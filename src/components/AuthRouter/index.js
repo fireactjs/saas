@@ -1,6 +1,8 @@
 import React, {useContext} from 'react';  
 import { Route, Redirect, withRouter } from "react-router-dom";
 import { AuthContext } from "../FirebaseAuth";
+import PublicTemplate from "../PublicTemplate";
+import Loader from "../Loader";
 
 const AuthRouter = ({component: Component, template: Template, title: Title, ...rest}) => {
     
@@ -22,7 +24,9 @@ const AuthRouter = ({component: Component, template: Template, title: Title, ...
                         <Redirect to={"/signin"} />
                     )
                 ):(
-                    <></>
+                    <PublicTemplate>
+                        <Loader size="5x" />
+                    </PublicTemplate>
                 )
             )}
         />
