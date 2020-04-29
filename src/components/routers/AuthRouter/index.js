@@ -1,8 +1,8 @@
 import React, {useContext} from 'react';  
 import { Route, Redirect, withRouter } from "react-router-dom";
-import { AuthContext } from "../FirebaseAuth";
-import PublicTemplate from "../PublicTemplate";
-import Loader from "../Loader";
+import { AuthContext } from "../../FirebaseAuth";
+import PublicTemplate from "../../templates/PublicTemplate";
+import Loader from "../../Loader";
 
 const AuthRouter = ({component: Component, template: Template, title: Title, ...rest}) => {
     
