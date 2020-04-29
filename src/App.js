@@ -9,6 +9,7 @@ import AuthRouter from './components/AuthRouter';
 
 import SignIn from './pages/public/SignIn';
 import Home from './pages/auth/Home';
+import PageNotFound from './pages/public/PageNotFound';
 
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
 				<Switch>
 					<AuthRouter exact path="/" component={Home} template={PublicTemplate} title="Welcome" />
 					<PublicRouter exact path="/signin" component={SignIn} template={PublicTemplate} title="Sign In" />
+					<PublicRouter component={PageNotFound} template={PublicTemplate} title="Page Not Found" />
 				</Switch>
 			</Router>
 		</AuthProvider>
