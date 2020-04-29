@@ -11,10 +11,19 @@ export const AuthProvider = ({ children }) => {
   
     useEffect(() => {
       FirebaseAuth.auth().onAuthStateChanged(function(user){
-        setAuthUser({
-          'user': user,
-          'checked': true
-        });
+        if(user !== null){
+          user.getIdToken().then(token => {
+            setAuthUser({
+              'user': user,
+              'checked': true
+            });
+          });
+        }else{
+          setAuthUser({
+            'user': null,
+            'checked': true
+          });
+        }
       });
     }, []);
   

@@ -5,9 +5,9 @@ import UserMenu from '../../menus/UserMenu';
 const AppTemplate = ({ children }) => {
     return (
 		<>
-            <header class="app-header navbar">
-                <button type="button" class="d-lg-none navbar-toggler" data-sidebar-toggler="true">
-                    <span class="navbar-toggler-icon"></span>
+            <header className="app-header navbar">
+                <button type="button" className="d-lg-none navbar-toggler" data-sidebar-toggler="true">
+                    <span className="navbar-toggler-icon"></span>
                 </button>
                 <NavLink className="navbar-brand" to="/">
                     <div className="navbar-brand-full">
@@ -22,15 +22,15 @@ const AppTemplate = ({ children }) => {
                     <UserMenu />
                 </ul>
             </header>
-            <div class="app-body">
-                <div class="sidebar">
+            <div className="app-body">
+                <div className="sidebar">
 
                 </div>
-                <main class="main">
+                <main className="main">
                 {children}
                 </main>
             </div>
-            <footer class="app-footer">
+            <footer className="app-footer">
 
             </footer>
         </>
