@@ -25,7 +25,7 @@ const AuthRouter = ({component: Component, template: Template, title: Title, ...
                     )
                 ):(
                     <PublicTemplate>
-                        <Loader size="5x" />
+                        <Loader size="5x" text="Loading..."/>
                     </PublicTemplate>
                 )
             )}

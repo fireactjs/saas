@@ -1,14 +1,15 @@
 import React from 'react';
+import './loader.scss';
 
 const Loader = ({size: Size, text: Text}) => (
-    <>
-        <i className={"fa fa-spinner fa-"+Size+" fa-spin"} />
+    <span>
+        <i className={"fa fa-spinner fa-"+Size+" fa-spin loader"} />
         {Text !== "" ?(
-            <span>{Text}</span>
+            <>{" "+Text}</>
         ):(
             <></>
         )}
-    </>
+    </span>
     
 );
 
