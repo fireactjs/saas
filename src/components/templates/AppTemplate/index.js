@@ -1,10 +1,11 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import UserMenu from '../../menus/UserMenu';
+import AppMenu from '../../menus/AppMenu';
 
 const AppTemplate = ({ children }) => {
     return (
-		<>
+		<div className="app">
             <header className="app-header navbar">
                 <button type="button" className="d-lg-none navbar-toggler" data-sidebar-toggler="true">
                     <span className="navbar-toggler-icon"></span>
@@ -24,7 +25,8 @@ const AppTemplate = ({ children }) => {
             </header>
             <div className="app-body">
                 <div className="sidebar">
-
+                    <AppMenu />
+                    <button className="sidebar-minimizer brand-minimizer" type="button" />
                 </div>
                 <main className="main">
                 {children}
@@ -33,7 +35,7 @@ const AppTemplate = ({ children }) => {
             <footer className="app-footer">
 
             </footer>
-        </>
+        </div>
     )
 }
 
