@@ -1,5 +1,6 @@
 import React from "react";
 import Breadcrumb from '../../../../components/Breadcrumb';
+import UserProfileView from './UserProfileView';
 
 const UserProfile = () => {
     const breadcrumbLinks = [
@@ -25,7 +26,7 @@ const UserProfile = () => {
             <Breadcrumb links={breadcrumbLinks} />
             <div className="container-fluid">
                 <div className="animated fadeIn">
-                    User Profile
+                   <UserProfileView />
                 </div>
             </div>
         </>
