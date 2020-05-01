@@ -11,6 +11,7 @@ import SignIn from './pages/public/SignIn';
 import Home from './pages/auth/Home';
 import PageNotFound from './pages/public/PageNotFound';
 import AppTemplate from './components/templates/AppTemplate';
+import UserProfile from './pages/auth/user/UserProfile';
 
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
 			<Router>
 				<Switch>
 					<AuthRouter exact path="/" component={Home} template={AppTemplate} title="Welcome" />
+					<AuthRouter exact path="/user/profile" component={UserProfile} template={AppTemplate} title="User Profile" />
 					<PublicRouter exact path="/signin" component={SignIn} template={PublicTemplate} title="Sign In" />
 					<PublicRouter component={PageNotFound} template={PublicTemplate} title="Page Not Found" />
 				</Switch>
