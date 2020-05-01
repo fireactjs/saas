@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import SidebarLink from '../SidebarLink';
 
 const AppMenu = () => {
     return (
@@ -7,20 +7,20 @@ const AppMenu = () => {
             <ul className="nav">
                 <li className="nav-title">Application</li>
                 <li className="nav-item">
-                    <Link className="nav-link" to="/">
+                    <SidebarLink className="nav-link active" to="/">
                         <i className="nav-icon fa fa-fire"></i> Dashboard
-                    </Link>
+                    </SidebarLink>
                 </li>
                 <li className="nav-title">User</li>
                 <li className="nav-item">
-                    <Link className="nav-link" to="/user/profile">
+                    <SidebarLink className="nav-link" to="/user/profile">
                         <i className="nav-icon fa fa-user"></i> Profile
-                    </Link>
+                    </SidebarLink>
                 </li>
                 <li className="nav-item">
-                    <Link className="nav-link" to="/user/log">
+                    <SidebarLink className="nav-link" to="/user/log">
                         <i className="nav-icon fa fa-list"></i> Activity Log
-                    </Link>
+                    </SidebarLink>
                 </li>
             </ul>
         </nav>
