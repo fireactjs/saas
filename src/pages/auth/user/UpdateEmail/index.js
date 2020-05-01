@@ -41,7 +41,10 @@ const UpdateEmail = () => {
                                 <Field label="Re-enter Password">
                                     <Input type="password" name="password" />
                                 </Field>
-                                <Buttons />
+                                <Field>
+                                    <button className="btn btn-primary mr-2">Submit</button>
+                                    <button className="btn btn-secondary">Back</button>
+                                </Field>
                             </Form>
                         </div>
                     </div>
