@@ -8,9 +8,9 @@ const Breadcrumb = ({links}) => {
                 <ol className="breadcrumb">
                     {links !== null && links.map((link, key) => {
                             return (
-                                <li className={link.active?"active breadcrumb-item":"breadcrumb-item"}>
+                                <li key={key} className={link.active?"active breadcrumb-item":"breadcrumb-item"}>
                                     {link.to !== null && 
-                                        <Link href={link.to}>{link.text}</Link>
+                                        <Link to={link.to}>{link.text}</Link>
                                     }
                                     {link.to === null && 
                                         <>{link.text}</>
