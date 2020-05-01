@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from 'react-router-dom';
 import Breadcrumb from '../../../../components/Breadcrumb';
 import { Form, Field, Input } from '../../../../components/Form';
 
@@ -43,7 +44,7 @@ const UpdateEmail = () => {
                                 </Field>
                                 <Field>
                                     <button className="btn btn-primary mr-2">Submit</button>
-                                    <button className="btn btn-secondary">Back</button>
+                                    <Link className="btn btn-secondary" to="/user/profile">Back</Link>
                                 </Field>
                             </Form>
                         </div>
