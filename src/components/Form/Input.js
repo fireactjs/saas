@@ -6,6 +6,10 @@ const Input = (props) => {
     const {
         hasError,
         validRegex,
+        minLen,
+        maxLen,
+        required,
+        error,
         ...others
     } = props;
 
@@ -15,14 +19,40 @@ const Input = (props) => {
     return (
         <>
             <input className={"form-control"+(hasErrorState?' is-invalid':'')} {...others} onBlur={(e) => {
-                // validate the value against validation regex
-                if(props.validRegex !== null && props.validRegex !== ''){
-                    if(RegExp(props.validRegex).test(e.target.value)){
-                        setHasErrorState(false);
-                    }else{
-                        setErrorMessage('Invalid format.')
-                        setHasErrorState(true);
+                let foundError = false;
+                // validae required
+                if(typeof(required) !== 'undefined' && required){
+                    if(e.target.value.trim().length === 0){
+                        setErrorMessage('This is a required field.');
+                        foundError = true;
                     }
+                }
+
+                // validate length
+                if(!foundError && typeof(minLen) !== 'undefined' && minLen !== 0){
+                    if(e.target.value.length < minLen){
+                        setErrorMessage('The input must be at least '+minLen+' characters.');
+                        foundError = true;
+                    }
+                }
+                if(!foundError && typeof(maxLen) !== 'undefined' && maxLen !== 0){
+                    if(e.target.value.length > maxLen){
+                        setErrorMessage('The input must be no more than '+maxLen+' characters.');
+                        foundError = true;
+                    }
+                }
+                
+                // validate the value against validation regex
+                if(!foundError && typeof(validRegex) !=='undefined' && validRegex !== ''){
+                    if(!RegExp(validRegex).test(e.target.value)){
+                        setErrorMessage('The input format is invalid.');
+                        foundError = true;
+                    }
+                }
+                if(foundError){
+                    setHasErrorState(true);
+                }else{
+                    setHasErrorState(false);
                 }
             }} />
             {hasErrorState && 
@@ -39,7 +69,10 @@ Input.propTypes = {
     type: PropTypes.string,
     validRegex: PropTypes.string,
     hasError: PropTypes.bool,
-    error: PropTypes.string
+    error: PropTypes.string,
+    minLen: PropTypes.number,
+    maxLen: PropTypes.number,
+    required: PropTypes.bool
 }
 
 export default Input;
