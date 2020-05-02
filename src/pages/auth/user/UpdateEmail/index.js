@@ -37,7 +37,7 @@ const UpdateEmail = () => {
 
                             }} >
                                 <Field label="Email Address">
-                                    <Input type="email" name="email-address" />
+                                    <Input type="email" name="email-address" validRegex="^[a-zA-Z0-9-_+\.]*@[a-zA-Z0-9-_\.]*\.[a-zA-Z0-9-_\.]*$" />
                                 </Field>
                                 <Field label="Re-enter Password">
                                     <Input type="password" name="password" />
