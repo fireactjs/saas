@@ -4,7 +4,7 @@ import './loader.scss';
 const Loader = ({size: Size, text: Text}) => (
     <span>
         <i className={"fa fa-spinner fa-"+Size+" fa-spin loader"} />
-        {Text !== "" ?(
+        {typeof(Text) !== 'undefined' && Text !== "" ?(
             <>{" "+Text}</>
         ):(
             <></>
