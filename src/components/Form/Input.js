@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 
 const Input = (props) => {
@@ -14,17 +14,23 @@ const Input = (props) => {
         ...others
     } = props;
 
-    const [hasErrorState, setHasErrorState] = useState(hasError||false);
-    const [errorMessage, setErrorMessage] = useState(props.error);
+    const [hasErrorState, setHasErrorState] = useState(hasError);
+    const [errorMessage, setErrorMessage] = useState(error);
+
+    useEffect(() => {
+        setHasErrorState(hasError);
+        setErrorMessage(error);
+    }, [hasError, error]);
 
     return (
         <>
             <input className={"form-control"+(hasErrorState?' is-invalid':'')} {...others} onChange={e => {
                 let foundError = false;
+                let foundErrorMessage = '';
                 // validae required
                 if(typeof(required) !== 'undefined' && required){
                     if(e.target.value.trim().length === 0){
-                        setErrorMessage('This is a required field.');
+                        foundErrorMessage = 'This is a required field.';
                         foundError = true;
                     }
                 }
@@ -32,13 +38,13 @@ const Input = (props) => {
                 // validate length
                 if(!foundError && typeof(minLen) !== 'undefined' && minLen !== 0){
                     if(e.target.value.length < minLen){
-                        setErrorMessage('The input must be at least '+minLen+' characters.');
+                        foundErrorMessage = 'The input must be at least '+minLen+' characters.';
                         foundError = true;
                     }
                 }
                 if(!foundError && typeof(maxLen) !== 'undefined' && maxLen !== 0){
                     if(e.target.value.length > maxLen){
-                        setErrorMessage('The input must be no more than '+maxLen+' characters.');
+                        foundErrorMessage = 'The input must be no more than '+maxLen+' characters.';
                         foundError = true;
                     }
                 }
@@ -46,16 +52,21 @@ const Input = (props) => {
                 // validate the value against validation regex
                 if(!foundError && typeof(validRegex) !=='undefined' && validRegex !== ''){
                     if(!RegExp(validRegex).test(e.target.value)){
-                        setErrorMessage('The input format is invalid.');
+                        foundErrorMessage = 'The input format is invalid.';
                         foundError = true;
                     }
                 }
                 if(foundError){
                     setHasErrorState(true);
+                    setErrorMessage(foundErrorMessage);
                 }else{
                     setHasErrorState(false);
                 }
-                changeHandler({hasError: foundError, value: e.target.value});
+                changeHandler({
+                    hasError: foundError,
+                    error: foundErrorMessage,
+                    value: e.target.value
+                });
             }} />
             {hasErrorState && 
                 <div className="invalid-feedback">
