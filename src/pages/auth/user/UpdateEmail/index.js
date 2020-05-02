@@ -5,7 +5,6 @@ import { Form, Field, Input } from '../../../../components/Form';
 import * as firebase from "firebase/app";
 import { FirebaseAuth } from '../../../../components/FirebaseAuth/firebase';
 import { AuthContext } from '../../../../components/FirebaseAuth';
-import Loader from '../../../../components/Loader';
 import Alert from '../../../../components/Alert';
 
 const UpdateEmail = () => {
@@ -99,21 +98,17 @@ const UpdateEmail = () => {
                                         })
                                         setInSubmit(false);
                                     })
-                                }} >
+                                }}
+                                disabled={emailAddress.hasError || password.hasError || emailAddress.value===null || password.value===null || inSubmit}
+                                inSubmit={inSubmit}
+                                enableDefaultButtons={true}
+                                backToUrl="/user/profile"
+                                >
                                     <Field label="Email Address">
                                         <Input type="email" name="email-address" hasError={emailAddress.hasError} error={emailAddress.error} minLen={5} maxLen={50} required={true} validRegex="^[a-zA-Z0-9-_+\.]*@[a-zA-Z0-9-_\.]*\.[a-zA-Z0-9-_\.]*$" changeHandler={setEmailAddress} />
                                     </Field>
                                     <Field label="Re-enter Password">
                                         <Input type="password" name="password" hasError={password.hasError} error={password.error} required={true} changeHandler={setPassword} />
-                                    </Field>
-                                    <Field>
-                                        <button className="btn btn-primary mr-2" disabled={(emailAddress.hasError || password.hasError || emailAddress.value===null || password.value===null || inSubmit ?'disabled':'')}>
-                                            {inSubmit && 
-                                                <Loader />
-                                            }
-                                            Submit
-                                        </button>
-                                        <Link className={"btn btn-secondary"+(inSubmit?" disabled":"")} to="/user/profile">Back</Link>
                                     </Field>
                                 </Form>
                             }
@@ -126,7 +121,7 @@ const UpdateEmail = () => {
                                             message: ''
                                         })
                                     }} >Try Again</button>
-                                    <Link className="btn btn-secondary" to="/user/profile">Back</Link>
+                                    <Link className="btn btn-secondary" to="/user/profile">View Profile</Link>
                                 </>
                             }
                             { result.status === true &&
