@@ -10,6 +10,7 @@ const Input = (props) => {
         maxLen,
         required,
         error,
+        changeHandler,
         ...others
     } = props;
 
@@ -18,7 +19,7 @@ const Input = (props) => {
 
     return (
         <>
-            <input className={"form-control"+(hasErrorState?' is-invalid':'')} {...others} onBlur={(e) => {
+            <input className={"form-control"+(hasErrorState?' is-invalid':'')} {...others} onChange={e => {
                 let foundError = false;
                 // validae required
                 if(typeof(required) !== 'undefined' && required){
@@ -54,6 +55,7 @@ const Input = (props) => {
                 }else{
                     setHasErrorState(false);
                 }
+                changeHandler({hasError: foundError, value: e.target.value});
             }} />
             {hasErrorState && 
                 <div className="invalid-feedback">
@@ -72,7 +74,8 @@ Input.propTypes = {
     error: PropTypes.string,
     minLen: PropTypes.number,
     maxLen: PropTypes.number,
-    required: PropTypes.bool
+    required: PropTypes.bool,
+    changeHandler: PropTypes.func
 }
 
 export default Input;
