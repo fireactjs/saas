@@ -38,7 +38,8 @@ Input.propTypes = {
     name: PropTypes.string,
     type: PropTypes.string,
     validRegex: PropTypes.string,
-    hasError: PropTypes.bool
+    hasError: PropTypes.bool,
+    error: PropTypes.string
 }
 
 export default Input;
