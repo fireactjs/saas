@@ -7,11 +7,6 @@ const UserProfileView = () => {
     return (
         <AuthContext.Consumer>
             {(context) => (   
-                <div className="card">
-                    <div className="card-header">
-                        Manage Your Profile
-                    </div>
-                    <div className="card-body">
                         <div className="list-group">
                             <a href="/" className="list-group-item group-item-action disabled">
                                 <div className="row">
@@ -101,10 +96,7 @@ const UserProfileView = () => {
                                     </div>
                                 </div>
                             </Link>
-
                         </div>
-                    </div>
-                </div>
             )}
         </AuthContext.Consumer>
     )
