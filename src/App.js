@@ -14,7 +14,7 @@ import AppTemplate from './components/templates/AppTemplate';
 import UserProfile from './pages/auth/user/UserProfile';
 import UpdateEmail from './pages/auth/user/UpdateEmail';
 import UpdateName from './pages/auth/user/UpdateName';
-
+import VerifyEmail from './pages/auth/user/VerifyEmail';
 
 function App() {
 	return (
@@ -25,6 +25,7 @@ function App() {
 					<AuthRouter exact path="/user/profile" component={UserProfile} template={AppTemplate} title="User Profile" />
 					<AuthRouter exact path="/user/profile/update-email" component={UpdateEmail} template={AppTemplate} title="Change Your Email" />
 					<AuthRouter exact path="/user/profile/update-name" component={UpdateName} template={AppTemplate} title="Change Your Name" />
+					<AuthRouter exact path="/user/profile/verify-email" component={VerifyEmail} template={AppTemplate} title="Verify Your Name" />
 					<PublicRouter exact path="/signin" component={SignIn} template={PublicTemplate} title="Sign In" />
 					<PublicRouter component={PageNotFound} template={PublicTemplate} title="Page Not Found" />
 				</Switch>
