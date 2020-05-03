@@ -13,6 +13,7 @@ import PageNotFound from './pages/public/PageNotFound';
 import AppTemplate from './components/templates/AppTemplate';
 import UserProfile from './pages/auth/user/UserProfile';
 import UpdateEmail from './pages/auth/user/UpdateEmail';
+import UpdateName from './pages/auth/user/UpdateName';
 
 
 function App() {
@@ -22,7 +23,8 @@ function App() {
 				<Switch>
 					<AuthRouter exact path="/" component={Home} template={AppTemplate} title="Welcome" />
 					<AuthRouter exact path="/user/profile" component={UserProfile} template={AppTemplate} title="User Profile" />
-					<AuthRouter exact path="/user/profile/update-email" component={UpdateEmail} template={AppTemplate} title="Change Your Name" />
+					<AuthRouter exact path="/user/profile/update-email" component={UpdateEmail} template={AppTemplate} title="Change Your Email" />
+					<AuthRouter exact path="/user/profile/update-name" component={UpdateName} template={AppTemplate} title="Change Your Name" />
 					<PublicRouter exact path="/signin" component={SignIn} template={PublicTemplate} title="Sign In" />
 					<PublicRouter component={PageNotFound} template={PublicTemplate} title="Page Not Found" />
 				</Switch>
