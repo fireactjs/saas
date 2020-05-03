@@ -4,8 +4,7 @@ import Breadcrumb from '../../../../components/Breadcrumb';
 const UserPageLayout = (props) => {
     const {
         title,
-        children,
-        ...others
+        children
     } = props
 
     const breadcrumbLinks = [
