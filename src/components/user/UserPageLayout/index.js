@@ -1,5 +1,5 @@
 import React from "react";
-import Breadcrumb from '../../../../components/Breadcrumb';
+import Breadcrumb from '../../Breadcrumb';
 
 const UserPageLayout = (props) => {
     const {

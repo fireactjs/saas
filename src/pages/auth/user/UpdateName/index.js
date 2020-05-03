@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Form, Field, Input } from '../../../../components/Form';
 import { AuthContext } from '../../../../components/FirebaseAuth';
 import Alert from '../../../../components/Alert';
-import UserPageLayout from '../UserProfile/UserPageLayout';
+import UserPageLayout from '../../../../components/user/UserPageLayout';
 
 const UpdateName = () => {
     const title = "Change Your Name";

@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from 'react-router-dom';
-import { AuthContext } from '../../../../components/FirebaseAuth';
-import UserAvatar from '../../../../components/UserAvatar';
+import { AuthContext } from '../../FirebaseAuth';
+import UserAvatar from '../../UserAvatar';
 
 const UserProfileView = () => {
     return (
