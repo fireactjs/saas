@@ -19,14 +19,14 @@ const UpdateEmail = () => {
 
     return (
         <UserPageLayout title={title} >
-            { result.status === null &&
+            { result.status === null && !authUser.user.emailVerified &&
                 <Form handleSubmit={e => {
                     e.preventDefault();
                     setInSubmit(true);
                     authUser.user.sendEmailVerification().then(() => {
                         setResult({
                             status: true,
-                            message: 'Please check your email inbox to verify the email address.'
+                            message: 'Please check your email inbox to verify the email address. Refresh this page after you verified your email address.'
                         });
                         setInSubmit(false);
                     }).catch((err) => {
@@ -46,6 +46,12 @@ const UpdateEmail = () => {
                         <input type="text" readOnly className="form-control-plaintext" value={authUser.user.email} ></input>
                     </Field>
                 </Form>
+            }
+            { result.status === null && authUser.user.emailVerified &&
+                <>
+                    <Alert type="success" dismissible={false} message="Your email is already verified." />
+                    <Link className="btn btn-primary" to="/user/profile">View Profile</Link>
+                </>
             }
             { result.status === false &&
                 <>
