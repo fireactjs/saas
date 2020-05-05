@@ -11,18 +11,24 @@ const Form = (props) => {
         disabled,
         inSubmit,
         enableDefaultButtons,
+        submitBtnStyle,
         submitBtnText,
         backBtnText,
         backToUrl,
         children,
         ...others} = props;
 
+    let btnClass = "primary";
+    if(submitBtnStyle){
+        btnClass = submitBtnStyle;
+    }
+
     return (
         <form {...others} onSubmit={handleSubmit}>
             {children}
             {enableDefaultButtons && 
                 <Field>
-                    <button className="btn btn-primary mr-2" disabled={(disabled?'disabled':'')}>
+                    <button className={"btn mr-2 btn-"+btnClass} disabled={(disabled?'disabled':'')}>
                         {inSubmit && 
                             <Loader />
                         }
