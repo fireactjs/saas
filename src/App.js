@@ -15,6 +15,7 @@ import UserProfile from './pages/auth/user/UserProfile';
 import UpdateEmail from './pages/auth/user/UpdateEmail';
 import UpdateName from './pages/auth/user/UpdateName';
 import VerifyEmail from './pages/auth/user/VerifyEmail';
+import UpdatePassword from './pages/auth/user/UpdatePassword';
 
 function App() {
 	return (
@@ -26,6 +27,7 @@ function App() {
 					<AuthRouter exact path="/user/profile/update-email" component={UpdateEmail} template={AppTemplate} title="Change Your Email" />
 					<AuthRouter exact path="/user/profile/update-name" component={UpdateName} template={AppTemplate} title="Change Your Name" />
 					<AuthRouter exact path="/user/profile/verify-email" component={VerifyEmail} template={AppTemplate} title="Verify Your Name" />
+					<AuthRouter exact path="/user/profile/update-password" component={UpdatePassword} template={AppTemplate} title="Update Your Password" />
 					<PublicRouter exact path="/signin" component={SignIn} template={PublicTemplate} title="Sign In" />
 					<PublicRouter component={PageNotFound} template={PublicTemplate} title="Page Not Found" />
 				</Switch>
