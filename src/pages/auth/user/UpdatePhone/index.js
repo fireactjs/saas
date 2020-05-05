@@ -106,7 +106,7 @@ const UpdatePhone = () => {
                     authUser.user.updatePhoneNumber(cred).then(() => {
                         setResult({
                             status: SUCCESS,
-                            message: ''
+                            message: 'Your phone number has been updated.'
                         });
                         setInSubmit(false);
                     }).catch(err => {
@@ -133,7 +133,7 @@ const UpdatePhone = () => {
                     <button className="btn btn-primary mr-2" onClick={() => {
                         setResult({
                             status: PHONESTEP,
-                            message: 'Your phone number has been updated.'
+                            message: ''
                         })
                     }} >Try Again</button>
                     <Link className="btn btn-secondary" to="/user/profile">View Profile</Link>
