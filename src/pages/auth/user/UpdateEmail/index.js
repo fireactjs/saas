@@ -83,7 +83,7 @@ const UpdateEmail = () => {
                     <Field label="Email Address">
                         <Input type="email" name="email-address" hasError={emailAddress.hasError} error={emailAddress.error} minLen={5} maxLen={50} required={true} validRegex="^[a-zA-Z0-9-_+\.]*@[a-zA-Z0-9-_\.]*\.[a-zA-Z0-9-_\.]*$" changeHandler={setEmailAddress} />
                     </Field>
-                    <Field label="Re-enter Password">
+                    <Field label="Current Password">
                         <Input type="password" name="password" hasError={password.hasError} error={password.error} required={true} changeHandler={setPassword} />
                     </Field>
                 </Form>
