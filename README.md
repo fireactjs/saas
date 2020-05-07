@@ -8,11 +8,11 @@ These basic user management functionalities are needed in many projects, and the
 
 ## Installation
 
-### `1. Setup Firebase`
+### 1. Setup Firebase
 
 This project uses Firebase to manage user accounts of the web application. You need to create a Firebase project first if you don't have a project yet.
 
-### `2. Create Firebase Configuration File`
+### 2. Create Firebase Configuration File
 
 Create a configuration file as `src/components/FirebaseAuth/firebase-config.json`.
 
@@ -34,11 +34,11 @@ To get your Firebase project settings, go to [Firebase console](https://console.
 }
 ```
 
-### `3. Enable Sign-in Methods`
+### 3. Enable Sign-in Methods
 
 By default, the web application UI allows signing in with email address, Google account and Facebook account. You need to enable these sign-in methods in your Firebase project so that the sign-in functionality will work.
 
-### `4. Setup Firebase Database Rules`
+### 4. Setup Firebase Database Rules
 
 This project stores use data in Firestore database. To secure the data so that only users with permission are able to access and interact with the data, copy and paste the database rules into your Firebase database rules.
 
@@ -59,14 +59,14 @@ service cloud.firestore {
 }
 ```
 
-### `5. Install Dependencies`
+### 5. Install Dependencies
 
 In the project directory, run
 ```
 npm install
 ```
 
-### `6. Test Run`
+### 6. Test Run
 
 In the project directory, run
 ```
@@ -75,14 +75,14 @@ npm start
 
 This will start up the web application in your browser. You can sign in and play around the project.
 
-### `7. Build`
+### 7. Build
 
 In the project directory, run
 ```
 npm run build
 ```
 
-### `8. Deploy to Firebase`
+### 8. Deploy to Firebase
 
 You will need to install Firebase tools and configure your Firebase project in your Firebase tools to deploy the project to your Firebase project hosting.
 
