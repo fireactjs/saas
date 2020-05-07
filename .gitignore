@@ -23,3 +23,6 @@ yarn-debug.log*
 yarn-error.log*
 package-lock.json
 src/components/FirebaseAuth/firebase-config.json
+.firebaserc
+firebase.json
+.firebase/hosting.YnVpbGQ.cache

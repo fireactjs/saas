@@ -1,6 +1,14 @@
 This project is built with [Firebase](https://firebase.google.com/) and [React](https://reactjs.org/). It is a fully functional web application that provides basic user sign in and user management features.
 
-## Purpose:
+The project UI uses [CoreUI free template](https://coreui.io/react/).
+
+## Live Demo
+
+Visit [live demo](https://fireact-e1bdc.firebaseapp.com/).
+
+You can sign in with email and password, Google or Facebook. Feel free to play around and test the demo site. You can delete your account when you are done with the demo.
+
+## Purpose
 
 The purpose of this project is to provide a starting point for building web applications that require user management functionalities, such as SaaS, membership websites, etc.
 
