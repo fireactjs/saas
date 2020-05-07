@@ -91,7 +91,9 @@ In the project directory, run
 firebase deploy
 ```
 
-Now, go to your Firebase hosting URL, and enjoy.
+## Development
+
+Now, you have the basic user management functions in your web application. Modify `src/pages/auth/Home/index.js` to start building the features of your web application.
 
 ---
 
