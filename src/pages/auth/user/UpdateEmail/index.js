@@ -6,6 +6,7 @@ import { FirebaseAuth } from '../../../../components/FirebaseAuth/firebase';
 import { AuthContext } from '../../../../components/FirebaseAuth';
 import Alert from '../../../../components/Alert';
 import UserPageLayout from '../../../../components/user/UserPageLayout';
+import { log, UPDATE_EMAIL } from '../../../../components/log';
 
 const UpdateEmail = () => {
     const title = "Change Your Email";
@@ -47,6 +48,7 @@ const UpdateEmail = () => {
                     .then(() => {
                         authUser.user.updateEmail(emailAddress.value).then(() => {
                             authUser.user.sendEmailVerification().then(() => {
+                                log(UPDATE_EMAIL);
                                 setResult({
                                     status: true,
                                     message: 'Your email address has been updated. Please check your email inbox to verify the email address.'
