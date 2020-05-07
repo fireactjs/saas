@@ -1,7 +1,7 @@
 import { FirebaseAuth } from "../FirebaseAuth/firebase";
 import * as firebase from "firebase/app";
 
-export const log = action => {
+export const log = (action, callback) => {
     const Firestore = FirebaseAuth.firestore();
     const currentUser = FirebaseAuth.auth().currentUser;
 
@@ -13,12 +13,12 @@ export const log = action => {
     const userDocRef = Firestore.collection('users').doc(currentUser.uid);
     userDocRef.collection('activities').doc(''+dt.getTime()).set(data).then(() => {
         userDocRef.set({'activityCount':firebase.firestore.FieldValue.increment(1)},{merge: true}).then(() => {
-
+            callback(true);
         }).catch(err => {
-
+            callback(false);
         });
     }).catch(err => {
-
+        callback(false);
     });
 }
 export const SIGN_IN = 'signed in';

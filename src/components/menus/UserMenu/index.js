@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from '../../FirebaseAuth';
-import { FirebaseAuth } from '../../FirebaseAuth/firebase';
+import { userSignOut } from '../../user/functions';
 import UserAvatar from '../../UserAvatar';
 
 const UserMenu = () => {
@@ -24,11 +24,7 @@ const UserMenu = () => {
                         </Link>
                         <button type="button" className="dropdown-item" href="/" data-toggle="modal" data-target="#logoutModal" onClick={(e) => {
                             e.preventDefault();
-                            FirebaseAuth.auth().signOut().then(function(){
-                                
-                            }, function(error){
-            
-                            })
+                            userSignOut();
                         }}>
                             <i className="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                             Sign Out

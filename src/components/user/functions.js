@@ -1,5 +1,5 @@
 import { FirebaseAuth } from "../FirebaseAuth/firebase";
-import { log, SIGN_IN } from '../log';
+import { log, SIGN_IN, SIGN_OUT } from '../log';
 
 export const userSignIn = (callback) => {
     var dt = new Date();
@@ -37,4 +37,13 @@ export const userSignIn = (callback) => {
         }
     });
     log(SIGN_IN);
+}
+
+export const userSignOut = () => {
+    log(SIGN_OUT, (result) => {
+        // wait for log is successfully written before signing out
+        if(result){
+            FirebaseAuth.auth().signOut();
+        }
+    });   
 }
