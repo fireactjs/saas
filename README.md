@@ -93,7 +93,7 @@ firebase deploy
 
 Now, go to your Firebase hosting URL, and enjoy.
 
-===================
+---
 
 If you like this project, please click the star icon.
 
