@@ -6,6 +6,7 @@ import { FirebaseAuth } from '../../../../components/FirebaseAuth/firebase';
 import { AuthContext } from '../../../../components/FirebaseAuth';
 import Alert from '../../../../components/Alert';
 import UserPageLayout from '../../../../components/user/UserPageLayout';
+import { log, UPDATE_PASSWORD } from '../../../../components/log';
 
 const UpdatePassword = () => {
     const title = "Change Your Password";
@@ -61,6 +62,7 @@ const UpdatePassword = () => {
                         .then(() => {
                             FirebaseAuth.auth().currentUser.updatePassword(newPassword.value)
                             .then(() => {
+                                log(UPDATE_PASSWORD);
                                 setResult({
                                     status: true,
                                     message: 'Your password has been updated.'
