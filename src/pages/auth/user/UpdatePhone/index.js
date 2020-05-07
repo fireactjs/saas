@@ -5,6 +5,7 @@ import * as firebase from "firebase/app";
 import { AuthContext } from '../../../../components/FirebaseAuth';
 import Alert from '../../../../components/Alert';
 import UserPageLayout from '../../../../components/user/UserPageLayout';
+import { log, UPDATE_PHONE } from '../../../../components/log';
 
 const UpdatePhone = () => {
     const title = "Change Your Phone Number";
@@ -104,6 +105,7 @@ const UpdatePhone = () => {
                     setInSubmit(true);
                     var cred = firebase.auth.PhoneAuthProvider.credential(verificationId, verificationCode.value);
                     authUser.user.updatePhoneNumber(cred).then(() => {
+                        log(UPDATE_PHONE);
                         setResult({
                             status: SUCCESS,
                             message: 'Your phone number has been updated.'
