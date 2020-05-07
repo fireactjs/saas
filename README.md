@@ -2,7 +2,7 @@ This project is built with [Firebase](https://firebase.google.com/) and [React](
 
 ## Purpose:
 
-The purpose of this project is to provide a starting point for building web applications that requires user management functionalities, such as SaaS, membership websites, etc.
+The purpose of this project is to provide a starting point for building web applications that require user management functionalities, such as SaaS, membership websites, etc.
 
 These basic user management functionalities are needed in many projects, and they are built over and over again. We hope that this project can reduce the time and efforts developers have to spend on building these functionalities, so that the developers can focus on the key features of their projects.
 
