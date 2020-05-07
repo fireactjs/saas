@@ -1,5 +1,5 @@
 import { FirebaseAuth } from "../FirebaseAuth/firebase";
-import { log, SIGN_IN, SIGN_OUT } from '../log';
+import { log, SIGN_IN, SIGN_OUT, UPDATE_USERNAME } from '../log';
 
 export const userSignIn = (callback) => {
     var dt = new Date();
@@ -46,4 +46,15 @@ export const userSignOut = () => {
             FirebaseAuth.auth().signOut();
         }
     });   
+}
+
+export const userUpdateName = () => {
+    const Firestore = FirebaseAuth.firestore();
+    const currentUser = FirebaseAuth.auth().currentUser;
+
+    const userDocRef = Firestore.collection('users').doc(currentUser.uid);
+    userDocRef.set({
+        displayName: currentUser.displayName
+    },{merge: true});
+    log(UPDATE_USERNAME);
 }

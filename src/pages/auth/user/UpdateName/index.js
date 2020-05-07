@@ -4,7 +4,7 @@ import { Form, Field, Input } from '../../../../components/Form';
 import { AuthContext } from '../../../../components/FirebaseAuth';
 import Alert from '../../../../components/Alert';
 import UserPageLayout from '../../../../components/user/UserPageLayout';
-import { log, UPDATE_USERNAME } from '../../../../components/log';
+import { userUpdateName } from '../../../../components/user/functions';
 
 const UpdateName = () => {
     const title = "Change Your Name";
@@ -33,7 +33,7 @@ const UpdateName = () => {
                     authUser.user.updateProfile({
                         displayName: fullname.value
                     }).then(() => {
-                        log(UPDATE_USERNAME);
+                        userUpdateName();
                         setResult({
                             status: true,
                             message: 'Your name has been updated.'
