@@ -20,7 +20,7 @@ const UserMenu = () => {
                         </Link>
                         <Link type="button" className="dropdown-item" to="/user/log">
                             <i className="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
-                            Activity Log
+                            Activity Logs
                         </Link>
                         <button type="button" className="dropdown-item" href="/" data-toggle="modal" data-target="#logoutModal" onClick={(e) => {
                             e.preventDefault();

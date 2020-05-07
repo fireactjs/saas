@@ -19,7 +19,7 @@ const AppMenu = () => {
                 </li>
                 <li className="nav-item">
                     <SidebarLink className={"nav-link"+(window.location.pathname.startsWith('/user/log')?" active":"")} to="/user/log">
-                        <i className="nav-icon fa fa-list"></i> Activity Log
+                        <i className="nav-icon fa fa-list"></i> Activity Logs
                     </SidebarLink>
                 </li>
             </ul>
