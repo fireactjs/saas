@@ -48,7 +48,7 @@ By default, the web application UI allows signing in with email address, Google 
 
 ### 4. Setup Firebase Database Rules
 
-This project stores use data in Firestore database. To secure the data so that only users with permission are able to access and interact with the data, copy and paste the database rules into your Firebase database rules.
+This project stores user data in Firestore database. To secure the data so that only users with permission are able to access and interact with the data, copy and paste the database rules into your Firebase database rules.
 
 ```
 rules_version = '2';
