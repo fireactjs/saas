@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import { FirebaseAuth } from '../../../components/FirebaseAuth/firebase';
 import * as firebase from "firebase/app";
-import { userSignIn } from '../../../components/user/functions';
+import { userSignIn } from '../../../libs/user';
 
 const SignIn = () => {
 

@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from '../../FirebaseAuth';
-import { userSignOut } from '../../user/functions';
+import { userSignOut } from '../../../libs/user';
 import UserAvatar from '../../UserAvatar';
 
 const UserMenu = () => {

@@ -6,7 +6,7 @@ import { FirebaseAuth } from '../../../../components/FirebaseAuth/firebase';
 import { AuthContext } from '../../../../components/FirebaseAuth';
 import Alert from '../../../../components/Alert';
 import UserPageLayout from '../../../../components/user/UserPageLayout';
-import { log, UPDATE_PASSWORD } from '../../../../components/log';
+import { log, UPDATE_PASSWORD } from '../../../../libs/log';
 
 const UpdatePassword = () => {
     const title = "Change Your Password";

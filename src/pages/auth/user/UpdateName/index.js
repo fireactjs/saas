@@ -4,7 +4,7 @@ import { Form, Field, Input } from '../../../../components/Form';
 import { AuthContext } from '../../../../components/FirebaseAuth';
 import Alert from '../../../../components/Alert';
 import UserPageLayout from '../../../../components/user/UserPageLayout';
-import { userUpdateName } from '../../../../components/user/functions';
+import { userUpdateName } from '../../../../libs/user';
 
 const UpdateName = () => {
     const title = "Change Your Name";

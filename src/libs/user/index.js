@@ -1,4 +1,4 @@
-import { FirebaseAuth } from "../FirebaseAuth/firebase";
+import { FirebaseAuth } from "../../components/FirebaseAuth/firebase";
 import { log, SIGN_IN, SIGN_OUT, UPDATE_USERNAME } from '../log';
 
 export const userSignIn = (callback) => {

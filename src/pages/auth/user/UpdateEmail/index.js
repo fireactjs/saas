@@ -6,7 +6,7 @@ import { FirebaseAuth } from '../../../../components/FirebaseAuth/firebase';
 import { AuthContext } from '../../../../components/FirebaseAuth';
 import Alert from '../../../../components/Alert';
 import UserPageLayout from '../../../../components/user/UserPageLayout';
-import { log, UPDATE_EMAIL } from '../../../../components/log';
+import { log, UPDATE_EMAIL } from '../../../../libs/log';
 
 const UpdateEmail = () => {
     const title = "Change Your Email";

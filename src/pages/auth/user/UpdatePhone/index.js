@@ -5,7 +5,7 @@ import * as firebase from "firebase/app";
 import { AuthContext } from '../../../../components/FirebaseAuth';
 import Alert from '../../../../components/Alert';
 import UserPageLayout from '../../../../components/user/UserPageLayout';
-import { log, UPDATE_PHONE } from '../../../../components/log';
+import { log, UPDATE_PHONE } from '../../../../libs/log';
 
 const UpdatePhone = () => {
     const title = "Change Your Phone Number";
