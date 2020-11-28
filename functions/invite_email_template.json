@@ -1,0 +1,5 @@
+{
+    "format": "html",
+    "subject": "{{sender_name}} sent you an invite",
+    "body": "<p>Hi,</p><p>{{sender_name}} invited you to join {{site_name}}.</p><p>Please <a href=\"{{invite_link}}\">click here</> to accept the invite.</p>"
+}

@@ -1,0 +1,23 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if false;
+    }
+    match /users/{userId} {
+      allow read, update, create: if request.auth.uid == userId;
+    }
+    match /users/{userId}/activities/{documents=**} {
+      allow read, create: if request.auth.uid == userId
+    }
+    match /plans/{planId} {
+      allow read: if true;
+    }
+    match /accounts/{accountId} {
+      allow read: if request.auth.uid != null && request.auth.uid in resource.data.access;
+    }
+    match /accounts/{accountId}/invoices/{invoiceId} {
+      allow read: if request.auth.uid != null && request.auth.uid in get(/databases/$(database)/documents/accounts/$(accountId)).data.admins;
+    }
+  }
+}
