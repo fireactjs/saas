@@ -1,8 +1,6 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 const stripeConfig = require('./stripe.json');
-const { user } = require('firebase-functions/lib/providers/auth');
-const { HttpsError } = require('firebase-functions/lib/providers/https');
 const crypto = require('crypto');
 const Mailgun = require('mailgun-js');
 const mailGunConfig = require('./mailgun.json');
@@ -52,7 +50,6 @@ const getDocIndexById = (docArray, id) => {
 }
 
 const sha256hash = (str) => {
-    const crypto = require('crypto');
     const hash = crypto.createHash('sha256');
     hash.update(str+":"+config.salt);
     return hash.digest('hex');
