@@ -7,6 +7,11 @@ const mailGunConfig = require('./mailgun.json');
 const config = require('./config.json');
 const inviteEmailTemplate = require('./invite_email_template.json');
 
+/*
+To add new functions for your project, please add your new functions as function groups.
+For more details, please read https://firebase.google.com/docs/functions/organize-functions#group_functions
+*/
+
 admin.initializeApp();
 
 const log = (uid, activity) => {
