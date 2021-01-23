@@ -89,26 +89,18 @@ const addUserToAccount = (accountId, userId, isAdmin) => {
         if(typeof(account.data().access) === 'undefined' || account.data().access.indexOf(user.id) === -1){
             // add user to account if user doesn't exist
             let access = [];
-            let accessRefs = [];
             let admins = [];
-            let adminRefs = [];
             if(typeof(account.data().access) !== 'undefined'){
                 access = account.data().access;
-                accessRefs = account.data().accessRefs;
                 admins = account.data().admins;
-                adminRefs = account.data().adminRefs;
             }
             access.push(user.id);
-            accessRefs.push(user.ref);
             if(isAdmin){
                 admins.push(user.id);
-                adminRefs.push(user.ref);
             }
             return account.ref.set({
                 'admins': admins,
-                'adminRefs': adminRefs,
                 'access': access,
-                'accessRefs': accessRefs,
                 'adminCount': admins.length,
                 'accessCount': access.length
             }, {merge: true});
@@ -191,8 +183,8 @@ exports.getAccountUsers = functions.https.onCall((data, context) => {
         account = accountRef;
         if(accountRef.data().admins.indexOf(context.auth.uid) !== -1){
             let getUsers = [];
-            accountRef.data().accessRefs.forEach(user => {
-                getUsers.push(getDoc('users/'+user.id));
+            accountRef.data().access.forEach(userId => {
+                getUsers.push(getDoc('users/'+userId));
             });
             return Promise.all(getUsers);
         }else{
@@ -250,12 +242,9 @@ exports.updateAccountUserRole = functions.https.onCall((data, context) => {
                     case 'user':
                         if(account.data().admins.indexOf(data.userId) !== -1){
                             let admins = account.data().admins;
-                            let adminRefs = account.data().adminRefs;
                             admins.splice(account.data().admins.indexOf(user.id),1);
-                            adminRefs.splice(getDocIndexById(adminRefs, user.id),1);
                             return account.ref.set({
                                 admins: admins,
-                                adminRefs: adminRefs,
                                 adminCount: admins.length
                             },{merge:true});
                         }else{
@@ -264,12 +253,9 @@ exports.updateAccountUserRole = functions.https.onCall((data, context) => {
                     case 'admin':
                         if(account.data().admins.indexOf(data.userId) === -1){
                             let admins = account.data().admins;
-                            let adminRefs = account.data().adminRefs;
                             admins.push(user.id);
-                            adminRefs.push(user.ref);
                             return account.ref.set({
                                 admins: admins,
-                                adminRefs: adminRefs,
                                 adminCount: admins.length
                             },{merge:true});
                         }else{
@@ -277,21 +263,15 @@ exports.updateAccountUserRole = functions.https.onCall((data, context) => {
                         }
                     case 'remove': {
                         let access = account.data().access;
-                        let accessRefs = account.data().accessRefs;
                         access.splice(account.data().access.indexOf(user.id),1);
-                        accessRefs.splice(getDocIndexById(accessRefs, user.id),1);
                         let admins = account.data().admins;
-                        let adminRefs = account.data().adminRefs;
                         if(account.data().admins.indexOf(data.userId) !== -1){
                             admins.splice(account.data().admins.indexOf(user.id),1);
-                            adminRefs.splice(getDocIndexById(adminRefs, user.id),1);
                         }
                         return account.ref.set({
                             access: access,
-                            accessRefs: accessRefs,
                             accessCount: access.length,
                             admins: admins,
-                            adminRefs: adminRefs,
                             adminCount: admins.length
                         },{merge:true});
                     }
@@ -552,10 +532,8 @@ exports.cancelSubscription = functions.https.onCall((data, context) => {
         return account.ref.set({
             subscriptionStatus: subscription.status,
             access:[],
-            accessRefs:[],
             accessCount: 0,
             admins: [],
-            adminRefs: [],
             adminCount: 0
         },{merge: true});
     }).then(writeResult => {
