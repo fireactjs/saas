@@ -35,9 +35,4 @@ ui-debug.log
 functions/config.json
 functions/mailgun.json
 .firebase/hosting.cHVibGlj.cache
-.c9/out_of_memory
-.c9/project.settings
-.c9/.nakignore
-.c9/launch.json
-.c9/metadata/tab1
-.c9/metadata/environment/.gitignore
+.c9/
