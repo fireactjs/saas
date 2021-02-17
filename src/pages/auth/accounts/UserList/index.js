@@ -92,10 +92,12 @@ const UserList = () => {
                                                     </div>
                                                 </div>
                                             </th>
-                                            <td>{user.role}</td>
+                                            <td>{user.id===userData.currentAccount.owner?"Owner":(user.role.charAt(0).toUpperCase()+user.role.slice(1))}</td>
                                             <td>{user.lastLoginTime.toLocaleTimeString()} {user.lastLoginTime.toLocaleDateString()}</td>
                                             <td className="text-right">
-                                                <Link className="btn btn-primary" to={"/account/"+userData.currentAccount.id+"/users/change/"+user.id}>Change Role</Link>
+                                                {user.id!==userData.currentAccount.owner && 
+                                                    <Link className="btn btn-primary" to={"/account/"+userData.currentAccount.id+"/users/change/"+user.id}>Change Role</Link>
+                                                }
                                             </td>
                                         </tr>
                                     )}

@@ -9,7 +9,7 @@ import Alert from "../../../../components/Alert";
 const Plans = () => {
     const title = 'Select a Plan';
 
-    const { userData } = useContext(AuthContext);
+    const { userData, authUser } = useContext(AuthContext);
     const stripe = useStripe();
     const elements = useElements();
     const mountedRef = useRef(true);
@@ -146,16 +146,17 @@ const Plans = () => {
         <>
             <div className="container-fluid">
                 <div className="animated fadeIn">
-                    {plans.length > 0 ? (
-                        <>
-                            <div className="card-deck mb-3">
-                                <div className="card">
-                                    <div className="card-header text-center">{title}</div>
-                                    <div className="card-body">
+                    <div className="card-deck mb-3">
+                        <div className="card">
+                            <div className="card-header text-center">{title}</div>
+                            <div className="card-body">
+                                {(userData.currentAccount.owner === authUser.user.uid)?(
+                                    <>
                                         {errorMessage !== null && 
                                         <Alert type="danger" message={errorMessage} dismissible={true} onDismiss={() => setErrorMessage(null)}></Alert>
                                         }
-                                        <div className="row justify-content-md-center">
+                                        {plans.length > 0 ? (
+                                            <div className="row justify-content-md-center">
                                             <div className="col col-sm-12 col-md-8 col-lg-8 col-xl-6">
 
                                             <div className="card-deck mb-3 text-center">
@@ -220,22 +221,25 @@ const Plans = () => {
                                                 subcribe(e);
                                             }}>{processing?(<Loader text="Please wait while subscription being processed..."></Loader>):(<>Subscribe</>)}</button>
                                         
-
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
+                                        ):(
+                                            <>
+                                                {(loading) ? (
+                                                    <Loader text="loading plans..."></Loader>
+                                                ):(
+                                                    <div>No plan is found</div>
+                                                )}
+                                            </>
+                                        )}
+                                    </>
+                                ):(
+                                    <Alert type="danger" message="Access Denied." dismissible={false} ></Alert>
+                                )}
+
                             </div>
-                        </>
-                    ):(
-                        <>
-                            {(loading) ? (
-                                <Loader text="loading plans..."></Loader>
-                            ):(
-                                <div>No plan is found</div>
-                            )}
-                        </>
-                    )}
+                        </div>
+                    </div>
                 </div>
             </div>
         </>

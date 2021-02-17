@@ -38,6 +38,7 @@ const getDoc = (docPath) => {
 const addAccount = (accountData) => {
     let acc = {
         'name':accountData.name,
+        'owner': accountData.ownerId,
         'creationTime': new Date()
     }
     return admin.firestore().collection('accounts').add(acc).then(account => {
@@ -171,7 +172,8 @@ exports.userActivityCountIncremental = functions.firestore.document('/users/{use
 
 exports.createAccount = functions.https.onCall((data, context) => {
     return addAccount({
-        'name':data.accountName
+        'name':data.accountName,
+        'ownerId':context.auth.uid
     }).then(account => {
         log(context.auth.uid, 'created account id: '+account.id);
         return addUserToAccount(account.id, context.auth.uid, true);

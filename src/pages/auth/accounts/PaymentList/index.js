@@ -9,7 +9,7 @@ import { currency } from "../../../../inc/currency.json";
 const PaymentList = () => {
     const title = 'Payment History';
 
-    const { userData } = useContext(AuthContext);
+    const { userData, authUser } = useContext(AuthContext);
     const { setBreadcrumb } = useContext(BreadcrumbContext);
 
     // document snapshots
@@ -89,11 +89,15 @@ const PaymentList = () => {
             <div className="container-fluid">
                 <div className="animated fadeIn">
                     <div className="text-right mb-3">
-                        {userData.currentAccount.price > 0 && 
-                            <Link to={"/account/"+userData.currentAccount.id+"/billing/payment-method"} className="btn btn-primary mr-2">Update Payment Method</Link>
+                        {userData.currentAccount.owner === authUser.user.uid &&
+                            <>
+                                {userData.currentAccount.price > 0 && 
+                                    <Link to={"/account/"+userData.currentAccount.id+"/billing/payment-method"} className="btn btn-primary mr-2">Update Payment Method</Link>
+                                }
+                                <Link to={"/account/"+userData.currentAccount.id+"/billing/plan"} className="btn btn-primary mr-2">Change Subscription Plan</Link>
+                                <Link to={"/account/"+userData.currentAccount.id+"/billing/delete"} className="btn btn-danger">Delete Account</Link>
+                            </>
                         }
-                        <Link to={"/account/"+userData.currentAccount.id+"/billing/plan"} className="btn btn-primary mr-2">Change Subscription Plan</Link>
-                        <Link to={"/account/"+userData.currentAccount.id+"/billing/delete"} className="btn btn-danger">Delete Account</Link>
                     </div>
                     <div className="card">
                         <div className="card-header">

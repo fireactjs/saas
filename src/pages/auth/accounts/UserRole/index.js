@@ -71,59 +71,67 @@ const UserRole = () => {
                             {title}
                         </div>
                         <div className="card-body">
-                            {success && 
-                                <Alert type="success" message="User role is successfully updated." dismissible={true} onDismiss={() => setSuccess(false)}></Alert>
-                            }
-                            {error !== null && 
-                                <Alert type="danger" message={error} dismissible={true} onDismiss={() => setError(null)}></Alert>
-                            }
-                            {user === null ? (
-                                <Loader text="Loading user details" />
+                            {(userId !== userData.currentAccount.owner)?(
+                                <>
+                                    {success && 
+                                        <Alert type="success" message="User role is successfully updated." dismissible={true} onDismiss={() => setSuccess(false)}></Alert>
+                                    }
+                                    {error !== null && 
+                                        <Alert type="danger" message={error} dismissible={true} onDismiss={() => setError(null)}></Alert>
+                                    }
+                                    {user === null ? (
+                                        <Loader text="Loading user details" />
+                                    ):(
+                                        <Form handleSubmit={e => {
+                                            e.preventDefault();
+                                            setError(null);
+                                            setSuccess(false);
+                                            setInSubmit(true);
+                                            const updateAccountUserRole = CloudFunctions.httpsCallable('updateAccountUserRole');
+                                            updateAccountUserRole({
+                                                accountId: userData.currentAccount.id,
+                                                userId: userId,
+                                                role: selectedRole
+                                            }).then(res => {
+                                                setInSubmit(false);
+                                                setSuccess(true);
+                                            }).catch(err => {
+                                                setInSubmit(false);
+                                                setError(err.message);
+                                            });
+                                        }}
+                                        disabled={selectedRole===null || inSubmit}
+                                        submitBtnStyle={(selectedRole!=='remove')?"primary":"danger"}
+                                        inSubmit={inSubmit}
+                                        enableDefaultButtons={true}
+                                        backToUrl={"/account/"+userData.currentAccount.id+"/users"}
+                                        >
+                                            <Field label="User Name">
+                                                <div className="row col">
+                                                    <UserAvatar name={user.displayName} photoUrl={user.photoUrl} className="c-avatar-img mr-2"></UserAvatar>
+                                                    <div className="pt-2 ml-1">{user.displayName}</div>
+                                                </div>
+                                            </Field>
+                                            <Field label="Last Login Time">
+                                                <div className="my-1">{user.lastLoginTime.toLocaleString()}</div>
+                                            </Field>
+                                            <Field label="Role">
+                                                <select className="form-control col-md-6 col-sm-8" defaultValue={user.role} onChange={e => {
+                                                    setSelectedRole(e.target.value);
+                                                }}>
+                                                    <option value="user">user</option>
+                                                    <option value="admin">admin</option>
+                                                    <option value="remove">-- Remove Access --</option>
+                                                </select>
+                                            </Field>
+                                        </Form>
+                                    )}
+                                </>
                             ):(
-                                <Form handleSubmit={e => {
-                                    e.preventDefault();
-                                    setError(null);
-                                    setSuccess(false);
-                                    setInSubmit(true);
-                                    const updateAccountUserRole = CloudFunctions.httpsCallable('updateAccountUserRole');
-                                    updateAccountUserRole({
-                                        accountId: userData.currentAccount.id,
-                                        userId: userId,
-                                        role: selectedRole
-                                    }).then(res => {
-                                        setInSubmit(false);
-                                        setSuccess(true);
-                                    }).catch(err => {
-                                        setInSubmit(false);
-                                        setError(err.message);
-                                    });
-                                }}
-                                disabled={selectedRole===null || inSubmit}
-                                submitBtnStyle={(selectedRole!=='remove')?"primary":"danger"}
-                                inSubmit={inSubmit}
-                                enableDefaultButtons={true}
-                                backToUrl={"/account/"+userData.currentAccount.id+"/users"}
-                                >
-                                    <Field label="User Name">
-                                        <div className="row col">
-                                            <UserAvatar name={user.displayName} photoUrl={user.photoUrl} className="c-avatar-img mr-2"></UserAvatar>
-                                            <div className="pt-2 ml-1">{user.displayName}</div>
-                                        </div>
-                                    </Field>
-                                    <Field label="Last Login Time">
-                                        <div className="my-1">{user.lastLoginTime.toLocaleString()}</div>
-                                    </Field>
-                                    <Field label="Role">
-                                        <select className="form-control col-md-6 col-sm-8" defaultValue={user.role} onChange={e => {
-                                            setSelectedRole(e.target.value);
-                                        }}>
-                                            <option value="user">user</option>
-                                            <option value="admin">admin</option>
-                                            <option value="remove">-- Remove Access --</option>
-                                        </select>
-                                    </Field>
-                                </Form>
+                                <Alert type="danger" message="Access Denied." dismissible={false} ></Alert>
                             )}
+
+
                         </div>
                     </div>
                 </div>

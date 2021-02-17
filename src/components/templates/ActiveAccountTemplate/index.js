@@ -27,6 +27,7 @@ const ActiveAccountTemplate = ({ role, children }) => {
                     setIsActive(true);
                 }
                 account.id = doc.id;
+                account.owner = doc.data().owner;
                 account.name = doc.data().name;
                 account.planId = doc.data().plan.id;
                 account.price = doc.data().price;

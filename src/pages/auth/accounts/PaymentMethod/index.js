@@ -9,7 +9,7 @@ import Alert from "../../../../components/Alert";
 const PaymentMethod = () => {
     const title = 'Update Payment Method';
 
-    const { userData } = useContext(AuthContext);
+    const { userData, authUser } = useContext(AuthContext);
     const stripe = useStripe();
     const elements = useElements();
     const { setBreadcrumb } = useContext(BreadcrumbContext);
@@ -126,36 +126,42 @@ const PaymentMethod = () => {
                                 <div className="card">
                                     <div className="card-header text-center">{title}</div>
                                     <div className="card-body">
-                                        {success && 
-                                        <Alert type="success" message="The payment method has been successfully updated." dismissible={true} onDismiss={() => setSuccess(false)}></Alert>
-                                        }
-                                        {errorMessage !== null && 
-                                        <Alert type="danger" message={errorMessage} dismissible={true} onDismiss={() => setErrorMessage(null)}></Alert>
-                                        }
-                                        <div className="row justify-content-md-center">
-                                            <div className="col col-sm-12 col-md-8 col-lg-8 col-xl-6">
-                                            <div className="card-deck">
-                                                <div className="card mb-4">
-                                                    <div className="card-header text-center">
-                                                        Credit or debit card
-                                                    </div>
-                                                    <div className="card-body">
-                                                        <div className="row justify-content-md-center">
-                                                            <div className="col col-12">
-                                                                {cardError !== null && 
-                                                                    <Alert type="danger" message={cardError} dismissible={true} onDismiss={() => setCardError(null)}></Alert>
-                                                                }
-                                                                <CardElement options={CARD_ELEMENT_OPTIONS}></CardElement>
+                                        {(userData.currentAccount.owner === authUser.user.uid)?(
+                                            <>
+                                                {success && 
+                                                <Alert type="success" message="The payment method has been successfully updated." dismissible={true} onDismiss={() => setSuccess(false)}></Alert>
+                                                }
+                                                {errorMessage !== null && 
+                                                <Alert type="danger" message={errorMessage} dismissible={true} onDismiss={() => setErrorMessage(null)}></Alert>
+                                                }
+                                                <div className="row justify-content-md-center">
+                                                    <div className="col col-sm-12 col-md-8 col-lg-8 col-xl-6">
+                                                    <div className="card-deck">
+                                                        <div className="card mb-4">
+                                                            <div className="card-header text-center">
+                                                                Credit or debit card
+                                                            </div>
+                                                            <div className="card-body">
+                                                                <div className="row justify-content-md-center">
+                                                                    <div className="col col-12">
+                                                                        {cardError !== null && 
+                                                                            <Alert type="danger" message={cardError} dismissible={true} onDismiss={() => setCardError(null)}></Alert>
+                                                                        }
+                                                                        <CardElement options={CARD_ELEMENT_OPTIONS}></CardElement>
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
+                                                    <button className="btn btn-lg btn-block btn-primary" disabled={processing?true:false} onClick={e => {
+                                                        subcribe(e);
+                                                    }}>{processing?(<Loader text="Please wait..."></Loader>):(<>Save</>)}</button>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <button className="btn btn-lg btn-block btn-primary" disabled={processing?true:false} onClick={e => {
-                                                subcribe(e);
-                                            }}>{processing?(<Loader text="Please wait..."></Loader>):(<>Save</>)}</button>
-                                            </div>
-                                        </div>
+                                            </>
+                                        ):(
+                                            <Alert type="danger" message="Access Denied." dismissible={false} ></Alert>
+                                        )}
                                     </div>
                                 </div>
                             </div>
