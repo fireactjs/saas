@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
 import { Link } from 'react-router-dom';
 import { Form, Field, Input } from '../../../../components/Form';
-import * as firebase from "firebase/app";
+import firebase from "firebase/app";
 import { FirebaseAuth } from '../../../../components/FirebaseAuth/firebase';
 import { AuthContext } from '../../../../components/FirebaseAuth';
 import Alert from '../../../../components/Alert';

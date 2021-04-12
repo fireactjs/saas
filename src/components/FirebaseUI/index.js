@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Link } from 'react-router-dom';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
-import { FirebaseAuth } from '..//FirebaseAuth/firebase';
-import * as firebase from "firebase/app";
+import { FirebaseAuth } from '../FirebaseAuth/firebase';
+import firebase from "firebase/app";
 import { userSignIn } from '../../libs/user';
 
 const FirebaseUI = () => {
