@@ -29,7 +29,9 @@ const ActiveAccountTemplate = ({ role, children }) => {
                 account.id = doc.id;
                 account.owner = doc.data().owner;
                 account.name = doc.data().name;
-                account.planId = doc.data().plan.id;
+                if(doc.data().plan){
+                    account.planId = doc.data().plan.id;
+                }
                 account.price = doc.data().price;
                 account.currency = doc.data().currency;
                 account.paymentCycle = doc.data().paymentCycle;
@@ -98,7 +100,7 @@ const ActiveAccountTemplate = ({ role, children }) => {
                             </div>
                         </div>
                     ):(
-                        <Redirect to={'/account/'+accountId+'/plan'}></Redirect>
+                        <Redirect to={'/account/'+accountId+'/billing/plan'}></Redirect>
                     )}
                     </>
                 ):(
