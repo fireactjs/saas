@@ -217,10 +217,11 @@ const Plans = () => {
                                                 </div>
                                             </div>
                                             }
-                                            <button className="btn btn-lg btn-block btn-primary" disabled={selectedPlan.id===0||processing?true:false} onClick={e => {
-                                                subcribe(e);
-                                            }}>{processing?(<Loader text="Please wait while subscription being processed..."></Loader>):(<>Subscribe</>)}</button>
-                                        
+                                            {selectedPlan.id!==0 &&                                             
+                                                <button className="btn btn-lg btn-block btn-primary" disabled={selectedPlan.id===0||processing?true:false} onClick={e => {
+                                                    subcribe(e);
+                                                }}>{processing?(<Loader text="Please wait while subscription being processed..."></Loader>):(<>Subscribe</>)}</button>
+                                            }
                                             </div>
                                         </div>
                                         ):(
