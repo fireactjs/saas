@@ -32,7 +32,7 @@ const Form = (props) => {
                         {inSubmit && 
                             <Loader />
                         }
-                        {(disabled?(<i className="fa fa-ban mr-1"></i>):'')}
+                        {((disabled && !inSubmit)?(<i className="fa fa-ban mr-1"></i>):'')}
                         {submitBtnText || 'Submit'}
                     </button>
                     {backToUrl && backToUrl !== "" &&
