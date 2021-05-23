@@ -209,8 +209,8 @@ const Plans = () => {
                                                     </div>
                                                     <div className="card-body">
                                                         <div className="form-group row">
-                                                            <label className="col-md-3 col-form-label mt-2 text-right"><b>Country/Territory</b></label>
-                                                            <div className="col-md-9 mt-2">
+                                                            <label className="col-lg-3 col-form-label mt-2 text-right"><b>Country/Territory</b></label>
+                                                            <div className="col-lg-9 mt-2">
                                                                 <select className="form-control" defaultValue={billingCountry} onChange={e => {
                                                                     setBillingCountry(e.target.selectedOptions[0].value);
                                                                 }}>
@@ -221,26 +221,26 @@ const Plans = () => {
                                                             </div>
                                                         </div>
                                                         <div className="form-group row">
-                                                            <label className="col-md-3 col-form-label mt-2 text-right"><b>Organisation Name</b></label>
-                                                            <div className="col-md-9 mt-2">
+                                                            <label className="col-lg-3 col-form-label mt-2 text-right"><b>Organisation Name</b></label>
+                                                            <div className="col-lg-9 mt-2">
                                                                 <Input required={false} maxLen={100} />
                                                             </div>
                                                         </div>
                                                         <div className="form-group row">
-                                                            <label className="col-md-3 col-form-label mt-2 text-right"><b>Full name</b></label>
-                                                            <div className="col-md-9 mt-2">
+                                                            <label className="col-lg-3 col-form-label mt-2 text-right"><b>Full name</b></label>
+                                                            <div className="col-lg-9 mt-2">
                                                                 <Input required={true} maxLen={100} />
                                                             </div>
                                                         </div>
                                                         <div className="form-group row">
-                                                            <label className="col-md-3 col-form-label mt-2 text-right"><b>Street Address</b></label>
-                                                            <div className="col-md-9 mt-2">
+                                                            <label className="col-lg-3 col-form-label mt-2 text-right"><b>Street Address</b></label>
+                                                            <div className="col-lg-9 mt-2">
                                                                 <Input required={true} maxLen={200} />
                                                             </div>
                                                         </div>
                                                         <div className="form-group row">
-                                                            <label className="col-md-3 col-form-label mt-2 text-right"><b>State/Province</b></label>
-                                                            <div className="col-md-3 mt-2">
+                                                            <label className="col-lg-3 col-form-label mt-2 text-right"><b>State/Province</b></label>
+                                                            <div className="col-lg-3 mt-2">
                                                                 {countries[billingCountry].states?(
                                                                     <select className="form-control">
                                                                         {Object.keys(countries[billingCountry].states).map(stateCode => 
@@ -252,14 +252,14 @@ const Plans = () => {
                                                                 )}
                                                                 
                                                             </div>
-                                                            <label className="col-md-3 col-form-label mt-2 text-right"><b>Zipcode/Postcode</b></label>
-                                                            <div className="col-md-3 mt-2">
+                                                            <label className="col-lg-3 col-form-label mt-2 text-right"><b>Zipcode/Postcode</b></label>
+                                                            <div className="col-lg-3 mt-2">
                                                                 <Input required={false} maxLen={20} />
                                                             </div>
                                                         </div>
                                                         <div className="form-group row mb-0">
-                                                            <label className="col-md-3 col-form-label mt-2 text-right"><b>Credit/Debit Card</b></label>
-                                                            <div className="col-md-9 mt-2">
+                                                            <label className="col-lg-3 col-form-label mt-2 text-right"><b>Credit/Debit Card</b></label>
+                                                            <div className="col-lg-9 mt-2">
                                                                 {cardError !== null && 
                                                                     <Alert type="danger" message={cardError} dismissible={true} onDismiss={() => setCardError(null)}></Alert>
                                                                 }                                                                <div className="form-control">
