@@ -5,6 +5,8 @@ import { BreadcrumbContext } from '../../../../components/Breadcrumb';
 import Loader from '../../../../components/Loader';
 import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import Alert from "../../../../components/Alert";
+import Input from "../../../../components/Form/Input";
+import { countries } from "../../../../inc/country.json";
 
 const Plans = () => {
     const title = 'Select a Plan';
@@ -40,6 +42,7 @@ const Plans = () => {
     const [selectedPlan, setSelectedPlan] = useState({id: 0});
     const [cardError, setCardError] = useState(null);
     const [errorMessage, setErrorMessage] = useState(null);
+    const [billingCountry, setBillingCountry] = useState("US");
 
     useEffect(() => {
         setBreadcrumb([
@@ -148,7 +151,7 @@ const Plans = () => {
                 <div className="animated fadeIn">
                     <div className="card-deck mb-3">
                         <div className="card">
-                            <div className="card-header text-center">{title}</div>
+                            <div className="card-header text-center"><h3>{title}</h3></div>
                             <div className="card-body">
                                 {(userData.currentAccount.owner === authUser.user.uid)?(
                                     <>
@@ -157,9 +160,9 @@ const Plans = () => {
                                         }
                                         {plans.length > 0 ? (
                                             <div className="row justify-content-md-center">
-                                            <div className="col col-sm-12 col-md-8 col-lg-8 col-xl-6">
+                                            <div className="col col-sm-12 col-md-8 col-lg-8 col-xl-8">
 
-                                            <div className="card-deck mb-3 text-center">
+                                            <div className="card-deck mb-5 text-center">
                                             {plans.map((plan,i) => 
                                                     <div className="card" key={i+plan.id}>
                                                         <div className="card-header">
@@ -202,15 +205,66 @@ const Plans = () => {
                                             <div className="card-deck">
                                                 <div className="card mb-4">
                                                     <div className="card-header text-center">
-                                                        Credit or debit card
+                                                        <h3>Billing Details</h3>
                                                     </div>
                                                     <div className="card-body">
-                                                        <div className="row justify-content-md-center">
-                                                            <div className="col col-12">
+                                                        <div className="form-group row">
+                                                            <label className="col-md-3 col-form-label mt-2 text-right"><b>Country/Territory</b></label>
+                                                            <div className="col-md-9 mt-2">
+                                                                <select className="form-control" defaultValue={billingCountry} onChange={e => {
+                                                                    setBillingCountry(e.target.selectedOptions[0].value);
+                                                                }}>
+                                                                    {Object.keys(countries).map((countryCode) => 
+                                                                        <option value={countryCode} key={countryCode}>{countries[countryCode].name}</option>
+                                                                    )}
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div className="form-group row">
+                                                            <label className="col-md-3 col-form-label mt-2 text-right"><b>Organisation Name</b></label>
+                                                            <div className="col-md-9 mt-2">
+                                                                <Input required={false} maxLen={100} />
+                                                            </div>
+                                                        </div>
+                                                        <div className="form-group row">
+                                                            <label className="col-md-3 col-form-label mt-2 text-right"><b>Full name</b></label>
+                                                            <div className="col-md-9 mt-2">
+                                                                <Input required={true} maxLen={100} />
+                                                            </div>
+                                                        </div>
+                                                        <div className="form-group row">
+                                                            <label className="col-md-3 col-form-label mt-2 text-right"><b>Street Address</b></label>
+                                                            <div className="col-md-9 mt-2">
+                                                                <Input required={true} maxLen={200} />
+                                                            </div>
+                                                        </div>
+                                                        <div className="form-group row">
+                                                            <label className="col-md-3 col-form-label mt-2 text-right"><b>State/Province</b></label>
+                                                            <div className="col-md-3 mt-2">
+                                                                {countries[billingCountry].states?(
+                                                                    <select className="form-control">
+                                                                        {Object.keys(countries[billingCountry].states).map(stateCode => 
+                                                                            <option value={stateCode} key={stateCode}>{countries[billingCountry].states[stateCode]}</option>
+                                                                        )}
+                                                                    </select>
+                                                                ):(
+                                                                    <Input required={false} maxLen={100} />
+                                                                )}
+                                                                
+                                                            </div>
+                                                            <label className="col-md-3 col-form-label mt-2 text-right"><b>Zipcode/Postcode</b></label>
+                                                            <div className="col-md-3 mt-2">
+                                                                <Input required={false} maxLen={20} />
+                                                            </div>
+                                                        </div>
+                                                        <div className="form-group row mb-0">
+                                                            <label className="col-md-3 col-form-label mt-2 text-right"><b>Credit/Debit Card</b></label>
+                                                            <div className="col-md-9 mt-2">
                                                                 {cardError !== null && 
                                                                     <Alert type="danger" message={cardError} dismissible={true} onDismiss={() => setCardError(null)}></Alert>
-                                                                }
+                                                                }                                                                <div className="form-control">
                                                                 <CardElement options={CARD_ELEMENT_OPTIONS}></CardElement>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
