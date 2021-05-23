@@ -262,8 +262,9 @@ const Plans = () => {
                                                             <div className="col-lg-9 mt-2">
                                                                 {cardError !== null && 
                                                                     <Alert type="danger" message={cardError} dismissible={true} onDismiss={() => setCardError(null)}></Alert>
-                                                                }                                                                <div className="form-control">
-                                                                <CardElement options={CARD_ELEMENT_OPTIONS}></CardElement>
+                                                                }
+                                                                <div className="form-control">
+                                                                    <CardElement options={CARD_ELEMENT_OPTIONS}></CardElement>
                                                                 </div>
                                                             </div>
                                                         </div>
