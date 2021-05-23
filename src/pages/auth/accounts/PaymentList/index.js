@@ -20,7 +20,6 @@ const PaymentList = () => {
     const [rows, setRows] = useState([]);
     const [toEnd, setToEnd] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [selectedInvoice, setSelectedInvoice] = useState(null);
 
     const getInvoices = (accountId, pageSize, lastDoc) => {
         setLoading(true);
@@ -44,8 +43,7 @@ const PaymentList = () => {
                         'tax': (Math.round((doc.data().tax || 0) / 100)).toFixed(2),
                         'amountPaid': (Math.round(doc.data().amountPaid / 100)).toFixed(2),
                         'created': (new Date(doc.data().created * 1000)).toLocaleString(),
-                        'periodStart': (new Date(doc.data().periodStart * 1000)).toLocaleString(),
-                        'preiodEnd': (new Date(doc.data().preiodEnd * 1000)).toLocaleString(),
+                        'hostedInvoiceUrl': doc.data().hostedInvoiceUrl,
                         'currency': doc.data().currency,
                         'status': doc.data().status
                     });
@@ -113,17 +111,17 @@ const PaymentList = () => {
                                                 <th scope="col">Amount</th>
                                                 <th scope="col">Status</th>
                                                 <th scope="col">Invoice Date</th>
+                                                <th scope="col">Invoice URL</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                         {rows.map((r,i) => 
                                             <tr key={r.id}>
-                                                <td><button className="btn btn-link" onClick={e => {
-                                                    setSelectedInvoice(r);
-                                                }}>{r.id}</button></td>
+                                                <td><a className="btn btn-link" rel="noreferrer" href={r.hostedInvoiceUrl} target="_blank">{r.id}</a></td>
                                                 <td>{currency[r.currency].sign}{r.total}</td>
                                                 <td>{r.status.toUpperCase()}</td>
                                                 <td>{r.created}</td>
+                                                <td><a href={r.hostedInvoiceUrl} rel="noreferrer" target="_blank" className="btn btn-info">View Invoice</a></td>
                                             </tr>
                                         )}
                                         </tbody>
@@ -147,83 +145,6 @@ const PaymentList = () => {
                     </div>
                 </div>
             </div>
-            {selectedInvoice !== null && 
-            <>
-            <div className="modal fade show" tabIndex="-1" role="dialog" style={{display: "block"}}>
-                <div className="modal-dialog modal-lg" role="document">
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <h4 className="modal-title">Invoice: {selectedInvoice.id}</h4>
-                            <button type="button" className="close" data-dismiss="modal" aria-label="Close" onClick={e => {
-                                setSelectedInvoice(null);
-                            }}>
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div className="modal-body">
-                            <div className="row mb-3 mt-3">
-                                <div className="col-4 text-right">
-                                    <strong>Created Time:</strong>
-                                </div>
-                                <div className="col-8">
-                                    {selectedInvoice.created}
-                                </div>
-                            </div>
-                            <div className="row mb-3">    
-                                <div className="col-4 text-right">
-                                    <strong>Billing Period:</strong>
-                                </div>
-                                <div className="col-8">
-                                    {selectedInvoice.periodStart} ~ {selectedInvoice.preiodEnd}
-                                </div>
-                            </div>
-                            <div className="row mb-3">    
-                                <div className="col-4 text-right">
-                                    <strong>Subtotal:</strong>
-                                </div>
-                                <div className="col-8">
-                                    {currency[selectedInvoice.currency].sign}{selectedInvoice.subTotal}
-                                </div>
-                            </div>
-                            <div className="row mb-3">    
-                                <div className="col-4 text-right">
-                                    <strong>Tax:</strong>
-                                </div>
-                                <div className="col-8">
-                                    {currency[selectedInvoice.currency].sign}{selectedInvoice.tax}
-                                </div>
-                            </div>
-                            <div className="row mb-3">    
-                                <div className="col-4 text-right">
-                                    <strong>Total:</strong>
-                                </div>
-                                <div className="col-8">
-                                    {currency[selectedInvoice.currency].sign}{selectedInvoice.total}
-                                </div>
-                            </div>
-                            <div className="row mb-3">    
-                                <div className="col-4 text-right">
-                                    <strong>Paid Amount:</strong>
-                                </div>
-                                <div className="col-8">
-                                    {currency[selectedInvoice.currency].sign}{selectedInvoice.amountPaid}
-                                </div>
-                            </div>
-                            <div className="row mb-3">    
-                                <div className="col-4 text-right">
-                                    <strong>Status:</strong>
-                                </div>
-                                <div className="col-8">
-                                    {selectedInvoice.status.toUpperCase()}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div className="modal-backdrop fade show"></div>
-            </>
-            }
         </>
     )
 }

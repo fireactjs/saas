@@ -569,8 +569,7 @@ const updateInvoice = (invoiceObject) => {
                         'currency': invoiceObject.currency,
                         'created': invoiceObject.created,
                         'status': invoiceObject.status,
-                        'periodStart': invoiceObject.period_start,
-                        'preiodEnd': invoiceObject.period_end
+                        'hostedInvoiceUrl': invoiceObject.hosted_invoice_url
                     }, {merge: true})
                 );
             });
