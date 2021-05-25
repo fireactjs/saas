@@ -214,6 +214,17 @@ const Plans = () => {
             const {error, paymentMethod} = await stripe.createPaymentMethod({
                 type: 'card',
                 card: cardElement,
+                billing_details: {
+                    name: fullName.value,
+                    address: {
+                        city: city.value,
+                        country: country,
+                        line1: organisationName.value,
+                        line2: streetAddress.value,
+                        postal_code: zipCode.value,
+                        state: state.value
+                    }
+                }
             });
     
             if (error) {
