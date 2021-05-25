@@ -42,7 +42,37 @@ const Plans = () => {
     const [selectedPlan, setSelectedPlan] = useState({id: 0});
     const [cardError, setCardError] = useState(null);
     const [errorMessage, setErrorMessage] = useState(null);
-    const [billingCountry, setBillingCountry] = useState("US");
+    const [country, setCountry] = useState("US");
+    const [organisationName, setOrganisationName] = useState({
+        hasError: false,
+        error: null,
+        value: null
+    });
+    const [fullName, setFullName] = useState({
+        hasError: false,
+        error: null,
+        value: null
+    });
+    const [streetAddress, setStreetAddress] = useState({
+        hasError: false,
+        error: null,
+        value: null
+    });
+    const [city, setCity] = useState({
+        hasError: false,
+        error: null,
+        value: null
+    });
+    const [zipCode, setZipCode] = useState({
+        hasError: false,
+        error: null,
+        value: null
+    });
+    const [state, setState] = useState({
+        hasError: false,
+        error: null,
+        value: "CA"
+    });
 
     useEffect(() => {
         setBreadcrumb([
@@ -98,6 +128,74 @@ const Plans = () => {
 
         let hasError = false;
         let paymentMethodId = '';
+        if(organisationName.value === null){
+            setOrganisationName({
+                hasError: false,
+                error: null,
+                value: ''
+            });
+        }else{
+            if(organisationName.hasError){
+                hasError = true;
+            }
+        }
+        if(fullName.value === null){
+            setFullName({
+                hasError: true,
+                error: 'This is a required field.',
+                value: ''
+            });
+            hasError = true;
+        }else{
+            if(fullName.hasError){
+                hasError = true;
+            }
+        }
+        if(streetAddress.value === null){
+            setStreetAddress({
+                hasError: true,
+                error: 'This is a required field.',
+                value: ''
+            });
+            hasError = true;
+        }else{
+            if(streetAddress.hasError){
+                hasError = true;
+            }
+        }
+        if(city.value === null){
+            setCity({
+                hasError: false,
+                error: null,
+                value: ''
+            });
+        }else{
+            if(city.hasError){
+                hasError = true;
+            }
+        }
+        if(zipCode.value === null){
+            setZipCode({
+                hasError: false,
+                error: null,
+                value: ''
+            });
+        }else{
+            if(zipCode.hasError){
+                hasError = true;
+            }
+        }
+        if(state.value === null){
+            setState({
+                hasError: false,
+                error: null,
+                value: ''
+            });
+        }else{
+            if(state.hasError){
+                hasError = true;
+            }
+        }
         if(selectedPlan.price !== 0){
             setCardError(null);
 
@@ -132,7 +230,16 @@ const Plans = () => {
             createSubscription({
                 planId: selectedPlan.id,
                 accountId: userData.currentAccount.id,
-                paymentMethodId: paymentMethodId
+                paymentMethodId: paymentMethodId,
+                billing: {
+                    country: country,
+                    organisation: organisationName.value,
+                    fullName: fullName.value,
+                    streetAddress: streetAddress.value,
+                    city: city.value,
+                    zipCode: zipCode.value,
+                    state: state.value
+                }
             }).then(res => {
                 // physical page load to reload the account data
                 document.location = '/account/'+userData.currentAccount.id+'/';
@@ -209,10 +316,10 @@ const Plans = () => {
                                                     </div>
                                                     <div className="card-body">
                                                         <div className="form-group row">
-                                                            <label className="col-lg-3 col-form-label mt-2 text-right"><b>Country/Territory</b></label>
-                                                            <div className="col-lg-9 mt-2">
-                                                                <select className="form-control" defaultValue={billingCountry} onChange={e => {
-                                                                    setBillingCountry(e.target.selectedOptions[0].value);
+                                                            <label className="col-lg-2 col-form-label mt-2 text-lg-right"><b>Country/Territory</b></label>
+                                                            <div className="col-lg-10 mt-2">
+                                                                <select className="form-control" defaultValue={country} onChange={e => {
+                                                                    setCountry(e.target.selectedOptions[0].value);
                                                                 }}>
                                                                     {Object.keys(countries).map((countryCode) => 
                                                                         <option value={countryCode} key={countryCode}>{countries[countryCode].name}</option>
@@ -221,45 +328,55 @@ const Plans = () => {
                                                             </div>
                                                         </div>
                                                         <div className="form-group row">
-                                                            <label className="col-lg-3 col-form-label mt-2 text-right"><b>Organisation Name</b></label>
-                                                            <div className="col-lg-9 mt-2">
-                                                                <Input required={false} maxLen={100} />
+                                                            <label className="col-lg-2 col-form-label mt-2 text-lg-right"><b>Organisation Name</b></label>
+                                                            <div className="col-lg-10 mt-2">
+                                                                <Input required={false} maxLen={100} changeHandler={setOrganisationName} hasError={organisationName.hasError} error={organisationName.error} />
                                                             </div>
                                                         </div>
                                                         <div className="form-group row">
-                                                            <label className="col-lg-3 col-form-label mt-2 text-right"><b>Full name</b></label>
-                                                            <div className="col-lg-9 mt-2">
-                                                                <Input required={true} maxLen={100} />
+                                                            <label className="col-lg-2 col-form-label mt-2 text-lg-right"><b>Full name</b></label>
+                                                            <div className="col-lg-10 mt-2">
+                                                                <Input required={true} maxLen={50} changeHandler={setFullName} hasError={fullName.hasError} error={fullName.error} />
                                                             </div>
                                                         </div>
                                                         <div className="form-group row">
-                                                            <label className="col-lg-3 col-form-label mt-2 text-right"><b>Street Address</b></label>
-                                                            <div className="col-lg-9 mt-2">
-                                                                <Input required={true} maxLen={200} />
+                                                            <label className="col-lg-2 col-form-label mt-2 text-lg-right"><b>Street Address</b></label>
+                                                            <div className="col-lg-10 mt-2">
+                                                                <Input required={true} maxLen={200} changeHandler={setStreetAddress} hasError={streetAddress.hasError} error={streetAddress.error} />
                                                             </div>
                                                         </div>
                                                         <div className="form-group row">
-                                                            <label className="col-lg-3 col-form-label mt-2 text-right"><b>State/Province</b></label>
-                                                            <div className="col-lg-3 mt-2">
-                                                                {countries[billingCountry].states?(
-                                                                    <select className="form-control">
-                                                                        {Object.keys(countries[billingCountry].states).map(stateCode => 
-                                                                            <option value={stateCode} key={stateCode}>{countries[billingCountry].states[stateCode]}</option>
+                                                            <label className="col-lg-2 col-form-label mt-2 text-lg-right"><b>City/Suburb</b></label>
+                                                            <div className="col-lg-2 mt-2">
+                                                                <Input required={false} maxLen={50} changeHandler={setCity} hasError={city.hasError} error={city.error} />
+                                                            </div>
+                                                            <label className="col-lg-2 col-form-label mt-2 text-lg-right"><b>Zipcode/Postcode</b></label>
+                                                            <div className="col-lg-2 mt-2">
+                                                                <Input required={false} maxLen={20} changeHandler={setZipCode} hasError={zipCode.hasError} error={zipCode.error} />
+                                                            </div>
+                                                            <label className="col-lg-2 col-form-label mt-2 text-lg-right"><b>State/Province</b></label>
+                                                            <div className="col-lg-2 mt-2">
+                                                                {countries[country].states?(
+                                                                    <select className="form-control" defaultValue={state.value} onChange={e => {
+                                                                        setState({
+                                                                            hasError: false,
+                                                                            error: null,
+                                                                            value: e.target.selectedOptions[0].value
+                                                                        })
+                                                                    }}>
+                                                                        {Object.keys(countries[country].states).map(stateCode => 
+                                                                            <option value={stateCode} key={stateCode}>{countries[country].states[stateCode]}</option>
                                                                         )}
                                                                     </select>
                                                                 ):(
-                                                                    <Input required={false} maxLen={100} />
+                                                                    <Input required={false} maxLen={100} changeHandler={setState} hasError={state.hasError} error={state.error} />
                                                                 )}
                                                                 
                                                             </div>
-                                                            <label className="col-lg-3 col-form-label mt-2 text-right"><b>Zipcode/Postcode</b></label>
-                                                            <div className="col-lg-3 mt-2">
-                                                                <Input required={false} maxLen={20} />
-                                                            </div>
                                                         </div>
                                                         <div className="form-group row mb-0">
-                                                            <label className="col-lg-3 col-form-label mt-2 text-right"><b>Credit/Debit Card</b></label>
-                                                            <div className="col-lg-9 mt-2">
+                                                            <label className="col-lg-2 col-form-label mt-2 text-lg-right"><b>Credit/Debit Card</b></label>
+                                                            <div className="col-lg-10 mt-2">
                                                                 {cardError !== null && 
                                                                     <Alert type="danger" message={cardError} dismissible={true} onDismiss={() => setCardError(null)}></Alert>
                                                                 }
