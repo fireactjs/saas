@@ -511,7 +511,14 @@ exports.createSubscription = functions.https.onCall((data, context) => {
             subscriptionCreated: subscription.created,
             subscriptionCurrentPeriodStart: subscription.current_period_start,
             subscriptionCurrentPeriodEnd: subscription.current_period_end,
-            subscriptionEnded: subscription.ended || 0
+            subscriptionEnded: subscription.ended || 0,
+            billingCountry: data.billing.country,
+            billingOrganisation: data.billing.organisation,
+            billingFullName: data.billing.fullName,
+            billingStreetAddress: data.billing.streetAddress,
+            billingCity: data.billing.city,
+            billingZipCode: data.billing.zipCode,
+            billingState: data.billing.state
         }, {merge: true});
     }).then(writeResult => {
         return {
