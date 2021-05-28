@@ -41,8 +41,8 @@ const Plans = () => {
     const [selectedPlan, setSelectedPlan] = useState({id: 0});
     const [cardError, setCardError] = useState(null);
     const [errorMessage, setErrorMessage] = useState(null);
-    const [country, setCountry] = useState("US");
-    const [state, setState] = useState("CA");
+    const [country, setCountry] = useState("");
+    const [state, setState] = useState("");
 
     useEffect(() => {
         setBreadcrumb([
@@ -217,26 +217,25 @@ const Plans = () => {
                                                             <label className="col-lg-3 col-form-label mt-2 text-lg-right"><b>Country/Territory</b></label>
                                                             <div className="col-lg-9 mt-2">
                                                                 <select className="form-control" defaultValue={country} onChange={e => {
-                                                                    setCountry(e.target.selectedOptions[0].value);
-                                                                    if(countries[e.target.selectedOptions[0].value].states){
-                                                                        setState(countries[e.target.selectedOptions[0].value].states[0]); // set to first state
-                                                                    }else{
-                                                                        setState(""); // set state to empty
-                                                                    }
+                                                                    const countryCode = e.target.selectedOptions[0].value;
+                                                                    setCountry(countryCode);
+                                                                    setState("");
                                                                 }}>
+                                                                    <option value=''>-- Select a country --</option>
                                                                     {Object.keys(countries).map((countryCode) => 
                                                                         <option value={countryCode} key={countryCode}>{countries[countryCode].name}</option>
                                                                     )}
                                                                 </select>
                                                             </div>
                                                         </div>
-                                                        {countries[country].states &&
+                                                        {countries[country] && countries[country].states &&
                                                             <div className="form-group row">
                                                                 <label className="col-lg-3 col-form-label mt-2 text-lg-right"><b>State/Province</b></label>
                                                                 <div className="col-lg-9 mt-2">
                                                                     <select className="form-control" defaultValue={state} onChange={e => {
                                                                         setState(e.target.selectedOptions[0].value);
                                                                     }}>
+                                                                        <option value=''>-- Select a state --</option>
                                                                         {Object.keys(countries[country].states).map(stateCode => 
                                                                             <option value={stateCode} key={stateCode}>{countries[country].states[stateCode]}</option>
                                                                         )}
