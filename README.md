@@ -22,6 +22,10 @@ Fireact comes with:
 
 In the live demo, you can sign in with email and passowrd, Google or Facebook. After signing in, you can create a subscription account with one of the payment plans, including a freemium plan. Please **DO NOT** use any real credit card number! Use the testing credit card number `4242 4242 4242 4242` for the "paid" plans.
 
+If you select `Australia` as your billing country, 10% GST will be applied to the subscription price via Stripe charges.
+
+If you select `California, United States` as your billing country and state, 7.25% sales tax will be applied to the subscription price via Stripe charges.
+
 [Launch Live Demo](https://fireact-e1bdc.firebaseapp.com/)
 
 ## Documentation
