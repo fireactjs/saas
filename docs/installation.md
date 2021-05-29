@@ -151,7 +151,7 @@ Create a new collection called "plans" in Firestore, then create new documents m
 }
 ```
 
-## Create Tax Rate (Optional)
+## Create Tax Rates (Optional)
 
 If you need to charge sales tax, VAT or GST, you can create tax rates based on the selected country and state on the subscription.
 
