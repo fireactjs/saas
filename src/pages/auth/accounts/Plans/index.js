@@ -42,7 +42,9 @@ const Plans = () => {
     const [cardError, setCardError] = useState(null);
     const [errorMessage, setErrorMessage] = useState(null);
     const [country, setCountry] = useState("");
+    const [countryError, setCountryError] = useState(null);
     const [state, setState] = useState("");
+    const [stateError, setStateError] = useState(null);
 
     useEffect(() => {
         setBreadcrumb([
@@ -100,6 +102,16 @@ const Plans = () => {
         let paymentMethodId = '';
 
         if(selectedPlan.price !== 0){
+            if(country === ''){
+                setCountryError('Please select a country.');
+                hasError = true;
+            }
+
+            if(state === '' && countries[country] && countries[country].states){
+                setStateError('Please select a state.');
+                hasError = true;
+            }
+
             setCardError(null);
 
             if (!stripe || !elements) {
@@ -216,10 +228,14 @@ const Plans = () => {
                                                         <div className="form-group row">
                                                             <label className="col-lg-3 col-form-label mt-2 text-lg-right"><b>Country/Territory</b></label>
                                                             <div className="col-lg-9 mt-2">
+                                                                {countryError !== null && 
+                                                                    <Alert type="danger" message={countryError} dismissible={true} onDismiss={() => setCountryError(null)}></Alert>
+                                                                }
                                                                 <select className="form-control" defaultValue={country} onChange={e => {
                                                                     const countryCode = e.target.selectedOptions[0].value;
                                                                     setCountry(countryCode);
                                                                     setState("");
+                                                                    setCountryError(null);
                                                                 }}>
                                                                     <option value=''>-- Select a country --</option>
                                                                     {Object.keys(countries).map((countryCode) => 
@@ -232,8 +248,12 @@ const Plans = () => {
                                                             <div className="form-group row">
                                                                 <label className="col-lg-3 col-form-label mt-2 text-lg-right"><b>State/Province</b></label>
                                                                 <div className="col-lg-9 mt-2">
+                                                                    {stateError !== null && 
+                                                                        <Alert type="danger" message={stateError} dismissible={true} onDismiss={() => setStateError(null)}></Alert>
+                                                                    }
                                                                     <select className="form-control" defaultValue={state} onChange={e => {
                                                                         setState(e.target.selectedOptions[0].value);
+                                                                        setStateError(null);
                                                                     }}>
                                                                         <option value=''>-- Select a state --</option>
                                                                         {Object.keys(countries[country].states).map(stateCode => 
