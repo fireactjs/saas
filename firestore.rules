@@ -19,5 +19,8 @@ service cloud.firestore {
     match /accounts/{accountId}/invoices/{invoiceId} {
       allow read: if request.auth.uid != null && request.auth.uid in get(/databases/$(database)/documents/accounts/$(accountId)).data.admins;
     }
+    match /taxes/{taxRateId} {
+      allow read: if true;
+    }
   }
 }
