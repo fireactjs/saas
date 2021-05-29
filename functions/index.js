@@ -423,9 +423,19 @@ exports.createSubscription = functions.https.onCall((data, context) => {
     const stripe = require('stripe')(stripeConfig.secret_api_key);
     let account = null;
     let plan = null;
-    return Promise.all([getDoc('/accounts/'+data.accountId),getDoc('/plans/'+data.planId)]).then(([accountDoc, planDoc]) => {
+    let taxRates = [];
+    return Promise.all([getDoc('/accounts/'+data.accountId),getDoc('/plans/'+data.planId),admin.firestore().collection('taxes').get()]).then(([accountDoc, planDoc, taxDocs]) => {
         account = accountDoc;
         plan = planDoc;
+        if(taxDocs){
+            taxDocs.forEach(taxRate => {
+                for(let i=0; i<taxRate.data().applicable.length; i++){
+                    if(taxRate.data().applicable[i] === data.billing.country || taxRate.data().applicable[i] === data.billing.country+":"+data.billing.state){
+                        taxRates.push(taxRate.id);
+                    }
+                }
+            })
+        }
         if(account.data().admins.indexOf(context.auth.uid) !== -1){
             if(data.paymentMethodId){
                 return getStripeCustomerId(context.auth.uid, context.auth.token.name, context.auth.token.email, data.paymentMethodId);
@@ -447,6 +457,7 @@ exports.createSubscription = functions.https.onCall((data, context) => {
                     // create subscription
                     return stripe.subscriptions.create({
                         customer: stripeCustomerId,
+                        default_tax_rates: taxRates,
                         default_payment_method: data.paymentMethodId,
                         items: [
                             {price: plan.data().stripePriceId}
@@ -479,6 +490,7 @@ exports.createSubscription = functions.https.onCall((data, context) => {
                 return stripe.subscriptions.update(
                     account.data().stripeActiveSubscriptionID,{
                     default_payment_method: data.paymentMethodId,
+                    default_tax_rates: taxRates,
                     items: [
                         {
                             id: subscription.items.data[0].id,
