@@ -151,6 +151,43 @@ Create a new collection called "plans" in Firestore, then create new documents m
 }
 ```
 
+## Create Tax Rate (Optional)
+
+If you need to charge sales tax, VAT or GST, you can create tax rates based on the selected country and state on the subscription.
+
+First, you will need to create tax rates in your Stripe account via the console UI or API. For more details, please see [https://stripe.com/docs/billing/taxes/tax-rates](https://stripe.com/docs/billing/taxes/tax-rates).
+
+Once you created the tax rates in Stripe, copy the tax rate IDs from Stripe to create the tax rates in your Firestore database.
+
+Create a new collection called "taxes" in Firesotre, and use the Stripe tax rate ID as the document ID for each tax rate document in Firestore.
+
+Below is the JSON object of the Australia GST tax rate in Firestore:
+
+```
+{
+    "applicable": [
+        "AU"
+    ],
+    "rate": 10
+}
+```
+
+Below is the JSON object of the California Sales Tax rate in Firestore:
+
+```
+{
+    "applicable": [
+        "US:CA"
+    ],
+    "rate": 7.25
+}
+```
+
+Each tax can be applied to multiple countries or states. For country wide tax, put in the 2-character country code in the `applicable` array. For state specific tax, put in the 2-character country code and state code with a colon as separator in the `applicable` array.
+
+You can find all the available country code and state code in the `/src/inc/country.json` file.
+
+
 ## Create Stripe Webhook
 
 When payments are processed or subscription status are changed, Stripe will send the data to Fireact via Webhook. The Fireact webhook location is `https://firebse-location-project-id.cloudfunctions.net/stripeWebHook`
