@@ -38,7 +38,6 @@ const Plans = () => {
     const [loading, setLoading] = useState(true);
     const [processing, setProcessing] = useState(false);
     const [plans, setPlans] = useState([]);
-    const [taxes, setTaxes] = useState([]);
     const [selectedPlan, setSelectedPlan] = useState({id: 0});
     const [cardError, setCardError] = useState(null);
     const [errorMessage, setErrorMessage] = useState(null);
@@ -66,8 +65,7 @@ const Plans = () => {
         setLoading(true);
 
         const plansQuery = FirebaseAuth.firestore().collection('plans').orderBy('price', 'asc');
-        const taxesQuery = FirebaseAuth.firestore().collection('taxes');
-        Promise.all([plansQuery.get(), taxesQuery.get()]).then(([planSnapShots, taxSnapShots]) => {
+        plansQuery.get().then(planSnapShots => {
             if (!mountedRef.current) return null
             let p = [];
             planSnapShots.forEach(doc => {
@@ -85,17 +83,6 @@ const Plans = () => {
             if(p.length > 0){
                 const ascendingOrderPlans = p.sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
                 setPlans(ascendingOrderPlans);
-            }
-            let t = [];
-            taxSnapShots.forEach(doc => {
-                t.push({
-                    'id': doc.id,
-                    'applicable': doc.data().applicable,
-                    'rate': doc.data().rate
-                });
-            });
-            if(t.length > 0){
-                setTaxes(t);
             }
             setLoading(false);
         });
