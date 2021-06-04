@@ -1,3 +1,6 @@
 remote_theme: "mmistakes/minimal-mistakes@4.23.0" 
+title: Fireact
+description: Fireact = React+Firebase+Stripe, open-source project for your next SaaS project.
+show_downloads: true
 plugins:
   - jekyll-include-cache
