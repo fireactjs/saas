@@ -3,7 +3,7 @@ minimal_mistakes_skin: contrast
 title: Fireact
 description: "Fireact = React+Firebase+Stripe, open-source project for your next SaaS project."
 url: "https://chaoming.github.io"
-baseurl: "/fireact/"
+baseurl: "/fireact"
 repository: "https://github.com/chaoming/fireact"
 plugins:
   - jekyll-include-cache
