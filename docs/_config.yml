@@ -1,6 +1,8 @@
-remote_theme: "mmistakes/minimal-mistakes@4.23.0" 
+remote_theme: "mmistakes/minimal-mistakes@4.23.0"
+minimal_mistakes_skin: contrast
 title: Fireact
-description: Fireact = React+Firebase+Stripe, open-source project for your next SaaS project.
+description: "Fireact = React+Firebase+Stripe, open-source project for your next SaaS project."
+baseurl: "https://chaoming.github.io/fireact/"
 show_downloads: true
 plugins:
   - jekyll-include-cache
