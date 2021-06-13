@@ -1,6 +1,11 @@
-# Installing Fireact
+---
+title: "Installation"
+permalink: /docs/installation/
+excerpt: "How to quickly install and setup Fireact."
+last_modified_at: 2021-06-07
+---
 
-This is a document to walk through how to install and deploy Fireact to your Firebase hosting.
+This document will walk you through the steps to install Fireact in your local machine and deploy Fireact to your Firebase project.
 
 ## Prerequisites
 
@@ -9,17 +14,17 @@ To run Fireact, you will need accounts on the following platforms:
 - [Stripe](https://stripe.com/)
 - [Mailgun](https://www.mailgun.com/)
 
-Fireact is designed to be hosted on Firebase Hosting. It uses Firebase Authenication for the sign-on feature and it stores the data in Firestore. It also contains Firebase Cloud Functions to execute server side logic.
+Fireact is designed to be hosted with Firebase Hosting. It uses Firebase Authenication for the sign-on feature and it stores the data in the Firestore database. It also requires Firebase Cloud Functions to execute server side logic.
 
 Stripe is integrated in Fireact to manage the subscriptions and payments.
 
 Mailgun is integrated to deliver emails that is not available in the Firebase Authentication feature, such as invitation emails from a user to other users.
 
-## Setup for React
+## Setup React Web Application
 
 ### 1. Setup Firebase
 
-Since the solution uses Firebase for authentication, hosting and data storage. You will need to create a Firebase project if you don't have a project already.
+Because the solution uses Firebase for authentication, hosting and data storage. You will need to create a Firebase project if you don't have a project already.
 
 You will also need to create a hosting in the Firebase project to host your Fireact application.
 
@@ -73,7 +78,7 @@ Run the following command to install the JavaScript packages the solution requir
 npm install
 ```
 
-## Setup for Cloud Function
+## Setup Cloud Function Backend
 
 ### 1. Create Config File
 

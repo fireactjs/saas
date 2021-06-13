@@ -1,9 +1,67 @@
 remote_theme: "mmistakes/minimal-mistakes@4.23.0"
-minimal_mistakes_skin: contrast
-title: Fireact
-description: "Fireact = React+Firebase+Stripe, open-source project for your next SaaS project."
+minimal_mistakes_skin: default
+title: "Fireact"
+logo: "/assets/images/fireact-logo.png"
+subtitle: "Reactjs + Firebase + Stripe"
 url: "https://chaoming.github.io"
 baseurl: "/fireact"
 repository: "https://github.com/chaoming/fireact"
 plugins:
   - jekyll-include-cache
+
+include:
+  - .htaccess
+  - _pages
+
+author:
+  name: "Chaoming Li"
+  avatar: "/assets/images/bio-photo.jpeg"
+
+# Collections
+collections:
+  docs:
+    output: true
+    permalink: /:collection/:path/
+  showcases:
+    output: true
+    permalink: /:collection/:path/
+  
+defaults:
+  # _posts
+  - scope:
+      path: ""
+      type: posts
+    values:
+      layout: single
+      author_profile: true
+      read_time: true
+      comments: true
+      share: true
+      related: true
+  # _pages
+  - scope:
+      path: ""
+      type: pages
+    values:
+      layout: single
+      author_profile: true
+  # _showcases
+  - scope:
+      path: ""
+      type: showcases
+    values:
+      layout: single
+  # _docs
+  - scope:
+      path: ""
+      type: docs
+    values:
+      layout: single
+      read_time: false
+      author_profile: false
+      share: false
+      comments: false
+      toc: true
+      toc_sticky: true
+      sidebar:
+        nav: "docs"
