@@ -2,7 +2,7 @@
 
 Fireact is a payment-ready SaaS solution framework that is built on React, Firebase and Stripe.
 
-[Get Started](https://chaoming.github.io/fireact/get-started.html)
+[Get Started](https://chaoming.github.io/fireact/get-started.html) // The link does not work
 
 [Download](https://github.com/chaoming/fireact/archive/master.zip)
 
