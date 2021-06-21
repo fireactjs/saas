@@ -1,8 +1,13 @@
-# Hello World
+---
+title: "Hello World"
+permalink: /docs/hello-world/
+excerpt: "How to write your SaaS with Fireact"
+last_modified_at: 2021-06-07
+---
 
-This page will walk you through how to create your SaaS application based on Fireact.
+This document will walk you through how to create your SaaS application based on Fireact.
 
-First of all, you will need to install Fireact following [the installation instructions](/installation.md).
+First of all, you will need to install Fireact following [the installation instructions](/fireact/docs/installation/).
 
 Once your instance of Fireact is up and running, sign in to the system. It will redirect you to create an subscription account. Subscribe to any of the plans available in your system, and you will see the Overview page of the subscription account.
 

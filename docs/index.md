@@ -1,10 +1,39 @@
-# Turn your SaaS idea to reality faster with Fireact
-
-Fireact is a payment-ready SaaS solution framework that is built on React, Firebase and Stripe.
-
-[Get Started](/get-started.md)
-
-[Download](https://github.com/chaoming/fireact/archive/master.zip)
+---
+layout: splash
+author_profile: false
+title: Fireact
+permalink: /
+hidden: true
+header:
+  overlay_color: "#5e616c"
+  overlay_image: /assets/images/fireact-hero.jpg
+  actions:
+    - label: "<i class='fas fa-download'></i> Install now"
+      url: "/docs/installation/"
+excerpt: >
+  Reactjs + Firebase + Stripe<br />
+  Built for subscription based SaaS web applications.<br />
+  <small><a href="https://github.com/chaoming/fireact/releases/tag/v2.1.0">Latest release v2.1.0</a></small>
+feature_row:
+  - alt: "installation"
+    title: "Installation"
+    excerpt: "Learn how to install Fireact and deploy it to your Firebase project."
+    url: "/docs/installation/"
+    btn_class: "btn--info"
+    btn_label: "Getting Started"
+  - alt: "live-demo"
+    title: "Live Demo"
+    excerpt: "Experience Fireact and its key features with the live demo."
+    url: "/demo/"
+    btn_class: "btn--info"
+    btn_label: "Try Now"
+  - alt: "show-cases"
+    title: "Show Cases"
+    excerpt: "Learn about projects built with Fireact and show case yours."
+    url: "/showcases/"
+    btn_class: "btn--info"
+    btn_label: "Learn more"      
+---
 
 ## Why Fireact
 
@@ -16,18 +45,9 @@ Fireact comes with:
 - Supporting multiple subscription accounts per user
 - User permission management in subscription accounts
 - Estiablished user permission framework for development of your SaaS functionalities
+- Supporting sales tax, GST and VAT in subscription payments
 
-## Live Demo
-
-In the live demo, you can sign in with email and passowrd, Google or Facebook. After signing in, you can create a subscription account with one of the payment plans, including a freemium plan. Please **DO NOT** use any real credit card number! Use the testing credit card number `4242 4242 4242 4242` for the "paid" plans.
-
-[Launch Live Demo](https://fireact-e1bdc.firebaseapp.com/)
-
-## Documentation
-
-To understand how to install Fireact or how to develop your SaaS functionalities based on Fireact after installation, please read the documentation.
-
-[Read Documentation](/get-started.md)
+{% include feature_row %}
 
 ## Contribution
 

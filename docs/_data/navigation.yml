@@ -1,0 +1,19 @@
+main:
+  - title: "Getting Started"
+    url: "/docs/installation/"
+  - title: "Demo"
+    url: "/demo/"
+  - title: "Discussions"
+    url: "https://github.com/chaoming/fireact/discussions"
+  - title: "Show Cases"
+    url: "/showcases/"
+
+docs:
+  - title: "Getting Started"
+    children:
+      - title: "Installation"
+        url: /docs/installation/
+  - title: "Development"
+    children:
+      - title: "Hello World"
+        url: /docs/hello-world/
