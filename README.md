@@ -36,6 +36,6 @@ To understand how to install Fireact or how to develop your SaaS functionalities
 
 ## Contribution
 
-If you like this project, please watch or star it here: [Fireact Github Repo](https://github.com/chaoming/fireact)
+If you like this project, please watch or star it here: [Fireact Github Repo](https://github.com/StajYerim/fireact)
 
 If you would like to improve this project, please consider to be a contributor.
