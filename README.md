@@ -4,7 +4,7 @@ Fireact is a payment-ready SaaS solution framework that is built on React, Fireb
 
 [Get Started](https://chaoming.github.io/fireact/docs/installation/)
 
-[Download](https://github.com/chaoming/fireact/archive/master.zip)
+[Download](https://github.com/StajYerim/fireact/archive/refs/heads/master.zip)
 
 ## Why Fireact
 
