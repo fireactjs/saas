@@ -8,6 +8,11 @@ baseurl: "/fireact"
 repository: "https://github.com/chaoming/fireact"
 plugins:
   - jekyll-include-cache
+analytics:
+  provider: "google-gtag"
+  google:
+    tracking_id: "G-SJXP1J27E9"
+    anonymize_ip: false
 
 include:
   - .htaccess
