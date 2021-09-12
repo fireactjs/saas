@@ -3,11 +3,6 @@ import SidebarLink from '../SidebarLink';
 
 const AppMenu = () => {
 
-    useEffect(() => {
-        document.querySelectorAll('.c-sidebar').forEach(element => {
-            window.coreui.Sidebar._sidebarInterface(element)
-        });
-    })
 
     return (
 

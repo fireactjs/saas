@@ -1,14 +1,17 @@
 import React from "react";
+import { Box, Container, Paper } from "@material-ui/core"
 
 const PublicTemplate = ({ children }) => {
     return (
-		<div className="c-app flex-row align-items-center">
-			<div className="container">
-				<div className="justify-content-center row">
+		<Box m={10}>
+			<Container maxWidth="sm">
+				<Paper elevation={3}>
+					<Box component="span" m={5} textAlign="center">
 					{children}
-				</div>
-			</div>
-		</div>
+					</Box>
+				</Paper>
+			</Container>
+		</Box>
     )
 }
 
