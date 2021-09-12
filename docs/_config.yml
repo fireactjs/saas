@@ -3,8 +3,8 @@ minimal_mistakes_skin: default
 title: "Fireact"
 logo: "/assets/images/fireact-logo.png"
 subtitle: "Reactjs + Firebase + Stripe"
-url: "https://chaoming.github.io"
-baseurl: "/fireact"
+url: "https://fireact.dev"
+baseurl: "/"
 repository: "https://github.com/chaoming/fireact"
 plugins:
   - jekyll-include-cache
