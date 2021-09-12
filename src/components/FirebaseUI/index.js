@@ -4,6 +4,7 @@ import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import { FirebaseAuth } from '../FirebaseAuth/firebase';
 import firebase from "firebase/app";
 import { userSignIn } from '../../libs/user';
+import Loader from "../Loader";
 
 const FirebaseUI = () => {
 
@@ -50,7 +51,7 @@ const FirebaseUI = () => {
     return (
         <>
         {signInSuccess &&
-            <i className="fa fa-spinner fa-5x fa-spin" />
+            <Loader size={50} text={"Loading..."}/>
         }
         {signInSuccess === null &&
             <>
@@ -58,7 +59,7 @@ const FirebaseUI = () => {
                     <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={FirebaseAuth.auth()} />
                 </div>
                 <div id="loader">
-                    <i className="fa fa-spinner fa-5x fa-spin" />
+                    <Loader size={50} />
                 </div>
             </>
         }
