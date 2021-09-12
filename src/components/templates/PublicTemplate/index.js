@@ -5,11 +5,9 @@ const PublicTemplate = ({ children }) => {
     return (
 		<Box m={10}>
 			<Container maxWidth="sm">
-				<Paper elevation={3}>
-					<Box component="span" m={5} textAlign="center">
+				<Box component="span" m={5} textAlign="center">
 					{children}
-					</Box>
-				</Paper>
+				</Box>
 			</Container>
 		</Box>
     )
