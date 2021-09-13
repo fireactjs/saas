@@ -4,8 +4,11 @@ import { Avatar, Box, Divider, Grid, List, ListItem, Typography } from "@materia
 import EditIcon from '@material-ui/icons/Edit';
 import SendIcon from '@material-ui/icons/Send';
 import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
+import { useHistory } from "react-router-dom";
 
 const UserProfileView = () => {
+    const history = useHistory();
+
     return (
         <AuthContext.Consumer>
             {(context) => (   
@@ -26,7 +29,9 @@ const UserProfileView = () => {
                         </Grid>
                     </ListItem>
                     <Divider />
-                    <ListItem button>
+                    <ListItem button onClick={() => {
+                        history.push('/user/profile/update-name');
+                    }}>
                         <Grid container spacing={1}>
                             <Grid container item xs={12} md={4}>
                                 <Box p={2}><strong>NAME</strong></Box>
@@ -42,7 +47,9 @@ const UserProfileView = () => {
                         </Grid>
                     </ListItem>
                     <Divider />
-                    <ListItem button>
+                    <ListItem button onClick={() => {
+                        history.push('/user/profile/update-email');
+                    }}>
                         <Grid container spacing={1}>
                             <Grid container item xs={12} md={4}>
                                 <Box p={2}><strong>EMAIL</strong></Box>
@@ -58,7 +65,9 @@ const UserProfileView = () => {
                         </Grid>
                     </ListItem>
                     <Divider />
-                    <ListItem button={!context.authUser.user.emailVerified}>
+                    <ListItem button={!context.authUser.user.emailVerified} onClick={() => {
+                        if(!context.authUser.user.emailVerified)history.push('/user/profile/verify-email');
+                    }}>
                         <Grid container spacing={1}>
                             <Grid container item xs={12} md={4}>
                                 <Box p={2}><strong>EMAIL VERIFIED</strong></Box>
@@ -74,7 +83,9 @@ const UserProfileView = () => {
                         </Grid>
                     </ListItem>
                     <Divider />
-                    <ListItem button>
+                    <ListItem button onClick={() => {
+                        history.push('/user/profile/update-phone');
+                    }}>
                         <Grid container spacing={1}>
                             <Grid container item xs={12} md={4}>
                                 <Box p={2}><strong>PHONE</strong></Box>
@@ -90,7 +101,9 @@ const UserProfileView = () => {
                         </Grid>
                     </ListItem>
                     <Divider />
-                    <ListItem button>
+                    <ListItem button onClick={() => {
+                        history.push('/user/profile/update-password');
+                    }}>
                         <Grid container spacing={1}>
                             <Grid container item xs={12} md={4}>
                                 <Box p={2}><strong>PASSWORD</strong></Box>
@@ -106,7 +119,9 @@ const UserProfileView = () => {
                         </Grid>
                     </ListItem>
                     <Divider />
-                    <ListItem button>
+                    <ListItem button onClick={() => {
+                        history.push('/user/profile/delete');
+                    }}>
                         <Grid container spacing={1}>
                             <Grid container item xs={12} md={4}>
                                 <Box p={2}><Typography color="error"><strong>DELETE ACCOUNT</strong></Typography></Box>
