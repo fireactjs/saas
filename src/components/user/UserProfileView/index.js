@@ -1,102 +1,119 @@
 import React from "react";
-import { Link } from 'react-router-dom';
 import { AuthContext } from '../../FirebaseAuth';
-import UserAvatar from '../../UserAvatar';
+import { Avatar, Box, Divider, Grid, List, ListItem, Typography } from "@material-ui/core";
+import EditIcon from '@material-ui/icons/Edit';
+import SendIcon from '@material-ui/icons/Send';
+import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
 
 const UserProfileView = () => {
     return (
         <AuthContext.Consumer>
             {(context) => (   
-                        <div className="list-group">
-                            <a href="/" className="list-group-item group-item-action disabled">
-                                <div className="row">
-                                    <div className="col-sm-12 col-md-3 text-left">
-                                        <strong>AVATAR</strong>
-                                    </div>
-                                    <div className="col-sm-9 col-md-6 text-left">
-                                        Update via social login
-                                    </div>
-                                    <div className="col-sm-3 col-md-3 text-right">
-                                        <UserAvatar name={context.authUser.user.displayName} photoUrl={context.authUser.user.photoURL} className="mt-3 rounded-circle" size="64" />
-                                    </div>
-                                </div>
-                            </a>
-                            <Link to="/user/profile/update-name" className="list-group-item list-group-item-action">
-                                <div className="row">
-                                   <div className="col-sm-12 col-md-3 text-left">
-                                        <strong>NAME</strong>
-                                    </div>
-                                    <div className="col-sm-9 col-md-6 text-left">
-                                        {context.authUser.user.displayName}
-                                    </div>
-                                    <div className="col-sm-3 col-md-3 text-right">
-                                        <i className="fa fa-angle-right" />
-                                    </div>
-                                </div>
-                            </Link>
-                            <Link to="/user/profile/update-email" className="list-group-item list-group-item-action">
-                                <div className="row">
-                                   <div className="col-sm-12 col-md-3 text-left">
-                                        <strong>EMAIL</strong>
-                                    </div>
-                                    <div className="col-sm-9 col-md-6 text-left">
-                                        {context.authUser.user.email}
-                                    </div>
-                                    <div className="col-sm-3 col-md-3 text-right">
-                                        <i className="fa fa-angle-right" />
-                                    </div>
-                                </div>
-                            </Link>
-                            <Link to="/user/profile/verify-email" className={"list-group-item list-group-item-action"+(context.authUser.user.emailVerified?" disabled":"")}>
-                                <div className="row">
-                                   <div className="col-sm-12 col-md-3 text-left">
-                                        <strong>EMAIL VERIFIED</strong>
-                                    </div>
-                                    <div className="col-sm-9 col-md-6 text-left">
-                                        {(context.authUser.user.emailVerified?" Verified":"Unverified email")}
-                                    </div>
-                                    <div className="col-sm-3 col-md-3 text-right">
-                                        <i className="fa fa-angle-right" />
-                                    </div>
-                                </div>
-                            </Link>
-                            <Link to="/user/profile/update-phone" className="list-group-item list-group-item-action">
-                                <div className="row">
-                                   <div className="col-sm-12 col-md-3 text-left">
-                                        <strong>PHONE</strong>
-                                    </div>
-                                    <div className="col-sm-9 col-md-6 text-left">
-                                        {context.authUser.user.phoneNumber}
-                                    </div>
-                                    <div className="col-sm-3 col-md-3 text-right">
-                                        <i className="fa fa-angle-right" />
-                                    </div>
-                                </div>
-                            </Link>
-                            <Link to="/user/profile/update-password" className="list-group-item list-group-item-action">
-                                <div className="row">
-                                   <div className="col-sm-12 col-md-3 text-left">
-                                        <strong>PASSWORD</strong>
-                                    </div>
-                                    <div className="col-sm-9 col-md-6 text-left">
-                                        ••••••••
-                                    </div>
-                                    <div className="col-sm-3 col-md-3 text-right">
-                                        <i className="fa fa-angle-right" />
-                                    </div>
-                                </div>
-                            </Link>
-                            <Link to="/user/profile/delete" className="list-group-item list-group-item-action">
-                                <div className="row">
-                                   <div className="col-9 text-danger text-left">
-                                        <strong>DELETE ACCOUNT</strong>
-                                    </div>
-                                    <div className="col-3 text-right">
-                                        <i className="fa fa-angle-right" />
-                                    </div>
-                                </div>
-                            </Link>
-                        </div>
+                <List component="nav">
+                    <ListItem>
+                        <Grid container spacing={1}>
+                            <Grid container item xs={12} md={4}>
+                                <Box p={2}><strong>AVATAR</strong><br /><Typography color="textSecondary">Update via social login</Typography></Box>
+                            </Grid>
+                            <Grid container item xs={12} md={4}>
+                                <Box p={2}></Box>
+                            </Grid>
+                            <Grid container item xs={12} md={4}>
+                                <Box p={2} style={{marginLeft: "auto", marginRight: "0px",}}>
+                                    <Avatar alt={context.authUser.user.displayName} src={context.authUser.user.photoURL} style={{height:'64px',width:'64px'}} />
+                                </Box>
+                            </Grid>
+                        </Grid>
+                    </ListItem>
+                    <Divider />
+                    <ListItem button>
+                        <Grid container spacing={1}>
+                            <Grid container item xs={12} md={4}>
+                                <Box p={2}><strong>NAME</strong></Box>
+                            </Grid>
+                            <Grid container item xs={12} md={4}>
+                                <Box p={2}>{context.authUser.user.displayName}</Box>
+                            </Grid>
+                            <Grid container item xs={12} md={4}>
+                                <Box p={2} style={{marginLeft: "auto", marginRight: "0px",}}>
+                                    <EditIcon />
+                                </Box>
+                            </Grid>
+                        </Grid>
+                    </ListItem>
+                    <Divider />
+                    <ListItem button>
+                        <Grid container spacing={1}>
+                            <Grid container item xs={12} md={4}>
+                                <Box p={2}><strong>EMAIL</strong></Box>
+                            </Grid>
+                            <Grid container item xs={12} md={4}>
+                                <Box p={2}>{context.authUser.user.email}</Box>
+                            </Grid>
+                            <Grid container item xs={12} md={4}>
+                                <Box p={2} style={{marginLeft: "auto", marginRight: "0px",}}>
+                                    <EditIcon />
+                                </Box>
+                            </Grid>
+                        </Grid>
+                    </ListItem>
+                    <Divider />
+                    <ListItem button={!context.authUser.user.emailVerified}>
+                        <Grid container spacing={1}>
+                            <Grid container item xs={12} md={4}>
+                                <Box p={2}><strong>EMAIL VERIFIED</strong></Box>
+                            </Grid>
+                            <Grid container item xs={12} md={4}>
+                                <Box p={2}>{(context.authUser.user.emailVerified?" Verified":"Unverified email")}</Box>
+                            </Grid>
+                            <Grid container item xs={12} md={4}>
+                                <Box p={2} style={{marginLeft: "auto", marginRight: "0px",}}>
+                                    {context.authUser.user.emailVerified?(<VerifiedUserIcon />):(<SendIcon />)}
+                                </Box>
+                            </Grid>
+                        </Grid>
+                    </ListItem>
+                    <Divider />
+                    <ListItem button>
+                        <Grid container spacing={1}>
+                            <Grid container item xs={12} md={4}>
+                                <Box p={2}><strong>PHONE</strong></Box>
+                            </Grid>
+                            <Grid container item xs={12} md={4}>
+                                <Box p={2}>{context.authUser.user.phoneNumber}</Box>
+                            </Grid>
+                            <Grid container item xs={12} md={4}>
+                                <Box p={2} style={{marginLeft: "auto", marginRight: "0px",}}>
+                                    <EditIcon />
+                                </Box>
+                            </Grid>
+                        </Grid>
+                    </ListItem>
+                    <Divider />
+                    <ListItem button>
+                        <Grid container spacing={1}>
+                            <Grid container item xs={12} md={4}>
+                                <Box p={2}><strong>PASSWORD</strong></Box>
+                            </Grid>
+                            <Grid container item xs={12} md={4}>
+                                <Box p={2}>••••••••</Box>
+                            </Grid>
+                            <Grid container item xs={12} md={4}>
+                                <Box p={2} style={{marginLeft: "auto", marginRight: "0px",}}>
+                                    <EditIcon />
+                                </Box>
+                            </Grid>
+                        </Grid>
+                    </ListItem>
+                    <Divider />
+                    <ListItem button>
+                        <Grid container spacing={1}>
+                            <Grid container item xs={12} md={4}>
+                                <Box p={2}><Typography color="error"><strong>DELETE ACCOUNT</strong></Typography></Box>
+                            </Grid>
+                        </Grid>
+                    </ListItem>
+                </List>
             )}
         </AuthContext.Consumer>
     )
