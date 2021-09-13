@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from '../../FirebaseAuth';
 import { userSignOut } from '../../../libs/user';
-import UserAvatar from '../../UserAvatar';
-import { IconButton, Menu, MenuItem, Avatar, Divider, Typography } from "@material-ui/core";
-import { mergeClasses } from "@material-ui/styles";
+import { IconButton, Menu, MenuItem, Avatar, Divider, Typography, makeStyles } from "@material-ui/core";
+import AccountBoxIcon from '@material-ui/icons/AccountBox';
+import ListAltIcon from '@material-ui/icons/ListAlt';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 
 const UserMenu = () => {
     const [anchorEl, setAnchorEl] = useState(null);
@@ -15,6 +16,12 @@ const UserMenu = () => {
     const handleClose = () => {
         setAnchorEl(null);
     };
+    const useStyles = makeStyles((theme) => ({
+        icon: {
+            marginRight: theme.spacing(1),
+        }
+    }));
+    const classes = useStyles();
 
     return (
         <>
@@ -45,18 +52,23 @@ const UserMenu = () => {
                     open={open}
                     onClose={handleClose}
                 >
-                    <Link to="/user/profile" style={{textDecoration:'none'}}>
+                    <Link to="/user/profile" style={{textDecoration:'none', color:'inherit'}}>
                         <MenuItem>
-                            <Typography color="textPrimary">Profile</Typography>
+                            <AccountBoxIcon className={classes.icon} />
+                            <Typography>Profile</Typography>
                         </MenuItem>
                     </Link>
-                    <Link to="/user/log" style={{textDecoration:'none'}}>
+                    <Link to="/user/log" style={{textDecoration:'none', color:'inherit'}}>
                         <MenuItem>
+                            <ListAltIcon className={classes.icon} />
                             <Typography color="textPrimary">Activity Logs</Typography>
                         </MenuItem>
                     </Link>
                     <Divider />
-                    <MenuItem onClick={() => userSignOut()}>Sign Out</MenuItem>
+                    <MenuItem onClick={() => userSignOut()}>
+                        <ExitToAppIcon className={classes.icon} />
+                        Sign Out
+                    </MenuItem>
                 </Menu>
                 </>
             )}

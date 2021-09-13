@@ -1,27 +1,33 @@
 import React from "react";
-import { List, ListItem, ListItemText, ListItemIcon, Divider } from "@material-ui/core";
+import { Link } from "react-router-dom";
+import { List, ListItem, ListItemText, ListItemIcon, Divider, makeStyles, Typography } from "@material-ui/core";
 import AppIcon from '@material-ui/icons/Apps';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import ListAltIcon from '@material-ui/icons/ListAlt';
 
 const AppMenu = () => {
-
     return (
         <List>
+            <Link to="/" style={{textDecoration:'none'}}>
                 <ListItem button key="Application">
                     <ListItemIcon><AppIcon /></ListItemIcon>
-                    <ListItemText primary="Application" />
+                    <ListItemText primary={<Typography color="textPrimary">Application</Typography>} />
                 </ListItem>
-                <Divider />
+            </Link>
+            <Divider />
+            <Link to="/user/profile" style={{textDecoration:'none'}}>
                 <ListItem button key="Profile">
                     <ListItemIcon><AccountBoxIcon /></ListItemIcon>
-                    <ListItemText primary="Profile" />
+                    <ListItemText primary={<Typography color="textPrimary">Profile</Typography>} />
                 </ListItem>
+            </Link>
+            <Link to="/user/log" style={{textDecoration:'none'}}>
                 <ListItem button key="Activity Logs">
                     <ListItemIcon><ListAltIcon /></ListItemIcon>
-                    <ListItemText primary="Activity Logs" />
+                    <ListItemText primary={<Typography color="textPrimary">Activity Logs</Typography>} />
                 </ListItem>
-            </List>
+            </Link>
+        </List>
     )
 }
 
