@@ -10,6 +10,8 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import Logo from '../Logo';
+import { Box, Typography } from '@material-ui/core';
 
 const drawerWidth = 240;
 
@@ -90,57 +92,75 @@ const Layout = ({drawerMenu, toolbarChildren, toolBarMenu, children}) => {
 
   return (
     <div className={classes.root}>
-      <CssBaseline />
-      <AppBar
-        position="fixed"
-        className={clsx(classes.appBar, {
-          [classes.appBarShift]: open,
-        })}
-      >
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-            className={clsx(classes.menuButton, {
-              [classes.hide]: open,
+        <CssBaseline />
+        <AppBar
+            position="fixed"
+            className={clsx(classes.appBar, {
+            [classes.appBarShift]: open,
             })}
-          >
-            <MenuIcon />
-          </IconButton>
-          {toolbarChildren}
-          <div style={{
-              marginLeft: "auto",
-              marginRight: "0px",
-          }}>{toolBarMenu}</div>
-        </Toolbar>
-      </AppBar>
-      <Drawer
-        variant="permanent"
-        className={clsx(classes.drawer, {
-          [classes.drawerOpen]: open,
-          [classes.drawerClose]: !open,
-        })}
-        classes={{
-          paper: clsx({
-            [classes.drawerOpen]: open,
-            [classes.drawerClose]: !open,
-          }),
-        }}
-      >
+        >
+            <Toolbar>
+                <div
+                    className={clsx(classes.menuButton, {
+                        [classes.hide]: open,
+                    })}
+                >
+                    <div style={{
+                        display: 'inline-flex',
+                        overflow: 'visible',
+                        alignItems: 'center',
+                        position: 'relative',
+                    }}>
+                        <div style={{display: 'inline-flex', paddingRight: '20px'}}><Logo /></div>
+                        <IconButton
+                        color="inherit"
+                        aria-label="open drawer"
+                        edge="start"
+                        onClick={handleDrawerOpen}
+                        >
+                            <MenuIcon  />
+                        </IconButton>
+                    </div> 
+                </div>
+                {toolbarChildren}
+                <div style={{
+                    marginLeft: "auto",
+                    marginRight: "0px",
+                }}>{toolBarMenu}</div>
+            </Toolbar>
+        </AppBar>
+        <Drawer
+            variant="permanent"
+            className={clsx(classes.drawer, {
+                [classes.drawerOpen]: open,
+                [classes.drawerClose]: !open,
+            })}
+            classes={{
+            paper: clsx({
+                [classes.drawerOpen]: open,
+                [classes.drawerClose]: !open,
+            }),
+            }}
+        >
         <div className={classes.toolbar}>
-          <IconButton onClick={handleDrawerClose}>
-            {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
-          </IconButton>
+            {open && <div style={{marginLeft:'0px', marginRight:'auto', display:'inline-flex',alignItems: 'center', flexWrap: 'wrap',}}>
+                <div style={{display: 'inline-flex', paddingRight: '20px'}}>
+                    <Logo />
+                </div>
+                <h2>FIREACT</h2>
+            </div>}
+            <IconButton onClick={handleDrawerClose}>
+                {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+            </IconButton>
         </div>
         <Divider />
-        {drawerMenu}
-      </Drawer>
-      <main className={classes.content}>
-        <div className={classes.toolbar} />
-        {children}
-      </main>
+            {drawerMenu}
+        <Divider />
+        </Drawer>
+        <main className={classes.content}>
+            <div className={classes.toolbar} />
+            {children}
+        </main>
     </div>
   );
 }

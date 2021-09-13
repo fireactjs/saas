@@ -1,7 +1,6 @@
 import React, {useState} from "react";
 import UserMenu from '../../menus/UserMenu';
 import AppMenu from '../../menus/AppMenu';
-import Logo from '../../Logo';
 import {BreadcrumbContext, Breadcrumb} from '../../Breadcrumb';
 import Layout from '../../Layout';
 
