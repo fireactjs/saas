@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { AuthContext } from '../../FirebaseAuth';
 import { userSignOut } from '../../../libs/user';
-import { IconButton, Menu, MenuItem, Avatar, Divider, Typography, makeStyles, Link } from "@material-ui/core";
+import { IconButton, Menu, MenuItem, Avatar, Divider, Typography, makeStyles } from "@material-ui/core";
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import ListAltIcon from '@material-ui/icons/ListAlt';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
@@ -53,26 +53,22 @@ const UserMenu = () => {
                     open={open}
                     onClose={handleClose}
                 >
-                    <Link href="#" onClick={(e)=>{
+                    <MenuItem onClick={(e)=>{
                         e.preventDefault();
                         handleClose();
                         history.push("/user/profile");
-                    }} style={{textDecoration:'none', color:'inherit'}}>
-                        <MenuItem>
-                            <AccountBoxIcon className={classes.icon} />
-                            <Typography>Profile</Typography>
-                        </MenuItem>
-                    </Link>
-                    <Link href="#" onClick={(e)=>{
+                    }}>
+                        <AccountBoxIcon className={classes.icon} />
+                        Profile
+                    </MenuItem>
+                    <MenuItem onClick={(e)=>{
                         e.preventDefault();
                         handleClose();
                         history.push("/user/log");
-                    }} style={{textDecoration:'none', color:'inherit'}}>
-                        <MenuItem>
-                            <ListAltIcon className={classes.icon} />
-                            <Typography color="textPrimary">Activity Logs</Typography>
-                        </MenuItem>
-                    </Link>
+                        }}>
+                        <ListAltIcon className={classes.icon} />
+                        Activity Logs
+                    </MenuItem>
                     <Divider />
                     <MenuItem onClick={() => userSignOut()}>
                         <ExitToAppIcon className={classes.icon} />
