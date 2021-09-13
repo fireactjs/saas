@@ -10,13 +10,11 @@ const AppTemplate = ({ children }) => {
     const [breadcrumb, setBreadcrumb] = useState([]);
 
     return (
-
-            <Layout drawerMenu={<AppMenu />}>
-                <BreadcrumbContext.Provider value={{setBreadcrumb}}>
+        <Layout drawerMenu={<AppMenu />} toolBarMenu={<UserMenu />} >
+            <BreadcrumbContext.Provider value={{setBreadcrumb}}>
                 {children}
-                </BreadcrumbContext.Provider>
-            </Layout>
-
+            </BreadcrumbContext.Provider>
+        </Layout>
     )
 }
 
