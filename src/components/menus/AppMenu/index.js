@@ -9,9 +9,9 @@ const AppMenu = () => {
     return (
         <List>
             <Link to="/" style={{textDecoration:'none'}}>
-                <ListItem button key="Application">
+                <ListItem button key="My Accounts">
                     <ListItemIcon><AppIcon /></ListItemIcon>
-                    <ListItemText primary={<Typography color="textPrimary">Application</Typography>} />
+                    <ListItemText primary={<Typography color="textPrimary">My Accounts</Typography>} />
                 </ListItem>
             </Link>
             <Divider />

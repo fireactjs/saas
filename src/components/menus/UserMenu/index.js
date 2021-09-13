@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { AuthContext } from '../../FirebaseAuth';
 import { userSignOut } from '../../../libs/user';
-import { IconButton, Menu, MenuItem, Avatar, Divider, Typography, makeStyles } from "@material-ui/core";
+import { IconButton, Menu, MenuItem, Avatar, Divider, makeStyles } from "@material-ui/core";
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import ListAltIcon from '@material-ui/icons/ListAlt';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
