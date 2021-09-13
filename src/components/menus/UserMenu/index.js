@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { AuthContext } from '../../FirebaseAuth';
 import { userSignOut } from '../../../libs/user';
-import { IconButton, Menu, MenuItem, Avatar, Divider, Typography, makeStyles } from "@material-ui/core";
+import { IconButton, Menu, MenuItem, Avatar, Divider, Typography, makeStyles, Link } from "@material-ui/core";
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import ListAltIcon from '@material-ui/icons/ListAlt';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
@@ -22,6 +22,7 @@ const UserMenu = () => {
         }
     }));
     const classes = useStyles();
+    const history = useHistory();
 
     return (
         <>
@@ -52,13 +53,21 @@ const UserMenu = () => {
                     open={open}
                     onClose={handleClose}
                 >
-                    <Link to="/user/profile" style={{textDecoration:'none', color:'inherit'}}>
+                    <Link href="#" onClick={(e)=>{
+                        e.preventDefault();
+                        handleClose();
+                        history.push("/user/profile");
+                    }} style={{textDecoration:'none', color:'inherit'}}>
                         <MenuItem>
                             <AccountBoxIcon className={classes.icon} />
                             <Typography>Profile</Typography>
                         </MenuItem>
                     </Link>
-                    <Link to="/user/log" style={{textDecoration:'none', color:'inherit'}}>
+                    <Link href="#" onClick={(e)=>{
+                        e.preventDefault();
+                        handleClose();
+                        history.push("/user/log");
+                    }} style={{textDecoration:'none', color:'inherit'}}>
                         <MenuItem>
                             <ListAltIcon className={classes.icon} />
                             <Typography color="textPrimary">Activity Logs</Typography>
