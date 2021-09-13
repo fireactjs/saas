@@ -1,16 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import clsx from 'clsx';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
-import Drawer from '@material-ui/core/Drawer';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Divider from '@material-ui/core/Divider';
-import IconButton from '@material-ui/core/IconButton';
+import { Drawer, AppBar, Toolbar, CssBaseline, Divider, IconButton, Box, Paper } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import Logo from '../Logo';
+import {BreadcrumbContext, Breadcrumb} from '../Breadcrumb';
 
 const drawerWidth = 240;
 
@@ -72,7 +68,7 @@ const useStyles = makeStyles((theme) => ({
   },
   content: {
     flexGrow: 1,
-    padding: theme.spacing(3),
+    //padding: theme.spacing(3),
   },
 }));
 
@@ -88,6 +84,8 @@ const Layout = ({drawerMenu, toolbarChildren, toolBarMenu, children}) => {
   const handleDrawerClose = () => {
     setOpen(false);
   };
+
+  const [breadcrumb, setBreadcrumb] = useState([]);
 
   return (
     <div className={classes.root}>
@@ -158,7 +156,18 @@ const Layout = ({drawerMenu, toolbarChildren, toolBarMenu, children}) => {
         </Drawer>
         <main className={classes.content}>
             <div className={classes.toolbar} />
-            {children}
+            <Box width={1} style={{position:'fixed'}}>
+                <Paper square>
+                    <Box p={2}>
+                    <Breadcrumb links={breadcrumb} />
+                    </Box>
+                </Paper>
+            </Box>
+            <Box mt={10} ml={3} mr={3} mb={3}>
+            <BreadcrumbContext.Provider value={{setBreadcrumb}}>
+                {children}
+            </BreadcrumbContext.Provider>
+            </Box>
         </main>
     </div>
   );

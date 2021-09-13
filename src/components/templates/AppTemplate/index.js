@@ -1,18 +1,13 @@
-import React, {useState} from "react";
+import React from "react";
 import UserMenu from '../../menus/UserMenu';
 import AppMenu from '../../menus/AppMenu';
-import {BreadcrumbContext, Breadcrumb} from '../../Breadcrumb';
 import Layout from '../../Layout';
 
 const AppTemplate = ({ children }) => {
 
-    const [breadcrumb, setBreadcrumb] = useState([]);
-
     return (
         <Layout drawerMenu={<AppMenu />} toolBarMenu={<UserMenu />} >
-            <BreadcrumbContext.Provider value={{setBreadcrumb}}>
-                {children}
-            </BreadcrumbContext.Provider>
+            {children}
         </Layout>
     )
 }
