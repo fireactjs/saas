@@ -1,31 +1,27 @@
-import React, { useEffect } from "react";
-import SidebarLink from '../SidebarLink';
+import React from "react";
+import { List, ListItem, ListItemText, ListItemIcon, Divider } from "@material-ui/core";
+import AppIcon from '@material-ui/icons/Apps';
+import AccountBoxIcon from '@material-ui/icons/AccountBox';
+import ListAltIcon from '@material-ui/icons/ListAlt';
 
 const AppMenu = () => {
 
-
     return (
-
-            <ul className="c-sidebar-nav ps ps--active-y">
-                <li className="c-sidebar-nav-title">Application</li>
-                <li className="c-sidebar-nav-item">
-                    <SidebarLink className={"c-sidebar-nav-link"+(window.location.pathname==='/'?" active":"")} to="/">
-                        <i className="c-sidebar-nav-icon fa fa-th-large"></i>My Accounts
-                    </SidebarLink>
-                </li>
-                <li className="c-sidebar-nav-title">User</li>
-                <li className="c-sidebar-nav-item">
-                    <SidebarLink className={"c-sidebar-nav-link"+(window.location.pathname.startsWith('/user/profile')?" active":"")} to="/user/profile">
-                        <i className="c-sidebar-nav-icon fa fa-user"></i> Profile
-                    </SidebarLink>
-                </li>
-                <li className="c-sidebar-nav-item">
-                    <SidebarLink className={"c-sidebar-nav-link"+(window.location.pathname.startsWith('/user/log')?" active":"")} to="/user/log">
-                        <i className="c-sidebar-nav-icon fa fa-list"></i> Activity Logs
-                    </SidebarLink>
-                </li>
-            </ul>
-
+        <List>
+                <ListItem button key="Application">
+                    <ListItemIcon><AppIcon /></ListItemIcon>
+                    <ListItemText primary="Application" />
+                </ListItem>
+                <Divider />
+                <ListItem button key="Profile">
+                    <ListItemIcon><AccountBoxIcon /></ListItemIcon>
+                    <ListItemText primary="Profile" />
+                </ListItem>
+                <ListItem button key="Activity Logs">
+                    <ListItemIcon><ListAltIcon /></ListItemIcon>
+                    <ListItemText primary="Activity Logs" />
+                </ListItem>
+            </List>
     )
 }
 

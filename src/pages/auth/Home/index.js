@@ -20,6 +20,7 @@ const Home = () => {
         const accountsRef = FirebaseAuth.firestore().collection('accounts');
         let query = accountsRef.where('access', 'array-contains', FirebaseAuth.auth().currentUser.uid);
         query.get().then(accountSnapshots => {
+            console.log(accountSnapshots);
             if (!mountedRef.current) return null
             accountSnapshots.forEach(account => {
                 records.push({
