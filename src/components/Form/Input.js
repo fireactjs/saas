@@ -24,7 +24,7 @@ const Input = (props) => {
     }, [hasError, error]);
 
     return (
-        <>
+        <div style={{marginTop:'20px',marginBottom:'20px'}}>
             <TextField error={hasErrorState} helperText={hasErrorState && errorMessage} {...others} onChange={e => {
                 let foundError = false;
                 let foundErrorMessage = '';
@@ -69,7 +69,7 @@ const Input = (props) => {
                     value: e.target.value
                 });
             }} />
-        </>
+        </div>
     )
 }
 

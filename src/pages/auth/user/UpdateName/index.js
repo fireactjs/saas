@@ -7,6 +7,8 @@ import { userUpdateName } from '../../../../libs/user';
 
 const UpdateName = () => {
     const title = "Change Your Name";
+    const backToUrl = "/user/profile";
+    const history = useHistory();
 
     const [fullname, setFullname] = useState({
         hasError: false,
@@ -23,8 +25,7 @@ const UpdateName = () => {
 
     const [inSubmit, setInSubmit] = useState(false);
 
-    const history = useHistory();
-    const backToUrl = "/user/profile";
+
 
     return (
         <UserPageLayout title={title} >
