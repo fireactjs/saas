@@ -1,8 +1,10 @@
+import { Button } from "@material-ui/core";
 import React, { useState, useEffect, useContext, useRef } from "react";
 import { BreadcrumbContext } from '../../../../components/Breadcrumb';
 import { FirebaseAuth } from "../../../../components/FirebaseAuth/firebase";
 import Loader from '../../../../components/Loader';
-
+import UserPageLayout from '../../../../components/user/UserPageLayout';
+import { Paper, TableContainer, Table, TableHead, TableBody, TableRow, TableCell, } from '@material-ui/core';
 const ViewLogs = () => {
     const pageSize = 10;
 
@@ -81,61 +83,49 @@ const ViewLogs = () => {
     },[setBreadcrumb]);
 
     return (
-        <>
-            <div className="container-fluid">
-                <div className="animated fadeIn">
-                    <div className="card">
-                        <div className="card-header">
-                            {title}
-                        </div>
-                        <div className="card-body">
-                            {total > 0 ? (
-                                <>
-                                    <div className="col-sm-12 table-responsive">
-                                        <table className="table table-responsive-sm table-hover table-outline">
-                                            <thead className="thead-light">
-                                                <tr role="row">
-                                                    <th>Activity</th>
-                                                    <th>Time</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {rows.map((r,i) => 
-                                                    <tr key={r.timestamp+i} row="row">
-                                                        <td>{r.action}</td>
-                                                        <td>{r.time}</td>
-                                                    </tr>
-                                                )}
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div className="row">
-                                        <div className="col-5">
-                                            {count} of {total}
-                                        </div>
-                                        <div className="col-7 text-right">
-                                            <button className="btn btn-primary" disabled={(total===count || loading)?'disabled':''} onClick={e => {
-                                                e.preventDefault();
-                                                getLogs(pageSize, qs.docs[qs.docs.length-1]);
-                                            }} >{loading && <Loader />} More activities...</button>
-                                        </div>
-                                    </div>
-                                </>
-                            ):(
-                                <>
-                                {(qs === null) ? (
-                                    <Loader text="loading logs..."></Loader>
-                                ):(
-                                    <div>No activity is found</div>
-                                )}
-                                </>
+        <UserPageLayout>
+            {total > 0 ? (
+                <>
+                    <TableContainer component={Paper}>
+                        <Table aria-label="simple table">
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>Activity</TableCell>
+                                    <TableCell>Time</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                            {rows.map((r,i) => 
+                                <TableRow key={i}>
+                                    <TableCell component="th" scope="row">
+                                        {r.action}
+                                    </TableCell>
+                                    <TableCell>
+                                        {r.time}
+                                    </TableCell>
+                                </TableRow>
                             )}
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-        </>
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                    <p></p>
+                    <Button variant="contained" color="primary" disabled={(total===count || loading)} onClick={(e) => {
+                        e.preventDefault();
+                        getLogs(pageSize, qs.docs[qs.docs.length-1]);
+                    }} >
+                        {loading && <Loader />} More activities...
+                    </Button>
+                </>
+            ):(
+                <>
+                {(qs === null) ? (
+                    <Loader text="loading logs..."></Loader>
+                ):(
+                    <div>No activity is found</div>
+                )}
+                </>
+            )}
+        </UserPageLayout>
         
     )
 }
