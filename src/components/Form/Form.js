@@ -2,20 +2,11 @@ import React from "react";
 import PropTypes from "prop-types";
 import { useHistory } from 'react-router-dom';
 import Loader from '../Loader';
-import { Button, makeStyles } from "@material-ui/core";
+import { Button } from "@material-ui/core";
+import ButtonRow from "./ButtonRow";
 
 const Form = (props) => {
-
-    const useStyles = makeStyles((theme) => ({
-        root: {
-          '& > *': {
-            margin: theme.spacing(1),
-          },
-        },
-    }));
-    const classes = useStyles();
     const history = useHistory();
-      
 
     const {
         handleSubmit,
@@ -38,7 +29,7 @@ const Form = (props) => {
         <form {...others} onSubmit={handleSubmit}>
             {children}
             {enableDefaultButtons && 
-                <div className={classes.root}>
+                <ButtonRow>
                     <Button variant="contained" color={btnClass} disabled={disabled} onClick={handleSubmit}>
                         {inSubmit && 
                             <Loader />
@@ -53,7 +44,7 @@ const Form = (props) => {
                             {backBtnText || 'Back'}
                         </Button>
                     }
-                </div>
+                </ButtonRow>
             }
         </form>
     )

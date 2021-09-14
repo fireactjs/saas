@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import { useHistory } from 'react-router-dom';
-import { Form, Input } from '../../../../components/Form';
+import { ButtonRow, Form, Input } from '../../../../components/Form';
 import { AuthContext } from '../../../../components/FirebaseAuth';
 import UserPageLayout from '../../../../components/user/UserPageLayout';
 import { userUpdateName } from '../../../../libs/user';
@@ -62,27 +62,29 @@ const UpdateName = () => {
             { result.status === false &&
                 <>
                     <Alert severity="error">{result.message}</Alert>
-                    <p></p>
-                    <button className="btn btn-primary mr-2" onClick={() => {
-                        setResult({
-                            status: null,
-                            message: ''
-                        })
-                    }} >Try Again</button>
-                    <Button variant="contained" onClick={(e) => {
-                        e.preventDefault();
-                        history.push(backToUrl);
-                    }}>View Profile</Button>
+                    <ButtonRow>
+                        <Button variant="contained" color="primary" onClick={() => {
+                            setResult({
+                                status: null,
+                                message: ''
+                            })
+                        }} >Try Again</Button>
+                        <Button variant="contained" onClick={(e) => {
+                            e.preventDefault();
+                            history.push(backToUrl);
+                        }}>View Profile</Button>
+                    </ButtonRow>
                 </>
             }
             { result.status === true &&
                 <>
                     <Alert severity="success">{result.message}</Alert>
-                    <p></p>
-                    <Button variant="contained" onClick={(e) => {
-                        e.preventDefault();
-                        history.push(backToUrl);
-                    }}>View Profile</Button>
+                    <ButtonRow>
+                        <Button variant="contained" color="primary" onClick={(e) => {
+                            e.preventDefault();
+                            history.push(backToUrl);
+                        }}>View Profile</Button>
+                    </ButtonRow>
                 </>
             }
         </UserPageLayout>
