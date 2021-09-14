@@ -1,11 +1,9 @@
 import React, { useState, useContext } from "react";
 import { useHistory } from 'react-router-dom';
-import { ButtonRow, Form, Input } from '../../../../components/Form';
+import { Form, FormResult, Input } from '../../../../components/Form';
 import { AuthContext } from '../../../../components/FirebaseAuth';
 import UserPageLayout from '../../../../components/user/UserPageLayout';
 import { userUpdateName } from '../../../../libs/user';
-import { Alert } from "@material-ui/lab";
-import { Button } from "@material-ui/core";
 
 const UpdateName = () => {
     const title = "Change Your Name";
@@ -60,32 +58,33 @@ const UpdateName = () => {
                 </Form>
             }
             { result.status === false &&
-                <>
-                    <Alert severity="error">{result.message}</Alert>
-                    <ButtonRow>
-                        <Button variant="contained" color="primary" onClick={() => {
-                            setResult({
-                                status: null,
-                                message: ''
-                            })
-                        }} >Try Again</Button>
-                        <Button variant="contained" onClick={(e) => {
-                            e.preventDefault();
-                            history.push(backToUrl);
-                        }}>View Profile</Button>
-                    </ButtonRow>
-                </>
+                <FormResult 
+                    severity="error"
+                    resultMessage={result.message}
+                    primaryText="Try Again"
+                    primaryAction={() => {
+                        setResult({
+                            status: null,
+                            message: ''
+                        })
+                    }}
+                    secondaryText="View Profile"
+                    secondaryAction={(e) => {
+                        e.preventDefault();
+                        history.push(backToUrl);
+                    }}
+                />
             }
             { result.status === true &&
-                <>
-                    <Alert severity="success">{result.message}</Alert>
-                    <ButtonRow>
-                        <Button variant="contained" color="primary" onClick={(e) => {
-                            e.preventDefault();
-                            history.push(backToUrl);
-                        }}>View Profile</Button>
-                    </ButtonRow>
-                </>
+                <FormResult 
+                    severity="success"
+                    resultMessage={result.message}
+                    primaryText="View Profile"
+                    primaryAction={(e) => {
+                        e.preventDefault();
+                        history.push(backToUrl);
+                    }}
+                />
             }
         </UserPageLayout>
     )
