@@ -96,8 +96,8 @@ const ViewLogs = () => {
                 <>
                 {total > 0 ? (
                     <DataTable columns={[
-                        {name: "Activity", field: "action"},
-                        {name: "Time", field: "time"}
+                        {name: "Activity", field: "action", style: {width: '50%'}},
+                        {name: "Time", field: "time", style: {width: '50%'}}
                     ]}
                     rows={rows}
                     totalRows={total}

@@ -10,7 +10,7 @@ const DataTable = ({columns, rows, totalRows, pageSize, page, handlePageChane, h
                     <TableHead>
                         <TableRow>
                         {columns.map((c,i) => 
-                            <TableCell key={i}>{c.name}</TableCell>
+                            <TableCell key={i} style={c.style}>{c.name}</TableCell>
                         )}
                         </TableRow>
                     </TableHead>
