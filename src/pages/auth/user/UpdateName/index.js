@@ -26,12 +26,14 @@ const UpdateName = () => {
     const [inSubmit, setInSubmit] = useState(false);
 
     const history = useHistory();
+    const backToUrl = "/user/profile";
 
     return (
         <UserPageLayout title={title} >
             { result.status === null &&
                 <Form handleSubmit={e => {
                     e.preventDefault();
+                    setInSubmit(true);
                     authUser.user.updateProfile({
                         displayName: fullname.value
                     }).then(() => {
@@ -47,12 +49,12 @@ const UpdateName = () => {
                             message: err.message
                         });
                         setInSubmit(false);
-                    })
+                    });
                 }}
                 disabled={fullname.hasError || fullname.value===null || inSubmit}
                 inSubmit={inSubmit}
                 enableDefaultButtons={true}
-                backToUrl="/user/profile"
+                backToUrl={backToUrl}
                 >
                     <Input label="Your Name" type="text" name="full-name" maxLen={100} required={true} changeHandler={setFullname} fullWidth variant="outlined" />
                 </Form>
@@ -69,7 +71,7 @@ const UpdateName = () => {
                     }} >Try Again</button>
                     <Button variant="contained" onClick={(e) => {
                         e.preventDefault();
-                        history.push("/user/profile");
+                        history.push(backToUrl);
                     }}>View Profile</Button>
                 </>
             }
@@ -79,7 +81,7 @@ const UpdateName = () => {
                     <p></p>
                     <Button variant="contained" onClick={(e) => {
                         e.preventDefault();
-                        history.push("/user/profile");
+                        history.push(backToUrl);
                     }}>View Profile</Button>
                 </>
             }

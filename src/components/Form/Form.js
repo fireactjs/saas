@@ -1,6 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-import Field from './Field';
 import { useHistory } from 'react-router-dom';
 import Loader from '../Loader';
 import { Button, makeStyles } from "@material-ui/core";
