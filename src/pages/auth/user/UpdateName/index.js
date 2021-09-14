@@ -70,8 +70,7 @@ const UpdateName = () => {
                         })
                     }}
                     secondaryText="View Profile"
-                    secondaryAction={(e) => {
-                        e.preventDefault();
+                    secondaryAction={() => {
                         history.push(backToUrl);
                     }}
                 />
@@ -81,8 +80,7 @@ const UpdateName = () => {
                     severity="success"
                     resultMessage={result.message}
                     primaryText="View Profile"
-                    primaryAction={(e) => {
-                        e.preventDefault();
+                    primaryAction={() => {
                         history.push(backToUrl);
                     }}
                 />

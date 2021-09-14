@@ -1,14 +1,15 @@
 import React, { useState, useContext, useEffect, createRef } from "react";
-import { Link } from 'react-router-dom';
-import { Form, Field, Input } from '../../../../components/Form';
+import { useHistory } from 'react-router-dom';
+import { Form, FormResult, Input } from '../../../../components/Form';
 import firebase from "firebase/app";
 import { AuthContext } from '../../../../components/FirebaseAuth';
-import Alert from '../../../../components/Alert';
 import UserPageLayout from '../../../../components/user/UserPageLayout';
 import { log, UPDATE_PHONE } from '../../../../libs/log';
 
 const UpdatePhone = () => {
     const title = "Change Your Phone Number";
+    const backToUrl = "/user/profile";
+    const history = useHistory();
 
     const [phoneNumber, setPhoneNumber] = useState({
         hasError: false,
@@ -91,12 +92,10 @@ const UpdatePhone = () => {
                 enableDefaultButtons={true}
                 backToUrl="/user/profile"
                 >
-                    <Field label="Phone Number">
-                        <Input type="text" name="phone-number" hasError={phoneNumber.hasError} error={phoneNumber.error} required={true} changeHandler={setPhoneNumber} />
-                    </Field>
-                    <Field label="">
+                    <Input label="Phone Number" type="text" name="phone-number" hasError={phoneNumber.hasError} error={phoneNumber.error} required={true} changeHandler={setPhoneNumber} fullWidth variant="outlined" />
+                    <div style={{marginTop:'20px',marginBottom:'20px'}}>
                         <div ref={(ref)=>recaptcha=ref}></div>
-                    </Field>
+                    </div>
                 </Form>
             }
             { result.status === VERIFYSTEP && 
@@ -124,28 +123,35 @@ const UpdatePhone = () => {
                 enableDefaultButtons={true}
                 backToUrl="/user/profile"
                 >
-                    <Field label="Verification Code">
-                        <Input type="text" name="verification-code" hasError={verificationCode.hasError} error={verificationCode.error} required={true} changeHandler={setVerificationCode} />
-                    </Field>
+                    <Input label="Verification Code" type="text" name="verification-code" hasError={verificationCode.hasError} error={verificationCode.error} required={true} changeHandler={setVerificationCode} fullWidth variant="outlined" />
                 </Form>
             }
             { result.status === FAILURE &&
-                <>
-                    <Alert type="danger" dismissible={false} message={result.message} />
-                    <button className="btn btn-primary mr-2" onClick={() => {
+                <FormResult 
+                    severity="error"
+                    resultMessage={result.message}
+                    primaryText="Try Again"
+                    primaryAction={() => {
                         setResult({
                             status: PHONESTEP,
                             message: ''
                         })
-                    }} >Try Again</button>
-                    <Link className="btn btn-secondary" to="/user/profile">View Profile</Link>
-                </>
+                    }}
+                    secondaryText="View Profile"
+                    secondaryAction={() => {
+                        history.push(backToUrl);
+                    }}
+                />
             }
             { result.status === SUCCESS &&
-                <>
-                    <Alert type="success" dismissible={false} message={result.message} />
-                    <Link className="btn btn-primary" to="/user/profile">View Profile</Link>
-                </>
+                <FormResult 
+                    severity="success"
+                    resultMessage={result.message}
+                    primaryText="View Profile"
+                    primaryAction={(e) => {
+                        history.push(backToUrl);
+                    }}
+                />
             }
         </UserPageLayout>
     )
