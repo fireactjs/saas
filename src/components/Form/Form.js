@@ -26,7 +26,7 @@ const Form = (props) => {
     }
 
     return (
-        <form {...others} onSubmit={handleSubmit}>
+        <form {...others} onSubmit={(e) => e.preventDefault()}>
             {children}
             {enableDefaultButtons && 
                 <ButtonRow>
