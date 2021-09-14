@@ -1,14 +1,14 @@
 import React, { useState, useContext } from "react";
-import { Link } from 'react-router-dom';
-import { Form, Field, Input } from '../../../../components/Form';
+import { useHistory } from 'react-router-dom';
+import { Form, Input } from '../../../../components/Form';
 import { AuthContext } from '../../../../components/FirebaseAuth';
-import Alert from '../../../../components/Alert';
 import UserPageLayout from '../../../../components/user/UserPageLayout';
 import { userUpdateName } from '../../../../libs/user';
+import { Alert } from "@material-ui/lab";
+import { Button } from "@material-ui/core";
 
 const UpdateName = () => {
     const title = "Change Your Name";
-    
 
     const [fullname, setFullname] = useState({
         hasError: false,
@@ -24,6 +24,8 @@ const UpdateName = () => {
     });
 
     const [inSubmit, setInSubmit] = useState(false);
+
+    const history = useHistory();
 
     return (
         <UserPageLayout title={title} >
@@ -52,27 +54,33 @@ const UpdateName = () => {
                 enableDefaultButtons={true}
                 backToUrl="/user/profile"
                 >
-                    <Field label="Your Name">
-                        <Input type="text" name="full-name" maxLen={100} required={true} changeHandler={setFullname} />
-                    </Field>
+                    <Input label="Your Name" type="text" name="full-name" maxLen={100} required={true} changeHandler={setFullname} fullWidth variant="outlined" />
                 </Form>
             }
             { result.status === false &&
                 <>
-                    <Alert type="danger" dismissible={false} message={result.message} />
+                    <Alert severity="error">{result.message}</Alert>
+                    <p></p>
                     <button className="btn btn-primary mr-2" onClick={() => {
                         setResult({
                             status: null,
                             message: ''
                         })
                     }} >Try Again</button>
-                    <Link className="btn btn-secondary" to="/user/profile">View Profile</Link>
+                    <Button variant="contained" onClick={(e) => {
+                        e.preventDefault();
+                        history.push("/user/profile");
+                    }}>View Profile</Button>
                 </>
             }
             { result.status === true &&
                 <>
-                    <Alert type="success" dismissible={false} message={result.message} />
-                    <Link className="btn btn-primary" to="/user/profile">View Profile</Link>
+                    <Alert severity="success">{result.message}</Alert>
+                    <p></p>
+                    <Button variant="contained" onClick={(e) => {
+                        e.preventDefault();
+                        history.push("/user/profile");
+                    }}>View Profile</Button>
                 </>
             }
         </UserPageLayout>

@@ -1,10 +1,22 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Field from './Field';
-import { Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import Loader from '../Loader';
+import { Button, makeStyles } from "@material-ui/core";
 
 const Form = (props) => {
+
+    const useStyles = makeStyles((theme) => ({
+        root: {
+          '& > *': {
+            margin: theme.spacing(1),
+          },
+        },
+    }));
+    const classes = useStyles();
+    const history = useHistory();
+      
 
     const {
         handleSubmit,
@@ -27,20 +39,22 @@ const Form = (props) => {
         <form {...others} onSubmit={handleSubmit}>
             {children}
             {enableDefaultButtons && 
-                <Field>
-                    <button className={"btn mr-2 btn-"+btnClass} disabled={(disabled?'disabled':'')}>
+                <div className={classes.root}>
+                    <Button variant="contained" color={btnClass} disabled={disabled} onClick={handleSubmit}>
                         {inSubmit && 
                             <Loader />
                         }
-                        {((disabled && !inSubmit)?(<i className="fa fa-ban mr-1"></i>):'')}
                         {submitBtnText || 'Submit'}
-                    </button>
+                    </Button>
                     {backToUrl && backToUrl !== "" &&
-                        <Link className={"btn btn-secondary"+(inSubmit?" disabled":"")} to={backToUrl}>
+                        <Button variant="contained" disabled={inSubmit} onClick={(e) => {
+                            e.preventDefault();
+                            history.push(backToUrl);
+                        }}>
                             {backBtnText || 'Back'}
-                        </Link>
+                        </Button>
                     }
-                </Field>
+                </div>
             }
         </form>
     )
