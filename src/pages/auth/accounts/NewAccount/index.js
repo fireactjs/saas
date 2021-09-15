@@ -1,9 +1,10 @@
 import React, {useState, useContext, useEffect} from "react";
 import { CloudFunctions } from "../../../../components/FirebaseAuth/firebase";
 import { BreadcrumbContext } from '../../../../components/Breadcrumb';
-import { Form, Field, Input } from '../../../../components/Form';
+import { Form, Input } from '../../../../components/Form';
 import { Redirect } from 'react-router-dom';
-import Alert from "../../../../components/Alert";
+import { Container, Paper, Box } from "@material-ui/core";
+import { Alert } from "@material-ui/lab";
 
 const NewAccount = () => {
     const title = 'Create New Account';
@@ -38,17 +39,14 @@ const NewAccount = () => {
 
 
     return (
-        <>
+        <Container>
+            <Paper>
+                <Box p={2}>
             {redirect === null && 
             <>
-                <div className="container-fluid">
-                    <div className="animated fadeIn">
-                        <div className="card">
-                            <div className="card-header">
-                                {title}
-                            </div>
+
                             {errorMessage !== null && 
-                                <Alert type="danger" message={errorMessage} dismissible={true} onDismiss={() => setErrorMessage(null)}></Alert>
+                                <Alert severity="error" dismissible={true} onDismiss={() => setErrorMessage(null)}>{errorMessage}</Alert>
                             }
                             <div className="card-body">
                                 <Form handleSubmit={e =>{
@@ -69,20 +67,18 @@ const NewAccount = () => {
                                 disabled={accountName.hasError || accountName.value===null || inSubmit}
                                 inSubmit={inSubmit}
                                 enableDefaultButtons={true}>
-                                    <Field label="Account Name">
-                                        <Input type="text" name="account-name" maxLen={100} required={true} changeHandler={setAccountName} />
-                                    </Field>
+                                    <Input label="Account Name" type="text" name="account-name" maxLen={100} required={true} changeHandler={setAccountName} fullWidth variant="outlined" />
                                 </Form>
                             </div>
-                        </div>
-                    </div>
-                </div>
+
             </>
             }
             {redirect !== null &&
                 <Redirect to={redirect}></Redirect>
             }
-        </>
+                </Box>
+            </Paper>
+        </Container>
 
     )
 }
