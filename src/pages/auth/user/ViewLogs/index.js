@@ -86,6 +86,9 @@ const ViewLogs = () => {
 
     useEffect(() => {
         getLogs(pageSize);
+        return () => { 
+            mountedRef.current = false
+        }
     },[pageSize]);
 
     return (
