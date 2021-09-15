@@ -1,11 +1,13 @@
 import React, {useState, useContext, useEffect, useRef} from "react";
 import { BreadcrumbContext } from '../../../components/Breadcrumb';
 import { FirebaseAuth } from "../../../components/FirebaseAuth/firebase";
-import { Link, Redirect } from 'react-router-dom';
+import { useHistory, Redirect } from 'react-router-dom';
 import Loader from '../../../components/Loader';
+import { Card, Button, CardActions, Grid, CardHeader } from "@material-ui/core";
 
 const Home = () => {
     const title = 'My Accounts';
+    const history = useHistory();   
 
     const { setBreadcrumb } = useContext(BreadcrumbContext);
     
@@ -55,44 +57,37 @@ const Home = () => {
 
     return (
         <>
-            <div className="container-fluid">
-                <div className="animated fadeIn">
-                    
-                    {accounts.length > 0 ? (
-                        <>
-                            <div className="text-right mb-3">
-                                <Link to="/new-account" className="btn btn-primary"><i className="fa fa-plus"></i> Add Account</Link>
-                            </div>
-                            
-                            {accounts.map((account, i) => 
-                                
-                                <div className="card" key={account.id}>
-                                    <div className="card-header font-weight-bold">
-                                        <h5>{account.name}</h5>
-                                    </div>
-                                    <div className="card-body">
-                                        {account.subscriptionStatus?(
-                                            <Link to={'/account/'+account.id+'/'}>Account Overview</Link>
-                                        ):(
-                                            <Link to={'/account/'+account.id+'/billing/plan'}>Activate the account</Link>
-                                        )}
-                                    </div>
-                                </div>
-                                
-                            )}
-                            
-                        </>
-                    ) : (
-                        <>
-                            {(loading) ? (
-                                <Loader text="loading accounts..."></Loader>
-                            ):(
-                                <Redirect to="/new-account"></Redirect>
-                            )}
-                        </>
+            {accounts.length > 0 ? (
+                <>
+                    <div style={{marginTop: '20px', marginBottom: '20px'}}>
+                        <Button onClick={() => history.push('/new-account')} color="primary" variant="contained"><i className="fa fa-plus"></i> Add Account</Button>
+                    </div>
+                    <Grid container spacing={3}>
+                    {accounts.map((account, i) => 
+                        <Grid container item xs={12} md={3}>
+                            <Card key={account.id} style={{width: '100%'}}>
+                                <CardHeader title={account.name}/>
+                                <CardActions>
+                                    {account.subscriptionStatus?(
+                                        <Button size="small" color="primary" onClick={() => history.push('/account/'+account.id+'/')}>Account Overview</Button>
+                                    ):(
+                                        <Button size="small" color="secondary" onClick={() => history.push('/account/'+account.id+'/billing/plan')}>Activate the account</Button>
+                                    )}
+                                </CardActions>
+                            </Card>
+                        </Grid>
                     )}
-                </div>
-            </div>
+                    </Grid>
+                </>
+            ) : (
+                <>
+                    {(loading) ? (
+                        <Loader text="loading accounts..."></Loader>
+                    ):(
+                        <Redirect to="/new-account"></Redirect>
+                    )}
+                </>
+            )}
         </>
 
     )
