@@ -22,7 +22,6 @@ const Home = () => {
         const accountsRef = FirebaseAuth.firestore().collection('accounts');
         let query = accountsRef.where('access', 'array-contains', FirebaseAuth.auth().currentUser.uid);
         query.get().then(accountSnapshots => {
-            console.log(accountSnapshots);
             if (!mountedRef.current) return null
             accountSnapshots.forEach(account => {
                 records.push({
@@ -64,7 +63,7 @@ const Home = () => {
                     </div>
                     <Grid container spacing={3}>
                     {accounts.map((account, i) => 
-                        <Grid container item xs={12} md={3}>
+                        <Grid container item xs={12} md={3} key={i}>
                             <Card key={account.id} style={{width: '100%'}}>
                                 <CardHeader title={account.name}/>
                                 <CardActions>
