@@ -47,7 +47,7 @@ function App() {
 				<Router>
 					<Switch>
 						<AuthRouter exact path="/" component={Home} template={AppTemplate} title="My Accounts" />
-						<AuthRouter exact path="/account/:accountId/billing/plan" component={Plans} template={AccountTemplate} title="Select Plan" role="admin" />
+						<AuthRouter exact path="/account/:accountId/billing/plan" component={Plans} template={AccountTemplate} title="Select Plan" role="admin" allowInactive={true} />
 						<AuthRouter exact path="/account/:accountId/billing/payment-method" component={PaymentMethod} template={ActiveAccountTemplate} title="Update Payment Method" role="admin" />
 						<AuthRouter exact path="/account/:accountId/billing/delete" component={DeleteAccount} template={ActiveAccountTemplate} title="Delete Account" role="admin" />
 						<AuthRouter exact path="/account/:accountId/users/change/:userId" component={UserRole} template={ActiveAccountTemplate} title="Change Role" role="admin" />
