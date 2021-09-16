@@ -3,7 +3,7 @@ import { BreadcrumbContext } from '../../../components/Breadcrumb';
 import { FirebaseAuth } from "../../../components/FirebaseAuth/firebase";
 import { useHistory, Redirect } from 'react-router-dom';
 import Loader from '../../../components/Loader';
-import { Card, Button, CardActions, Grid, CardHeader } from "@material-ui/core";
+import { Card, Button, CardActions, Grid, CardHeader } from "@mui/material";
 
 const Home = () => {
     const title = 'My Accounts';

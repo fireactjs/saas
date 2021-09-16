@@ -3,8 +3,7 @@ import { CloudFunctions } from "../../../../components/FirebaseAuth/firebase";
 import { BreadcrumbContext } from '../../../../components/Breadcrumb';
 import { Form, Input } from '../../../../components/Form';
 import { Redirect } from 'react-router-dom';
-import { Container, Paper, Box } from "@material-ui/core";
-import { Alert } from "@material-ui/lab";
+import { Container, Paper, Box, Alert } from "@mui/material";
 
 const NewAccount = () => {
     const title = 'Create New Account';

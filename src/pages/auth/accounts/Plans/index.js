@@ -6,6 +6,8 @@ import Loader from '../../../../components/Loader';
 import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import Alert from "../../../../components/Alert";
 import { countries } from "../../../../inc/country.json";
+import { Paper, Box, Grid, Card, CardHeader, CardContent } from "@material-ui/core";
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 const Plans = () => {
     const title = 'Select a Plan';
@@ -164,6 +166,35 @@ const Plans = () => {
 
     return (
         <>
+            <Paper>
+                <Box p={3} style={{textAlign: 'center'}} >
+                    <h1>{title}</h1>
+                    <Grid container spacing={3}>
+                        {plans.length > 0 ? (
+                            <>
+                            {plans.map((plan,i) => 
+                                <Grid container item xs={12} md={4} key={i} >
+                                    <Card style={{width: '100%'}}>
+                                        <CardHeader title={plan.name} subheader={"$"+plan.price+"/"+plan.paymentCycle} />
+                                        <CardContent>
+                                            <ul style={{listStyleType: 'none'}}>
+                                            {plan.features.map((feature, i) => 
+                                                <li key={i}>
+                                                    <i className="fa fa-check" style={{color:""}} /> {feature}
+                                                </li>
+                                            )}
+                                            </ul>
+                                        </CardContent>
+                                    </Card>
+                                </Grid>
+                            )}
+                            </>
+                        ):(
+                            <div>No plan is found</div>
+                        )}
+                    </Grid>
+                </Box>
+            </Paper>
             <div className="container-fluid">
                 <div className="animated fadeIn">
                     <div className="card-deck mb-3">
@@ -196,7 +227,7 @@ const Plans = () => {
                                                         <div className="card-body">
                                                             <ul className="list-unstyled mt-3 mb-4">
                                                                 {plan.features.map((feature, i) => 
-                                                                    <li key={i}><i className="fa fa-check text-success"></i> {feature}</li>
+                                                                    <li key={i}><i className="fa fa-check"></i> {feature}</li>
                                                                 )}
                                                             </ul>
                                                         </div>
