@@ -6,7 +6,7 @@ import Loader from '../../../../components/Loader';
 import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import Alert from "../../../../components/Alert";
 import { countries } from "../../../../inc/country.json";
-import { Paper, Box, Grid, Card, CardHeader, CardContent, CardActions, Button, CardActionArea } from "@mui/material";
+import { Paper, Box, Grid, Card, CardHeader, CardContent, CardActions, Button, Divider } from "@mui/material";
 
 const Plans = () => {
     const title = 'Select a Plan';
@@ -167,7 +167,7 @@ const Plans = () => {
         <>
             <Paper>
                 <Box p={3} style={{textAlign: 'center'}} >
-                    <h1>{title}</h1>
+                    <h2>{title}</h2>
                     <Grid container spacing={3}>
                         {plans.length > 0 ? (
                             <>
@@ -177,20 +177,22 @@ const Plans = () => {
                                         width: '100%',
                                         display: 'flex',
                                         flexDirection: 'column',
+                                        paddingBottom: '20px',
                                     }}>
                                         <CardHeader title={plan.name} subheader={"$"+plan.price+"/"+plan.paymentCycle} />
                                         <CardContent>
+                                            <Divider />
                                             <ul style={{listStyleType: 'none', paddingLeft: '0px'}}>
                                             {plan.features.map((feature, i) => 
                                                 <li key={i}>
-                                                    <i className="fa fa-check" style={{color: "#4caf50"}} /> {feature}
+                                                    <i className="fa fa-check" style={{color: "#2e7d32"}} /> {feature}
                                                 </li>
                                             )}
                                             </ul>
                                         </CardContent>
                                         <CardActions style={{
                                             marginTop: 'auto',
-                                            justifyContent: 'center'
+                                            justifyContent: 'center',
                                         }}>
                                             {plan.current?(
                                                 <Button color="success" variant="contained" disabled={true}>Current Plan</Button>
@@ -212,6 +214,11 @@ const Plans = () => {
                             <div>No plan is found</div>
                         )}
                     </Grid>
+                    {selectedPlan.id !== 0 && selectedPlan.price > 0 && 
+                        <div style={{justifyContent: 'center', marginTop: '50px'}}>
+                            <h2>Billing Details</h2>
+                        </div>
+                    }
                 </Box>
             </Paper>
             <div className="container-fluid">
