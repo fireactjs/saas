@@ -6,7 +6,9 @@ import Loader from '../../../../components/Loader';
 import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import Alert from "../../../../components/Alert";
 import { countries } from "../../../../inc/country.json";
-import { Paper, Box, Grid, Card, CardHeader, CardContent, CardActions, Button, Divider } from "@mui/material";
+import { countries as countryData } from "../../../../inc/countries.json";
+import { Paper, Box, Grid, Card, CardHeader, CardContent, CardActions, Button, Divider, Container, Autocomplete, TextField, Stack } from "@mui/material";
+
 
 const Plans = () => {
     const title = 'Select a Plan';
@@ -45,6 +47,7 @@ const Plans = () => {
     const [country, setCountry] = useState("");
     const [countryError, setCountryError] = useState(null);
     const [state, setState] = useState("");
+    const [states, setStates] = useState([]);
     const [stateError, setStateError] = useState(null);
 
     useEffect(() => {
@@ -217,6 +220,105 @@ const Plans = () => {
                     {selectedPlan.id !== 0 && selectedPlan.price > 0 && 
                         <div style={{justifyContent: 'center', marginTop: '50px'}}>
                             <h2>Billing Details</h2>
+                            <Grid container spacing={3}>
+                                <Grid container item xs={12}>
+                                    <Card style={{
+                                        width: '100%',
+                                        paddingBottom: '20px',
+                                    }}>
+                                        <CardContent>
+                                            <Container maxWidth="sm">
+                                                <Stack spacing={3}>
+                                                    <Autocomplete
+                                                        
+                                                        options={countryData}
+                                                        autoHighlight
+                                                        getOptionLabel={(option) => option.label}
+                                                        renderOption={(props, option) => (
+                                                            <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                                                                <img
+                                                                    loading="lazy"
+                                                                    width="20"
+                                                                    src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`}
+                                                                    srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
+                                                                    alt=""
+                                                                />
+                                                                {option.label}
+                                                            </Box>
+                                                        )}
+                                                        renderInput={(params) => (
+                                                            <TextField
+                                                                {...params}
+                                                                label="Country"
+                                                                inputProps={{
+                                                                    ...params.inputProps,
+                                                                    autoComplete: 'new-password',
+                                                                }}
+                                                            />
+                                                        )}
+                                                        onChange={(event, newValue) => {
+                                                            setCountry(newValue.code);
+                                                            setState("");
+                                                            if(newValue.states){
+                                                                setStates(newValue.states);
+                                                            }else{
+                                                                setStates([]);
+                                                            }
+                                                            setCountryError(null);
+                                                        }}
+                                                    />
+                                                    {states.length > 0 &&
+                                                    <Autocomplete
+                                                        
+                                                        options={states}
+                                                        autoHighlight
+                                                        getOptionLabel={(option) => option.label}
+                                                        renderOption={(props, option) => (
+                                                            <Box component="li" {...props}>
+                                                                {option.label}
+                                                            </Box>
+                                                        )}
+                                                        renderInput={(params) => (
+                                                            <TextField
+                                                                {...params}
+                                                                label="State"
+                                                                inputProps={{
+                                                                    ...params.inputProps,
+                                                                    autoComplete: 'new-password',
+                                                                }}
+                                                            />
+                                                        )}
+                                                        onChange={(event, newValue) => {
+                                                            setState(newValue.code);
+                                                            setCountryError(null);
+                                                        }}
+                                                    />
+                                                    }
+                                                    <div style={{position: "relative", minHeight: '56px', padding: '15px'}}>
+                                                        <CardElement options={CARD_ELEMENT_OPTIONS}></CardElement>
+                                                        <fieldset style={{
+                                                            borderColor: 'rgba(0, 0, 0, 0.23)',
+                                                            borderStyle: 'solid',
+                                                            borderWidth: '1px',
+                                                            borderRadius: '4px',
+                                                            position: 'absolute',
+                                                            top: '-5px',
+                                                            left: '0',
+                                                            right: '0',
+                                                            bottom: '0',
+                                                            margin: '0',
+                                                            padding: '0 8px',
+                                                            overflow: 'hidden',
+                                                            pointerEvents: 'none'
+                                                            
+                                                        }}></fieldset>
+                                                    </div>
+                                                </Stack>
+                                            </Container>
+                                        </CardContent>
+                                    </Card>
+                                </Grid>
+                            </Grid>
                         </div>
                     }
                 </Box>
@@ -327,7 +429,7 @@ const Plans = () => {
                                                                     <Alert type="danger" message={cardError} dismissible={true} onDismiss={() => setCardError(null)}></Alert>
                                                                 }
                                                                 <div className="form-control">
-                                                                    <CardElement options={CARD_ELEMENT_OPTIONS}></CardElement>
+                                                                    
                                                                 </div>
                                                             </div>
                                                         </div>
