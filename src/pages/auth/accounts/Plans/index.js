@@ -6,8 +6,7 @@ import Loader from '../../../../components/Loader';
 import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import Alert from "../../../../components/Alert";
 import { countries } from "../../../../inc/country.json";
-import { Paper, Box, Grid, Card, CardHeader, CardContent } from "@material-ui/core";
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import { Paper, Box, Grid, Card, CardHeader, CardContent, CardActions, Button, CardActionArea } from "@mui/material";
 
 const Plans = () => {
     const title = 'Select a Plan';
@@ -174,17 +173,37 @@ const Plans = () => {
                             <>
                             {plans.map((plan,i) => 
                                 <Grid container item xs={12} md={4} key={i} >
-                                    <Card style={{width: '100%'}}>
+                                    <Card style={{
+                                        width: '100%',
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                    }}>
                                         <CardHeader title={plan.name} subheader={"$"+plan.price+"/"+plan.paymentCycle} />
                                         <CardContent>
-                                            <ul style={{listStyleType: 'none'}}>
+                                            <ul style={{listStyleType: 'none', paddingLeft: '0px'}}>
                                             {plan.features.map((feature, i) => 
                                                 <li key={i}>
-                                                    <i className="fa fa-check" style={{color:""}} /> {feature}
+                                                    <i className="fa fa-check" style={{color: "#4caf50"}} /> {feature}
                                                 </li>
                                             )}
                                             </ul>
                                         </CardContent>
+                                        <CardActions style={{
+                                            marginTop: 'auto',
+                                            justifyContent: 'center'
+                                        }}>
+                                            {plan.current?(
+                                                <Button color="success" variant="contained" disabled={true}>Current Plan</Button>
+                                            ):(
+                                                <Button color="success" variant={(plan.id!==selectedPlan.id)?"outlined":"contained"} onClick={() => {
+                                                    for(let i=0; i<plans.length; i++){
+                                                        if(plans[i].id === plan.id){
+                                                            setSelectedPlan(plan);
+                                                        }
+                                                    }
+                                                }}>{plan.id===selectedPlan.id && <><i className="fa fa-check" /> </>}{(plan.id!==selectedPlan.id)?"Select":"Selected"}</Button>    
+                                            )}
+                                        </CardActions>
                                     </Card>
                                 </Grid>
                             )}
