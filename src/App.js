@@ -5,7 +5,6 @@ import { AuthProvider } from './components/FirebaseAuth';
 import PublicRouter from './components/routers/PublicRouter';
 import PublicTemplate from './components/templates/PublicTemplate';
 import AccountTemplate from './components/templates/AccountTemplate';
-import ActiveAccountTemplate from './components/templates/ActiveAccountTemplate';
 
 import AuthRouter from './components/routers/AuthRouter';
 

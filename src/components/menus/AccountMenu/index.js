@@ -27,19 +27,23 @@ const AccountMenu = () => {
                     <ListItemText primary={<Typography color="textPrimary">Overview</Typography>} />
                 </ListItem>
             </Link>
-            <Divider />
-            <Link to={'/account/'+accountId+'/users'} style={{textDecoration:'none'}}>
-                <ListItem button key="Users">
-                    <ListItemIcon><PeopleIcon /></ListItemIcon>
-                    <ListItemText primary={<Typography color="textPrimary">Users</Typography>} />
-                </ListItem>
-            </Link>
-            <Link to={'/account/'+accountId+'/billing'} style={{textDecoration:'none'}}>
-                <ListItem button key="Billing">
-                    <ListItemIcon><PaymentIcon /></ListItemIcon>
-                    <ListItemText primary={<Typography color="textPrimary">Billing</Typography>} />
-                </ListItem>
-            </Link>
+            {userData.currentAccount.role === 'admin' && 
+            <>
+                <Divider />
+                <Link to={'/account/'+accountId+'/users'} style={{textDecoration:'none'}}>
+                    <ListItem button key="Users">
+                        <ListItemIcon><PeopleIcon /></ListItemIcon>
+                        <ListItemText primary={<Typography color="textPrimary">Users</Typography>} />
+                    </ListItem>
+                </Link>
+                <Link to={'/account/'+accountId+'/billing'} style={{textDecoration:'none'}}>
+                    <ListItem button key="Billing">
+                        <ListItemIcon><PaymentIcon /></ListItemIcon>
+                        <ListItemText primary={<Typography color="textPrimary">Billing</Typography>} />
+                    </ListItem>
+                </Link>
+            </>
+            }
         </List>
     )
 }
