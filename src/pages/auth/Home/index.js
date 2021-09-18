@@ -61,7 +61,7 @@ const Home = () => {
         <>
             {accounts.length > 0 ? (
                 <>
-                    <div style={{marginTop: '20px', marginBottom: '20px'}}>
+                    <div style={{marginTop: '20px', marginBottom: '20px', textAlign: 'right'}}>
                         <Button onClick={() => history.push('/new-account')} color="primary" variant="contained"><i className="fa fa-plus"></i> Add Account</Button>
                     </div>
                     <Grid container spacing={3}>
