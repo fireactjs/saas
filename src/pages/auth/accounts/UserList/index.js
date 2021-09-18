@@ -49,10 +49,13 @@ const UserList = () => {
             if (!mountedRef.current) return null
             setError(err.message);
         });
+    },[userData, setBreadcrumb]);
+
+    useEffect(() => {
         return () => { 
             mountedRef.current = false
         }
-    },[userData, setBreadcrumb])
+    },[]);
 
     return (
         <>

@@ -49,10 +49,13 @@ const Home = () => {
             }
         ]);
         getAccounts();
+    },[setBreadcrumb]);
+
+    useEffect(() => {
         return () => { 
             mountedRef.current = false
         }
-    },[setBreadcrumb]);
+    },[]);
 
     return (
         <>

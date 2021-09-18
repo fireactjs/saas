@@ -57,10 +57,13 @@ const UserRole = () => {
             if (!mountedRef.current) return null
             setError(err.message);
         });
+    },[userData, userId, setBreadcrumb]);
+
+    useEffect(() => {
         return () => { 
             mountedRef.current = false
         }
-    },[userData, userId, setBreadcrumb])
+    },[]);
 
     return (
         <>

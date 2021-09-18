@@ -91,10 +91,13 @@ const Plans = () => {
             }
             setLoading(false);
         });
+    },[userData, setBreadcrumb, title]);
+
+    useEffect(() => {
         return () => { 
             mountedRef.current = false
         }
-    },[userData, setBreadcrumb, title]);
+    },[]);
 
     const subcribe = async(event) => {
         event.preventDefault();
@@ -155,8 +158,10 @@ const Plans = () => {
                 }
             }).then(res => {
                 // physical page load to reload the account data
+                if (!mountedRef.current) return null
                 document.location = '/account/'+userData.currentAccount.id+'/';
             }).catch(err => {
+                if (!mountedRef.current) return null
                 setProcessing(false);
                 setErrorMessage(err.message);
             });

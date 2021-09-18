@@ -76,10 +76,13 @@ const PaymentList = () => {
             }
         ]);
         getInvoices(userData.currentAccount.id, pageSize);
+    },[userData, setBreadcrumb]);
+
+    useEffect(() => {
         return () => { 
             mountedRef.current = false
         }
-    },[userData, setBreadcrumb]);
+    },[]);
 
 
     return (
