@@ -5,7 +5,6 @@ import { BreadcrumbContext } from '../../../../components/Breadcrumb';
 import Loader from '../../../../components/Loader';
 import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { countries } from "../../../../inc/country.json";
-import { countries as countryData } from "../../../../inc/countries.json";
 import { Paper, Box, Grid, Card, CardHeader, CardContent, CardActions, Button, Divider, Container, Autocomplete, TextField, Stack, Alert } from "@mui/material";
 
 
@@ -238,10 +237,10 @@ const Plans = () => {
                                                         <Alert severity="error" onClose={() => setCountryError(null)}>{countryError}</Alert>
                                                     }
                                                     <Autocomplete
-                                                        value={(country !== '')?(countryData.find(obj =>{
+                                                        value={(country !== '')?(countries.find(obj =>{
                                                             return obj.code === country
                                                         })):(null)}
-                                                        options={countryData}
+                                                        options={countries}
                                                         autoHighlight
                                                         getOptionLabel={(option) => option.label}
                                                         renderOption={(props, option) => (
