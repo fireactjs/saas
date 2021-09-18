@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect, useRef } from "react";
 import { useHistory } from 'react-router-dom';
 import { Form, FormResult, Input } from '../../../../components/Form';
 import { AuthContext } from '../../../../components/FirebaseAuth';
@@ -9,6 +9,7 @@ const UpdateName = () => {
     const title = "Change Your Name";
     const backToUrl = "/user/profile";
     const history = useHistory();
+    const mountedRef = useRef(true);
 
     const [fullname, setFullname] = useState({
         hasError: false,
@@ -25,7 +26,11 @@ const UpdateName = () => {
 
     const [inSubmit, setInSubmit] = useState(false);
 
-
+    useEffect(() => {
+        return () => { 
+            mountedRef.current = false
+        }
+    },[]);
 
     return (
         <UserPageLayout title={title} >
@@ -36,6 +41,7 @@ const UpdateName = () => {
                     authUser.user.updateProfile({
                         displayName: fullname.value
                     }).then(() => {
+                        if (!mountedRef.current) return null 
                         userUpdateName();
                         setResult({
                             status: true,
@@ -43,6 +49,7 @@ const UpdateName = () => {
                         });
                         setInSubmit(false);
                     }).catch(err => {
+                        if (!mountedRef.current) return null 
                         setResult({
                             status: false,
                             message: err.message

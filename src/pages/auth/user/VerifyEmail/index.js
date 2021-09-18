@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect, useRef } from "react";
 import { useHistory } from 'react-router-dom';
 import { Form, FormResult } from '../../../../components/Form';
 import { AuthContext } from '../../../../components/FirebaseAuth';
@@ -8,6 +8,7 @@ const UpdateEmail = () => {
     const title = "Verify Your Email";
     const backToUrl = "/user/profile";
     const history = useHistory();   
+    const mountedRef = useRef(true);  
 
     const { authUser } = useContext(AuthContext);
 
@@ -18,6 +19,12 @@ const UpdateEmail = () => {
 
     const [inSubmit, setInSubmit] = useState(false);
 
+    useEffect(() => {
+        return () => { 
+            mountedRef.current = false
+        }
+    },[]);
+
     return (
         <UserPageLayout title={title} >
             { result.status === null && !authUser.user.emailVerified &&
@@ -25,12 +32,14 @@ const UpdateEmail = () => {
                     e.preventDefault();
                     setInSubmit(true);
                     authUser.user.sendEmailVerification().then(() => {
+                        if (!mountedRef.current) return null
                         setResult({
                             status: true,
                             message: 'Please check your email inbox to verify the email address. Refresh this page after you verified your email address.'
                         });
                         setInSubmit(false);
                     }).catch((err) => {
+                        if (!mountedRef.current) return null
                         setResult({
                             status: false,
                             message: err.message

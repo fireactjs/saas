@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect, useRef } from "react";
 import { useHistory } from 'react-router-dom';
 import { Form, FormResult, Input } from '../../../../components/Form';
 import firebase from "firebase/app";
@@ -11,6 +11,7 @@ const UpdatePassword = () => {
     const title = "Change Your Password";
     const backToUrl = "/user/profile";
     const history = useHistory(); 
+    const mountedRef = useRef(true);  
     
     const [password, setPassword] = useState({
         hasError: false,
@@ -39,6 +40,12 @@ const UpdatePassword = () => {
 
     const [inSubmit, setInSubmit] = useState(false);
 
+    useEffect(() => {
+        return () => { 
+            mountedRef.current = false
+        }
+    },[]);
+
     return (
         <UserPageLayout title={title} >
             { result.status === null &&
@@ -61,8 +68,10 @@ const UpdatePassword = () => {
                         // update email address
                         authUser.user.reauthenticateWithCredential(credential)
                         .then(() => {
+                            if (!mountedRef.current) return null
                             FirebaseAuth.auth().currentUser.updatePassword(newPassword.value)
                             .then(() => {
+                                if (!mountedRef.current) return null
                                 log(UPDATE_PASSWORD);
                                 setResult({
                                     status: true,
@@ -70,6 +79,7 @@ const UpdatePassword = () => {
                                 });
                                 setInSubmit(false);
                             }).catch(err => {
+                                if (!mountedRef.current) return null
                                 setResult({
                                     status: false,
                                     message: err.message
@@ -77,6 +87,7 @@ const UpdatePassword = () => {
                                 setInSubmit(false);
                             })
                         }).catch(() => {
+                            if (!mountedRef.current) return null
                             setPassword({
                                 hasError: true,
                                 error: 'Incorrect password, authentication failed.',

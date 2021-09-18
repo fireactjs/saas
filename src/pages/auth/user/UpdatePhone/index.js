@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect, createRef } from "react";
+import React, { useState, useContext, useEffect, createRef, useRef } from "react";
 import { useHistory } from 'react-router-dom';
 import { Form, FormResult, Input } from '../../../../components/Form';
 import firebase from "firebase/app";
@@ -10,6 +10,7 @@ const UpdatePhone = () => {
     const title = "Change Your Phone Number";
     const backToUrl = "/user/profile";
     const history = useHistory();
+    const mountedRef = useRef(true);  
 
     const [phoneNumber, setPhoneNumber] = useState({
         hasError: false,
@@ -59,6 +60,12 @@ const UpdatePhone = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     },[result]);  
 
+    useEffect(() => {
+        return () => { 
+            mountedRef.current = false
+        }
+    },[]);
+
     return (
         <UserPageLayout title={title} >
             { result.status === PHONESTEP &&
@@ -71,6 +78,7 @@ const UpdatePhone = () => {
                         phoneNumber.value,
                         window.recaptchaVerifier
                     ).then(vid => {
+                        if (!mountedRef.current) return null
                         setRecaptchaVerified(true);
                         setVerificationId(vid);
                         setResult({
@@ -79,6 +87,7 @@ const UpdatePhone = () => {
                         });
                         setInSubmit(false);    
                     }).catch(err => {
+                        if (!mountedRef.current) return null
                         setPhoneNumber({
                             hasError: true,
                             error: err.message,
@@ -104,6 +113,7 @@ const UpdatePhone = () => {
                     setInSubmit(true);
                     var cred = firebase.auth.PhoneAuthProvider.credential(verificationId, verificationCode.value);
                     authUser.user.updatePhoneNumber(cred).then(() => {
+                        if (!mountedRef.current) return null
                         log(UPDATE_PHONE);
                         setResult({
                             status: SUCCESS,
@@ -111,6 +121,7 @@ const UpdatePhone = () => {
                         });
                         setInSubmit(false);
                     }).catch(err => {
+                        if (!mountedRef.current) return null
                         setResult({
                             status: FAILURE,
                             message: err.message

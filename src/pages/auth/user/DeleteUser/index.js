@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect, useRef } from "react";
 import { useHistory } from 'react-router-dom';
 import { Form, FormResult, Input } from '../../../../components/Form';
 import { AuthContext } from '../../../../components/FirebaseAuth';
@@ -7,7 +7,8 @@ import UserPageLayout from '../../../../components/user/UserPageLayout';
 const DeleteUser = () => {
     const title = "Delete Your Account";
     const backToUrl = "/user/profile";
-    const history = useHistory();     
+    const history = useHistory();
+    const mountedRef = useRef(true);
 
     const [emailAddress, setEmailAddress] = useState({
         hasError: false,
@@ -24,6 +25,12 @@ const DeleteUser = () => {
 
     const [inSubmit, setInSubmit] = useState(false);
 
+    useEffect(() => {
+        return () => { 
+            mountedRef.current = false
+        }
+    },[]);
+
     return (
         <UserPageLayout title={title} >
             { result.status === null &&
@@ -31,13 +38,16 @@ const DeleteUser = () => {
                     e.preventDefault();
                     setInSubmit(true);
                     if(emailAddress.value === authUser.user.email){
+                        if (!mountedRef.current) return null 
                         authUser.user.delete().then(() => {
+                            if (!mountedRef.current) return null 
                             setResult({
                                 status: true,
                                 message: 'Your account has been deleted.'
                             });
                             setInSubmit(false);
                         }).catch(err => {
+                            if (!mountedRef.current) return null 
                             setResult({
                                 status: false,
                                 message: err.message
@@ -45,6 +55,7 @@ const DeleteUser = () => {
                             setInSubmit(false);
                         });
                     }else{
+                        if (!mountedRef.current) return null 
                         setEmailAddress({
                             hasError: true,
                             error: 'The email address does not match your email address.',
