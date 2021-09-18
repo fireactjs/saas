@@ -1,14 +1,16 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import { BreadcrumbContext } from '../../../../components/Breadcrumb';
 import { AuthContext } from "../../../../components/FirebaseAuth";
 import { CloudFunctions } from "../../../../components/FirebaseAuth/firebase";
 import {Form, Input} from "../../../../components/Form";
-import { Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import Loader from "../../../../components/Loader";
-import { Paper, Box, Alert, Select, MenuItem, FormControl, InputLabel } from "@mui/material";
+import { Paper, Box, Alert, Select, MenuItem, FormControl, InputLabel, Stack, Button } from "@mui/material";
 
 const AddUser = () => {
     const title = 'Add User';
+    const mountedRef = useRef(true);
+    const history = useHistory(); 
 
     const { userData } = useContext(AuthContext);
     const { setBreadcrumb } = useContext(BreadcrumbContext);
@@ -48,28 +50,37 @@ const AddUser = () => {
         ]);
     }, [userData, setBreadcrumb, title]);
 
+    useEffect(() => {
+        return () => { 
+            mountedRef.current = false
+        }
+    },[]);
+
     return (
         <>
             <Paper>
                 <Box p={2}>
                 {success?(
-                    <>
-                        {inviteDialog?(
+                        <>
+                            {inviteDialog?(
                                 <Alert severity="success">The invite is sent to the email address.</Alert>
                             ):(
                                 <Alert severity="success">The user is added to the account.</Alert>
                             )}
+                            <Stack direction="row" spacing={1} mt={2}>
+                                <Button variant="contained" color="primary" onClick={() => history.push("/account/"+userData.currentAccount.id+"/users")} >Back to User List</Button>
+                            </Stack>
                         </>
                     ):(
                         <>
                             {error !== null && 
-                                <Alert severity="error">{error}</Alert>
+                                <div style={{marginBottom: '20px'}}><Alert severity="error">{error}</Alert></div>
                             }
                             {inviteDialog?(
                                 <>
-                                    <div className="text-center">The email is not registered by any existing user. Do you want to send an invite to the user?</div>
-                                    <div className="text-center mt-3">
-                                        <button className="btn btn-primary mr-2" disabled={inSubmit} onClick={e => {
+                                    <Alert severity="info">The email is not registered by any existing user. Do you want to send an invite to the user?</Alert>
+                                    <Stack direction="row" spacing={1} mt={2}>
+                                        <Button variant="contained" color="primary" disabled={inSubmit} onClick={e => {
                                             e.preventDefault();
                                             setInSubmit(true);
                                             const inviteEmailToAccount = CloudFunctions.httpsCallable('inviteEmailToAccount');
@@ -78,19 +89,19 @@ const AddUser = () => {
                                                 email: emailAddress.value,
                                                 role: selectedRole
                                             }).then(res => {
+                                                if (!mountedRef.current) return null
                                                 setInSubmit(false);
                                                 setSuccess(true);
                                             }).catch(err => {
+                                                if (!mountedRef.current) return null
                                                 setError(err.message);
                                             });
                                         }}>{inSubmit && <Loader />}
-                                            Yes, send an invite</button>
-                                        <Link className={inSubmit?("btn btn-secondary ml-2 btn-disabled"):("btn btn-secondary ml-2")} disabled={inSubmit} to={"/account/"+userData.currentAccount.id+"/users"} onClick={e => {
-                                            if(inSubmit){
-                                                e.preventDefault();
-                                            }
-                                        }}>No</Link>
-                                    </div>
+                                            Yes, send an invite</Button>
+                                        <Button variant="contained" color="secondary" disabled={inSubmit} onClick={() => {
+                                                history.push("/account/"+userData.currentAccount.id+"/users");
+                                        }}>No</Button>
+                                    </Stack>
                                 </>
                             ):(
                                 <Form handleSubmit={e => {
@@ -104,9 +115,11 @@ const AddUser = () => {
                                         email: emailAddress.value,
                                         role: selectedRole
                                     }).then(res => {
+                                        if (!mountedRef.current) return null
                                         setInSubmit(false);
                                         setSuccess(true);
                                     }).catch(err => {
+                                        if (!mountedRef.current) return null
                                         setInSubmit(false);
                                         if(err.details && err.details.code === 'auth/user-not-found'){
                                             setInviteDialog(true);
