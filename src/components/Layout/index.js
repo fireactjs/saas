@@ -133,20 +133,22 @@ const Layout = ({drawerMenu, toolbarChildren, toolBarMenu, children}) => {
             {drawerMenu}
         <Divider />
         </Drawer>
-        <Box component="main" sx={{ flexGrow: 1}}>
+        <Box component="main" sx={{ flexGrow: 1, overflow:'hidden'}}>
             <DrawerHeader />
-            <Box width={1} style={{position:'fixed'}}>
+            <Box width={1} style={{position:"fixed", zIndex: '1200'}}>
                 <Paper square>
                     <Box p={2}>
                     <Breadcrumb links={breadcrumb} />
                     </Box>
                 </Paper>
             </Box>
+            <div style={{position: 'relative'}}>
             <Box mt={10} ml={3} mr={3} mb={3}>
               <BreadcrumbContext.Provider value={{setBreadcrumb}}>
                   {children}
               </BreadcrumbContext.Provider>
             </Box>
+            </div>
         </Box>
     </Box>
   );
