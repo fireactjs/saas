@@ -101,10 +101,10 @@ const UserList = () => {
                         <Loader text="Loading users" />
                     ):(
                         <DataTable columns={[
-                            {name: "Name", field: "nameCol", style: {width: '30%'}},
+                            {name: "Name", field: "nameCol", style: {width: '40%'}},
                             {name: "Role", field: "roleCol", style: {width: '20%'}},
                             {name: "Last Login", field: "lastLoginTimeCol", style: {width: '30%'}},
-                            {name: "Action", field: "actionCol", style: {width: '20%'}}
+                            {name: "Action", field: "actionCol", style: {width: '10%'}}
                         ]}
                         rows={users}
                         totalRows={total}
