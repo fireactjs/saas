@@ -42,9 +42,7 @@ const ViewLogs = () => {
         query = query.limit(pz);
         
         query.get().then(documentSnapshots => {
-            console.log(documentSnapshots);
-            if (!mountedRef.current) return null
-            
+            if (!mountedRef.current) return null 
             documentSnapshots.forEach(doc => {
                 records.push({
                     'timestamp': doc.id,
