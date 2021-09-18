@@ -4,6 +4,7 @@ import { FirebaseAuth } from "../../../../components/FirebaseAuth/firebase";
 import Loader from '../../../../components/Loader';
 import UserPageLayout from '../../../../components/user/UserPageLayout';
 import DataTable from "../../../../components/DataTable";
+import { Alert } from "@mui/material";
 
 const ViewLogs = () => {
     const [total, setTotal] = useState(0);
@@ -13,6 +14,7 @@ const ViewLogs = () => {
     const [loading, setLoading] = useState(true);
     const [qs, setQs] = useState(null);
     const mountedRef = useRef(true);
+    const [error, setError] = useState(null);
 
     const getTotal = () => {
         setLoading(true);
@@ -38,8 +40,11 @@ const ViewLogs = () => {
             query = query.endBefore(doc);
         }
         query = query.limit(pz);
+        
         query.get().then(documentSnapshots => {
+            console.log(documentSnapshots);
             if (!mountedRef.current) return null
+            
             documentSnapshots.forEach(doc => {
                 records.push({
                     'timestamp': doc.id,
@@ -53,7 +58,8 @@ const ViewLogs = () => {
             }
             setLoading(false);
         }).catch(e => {
-            console.log(e);
+            setError(e);
+            setLoading(false);
         });
     }
 
@@ -86,9 +92,6 @@ const ViewLogs = () => {
 
     useEffect(() => {
         getLogs(pageSize);
-        return () => { 
-            mountedRef.current = false
-        }
     },[pageSize]);
 
     return (
@@ -97,31 +100,37 @@ const ViewLogs = () => {
                 <Loader text="Loading logs..."></Loader>
             ):(
                 <>
-                {total > 0 ? (
-                    <DataTable columns={[
-                        {name: "Activity", field: "action", style: {width: '50%'}},
-                        {name: "Time", field: "time", style: {width: '50%'}}
-                    ]}
-                    rows={rows}
-                    totalRows={total}
-                    pageSize={pageSize}
-                    page={page}
-                    handlePageChane={(e, p) => {
-                        if(p>page){
-                            getLogs(pageSize, 'next', qs.docs[qs.docs.length-1]);
-                        }
-                        if(p<page){
-                            getLogs(pageSize, 'previous', qs.docs[0]);
-                        }
-                        setPage(p);
-                    }}
-                    handlePageSizeChange={(e) => {
-                        setPageSize(e.target.value);
-                        setPage(0);
-                    }}
-                    ></DataTable>
+                {error?(
+                    <Alert severity="error">{error}</Alert>
                 ):(
-                    <div>No activity is found</div>
+                    <>
+                        {total > 0 ? (
+                            <DataTable columns={[
+                                {name: "Activity", field: "action", style: {width: '50%'}},
+                                {name: "Time", field: "time", style: {width: '50%'}}
+                            ]}
+                            rows={rows}
+                            totalRows={total}
+                            pageSize={pageSize}
+                            page={page}
+                            handlePageChane={(e, p) => {
+                                if(p>page){
+                                    getLogs(pageSize, 'next', qs.docs[qs.docs.length-1]);
+                                }
+                                if(p<page){
+                                    getLogs(pageSize, 'previous', qs.docs[0]);
+                                }
+                                setPage(p);
+                            }}
+                            handlePageSizeChange={(e) => {
+                                setPageSize(e.target.value);
+                                setPage(0);
+                            }}
+                            ></DataTable>
+                        ):(
+                            <div>No activity is found</div>
+                        )}
+                    </>
                 )}
                 </>
             )}
