@@ -77,7 +77,9 @@ const UserList = () => {
             }
             records.push(data[i]);
         }
-        setUsers(records);
+        if(records.length > 0){
+            setUsers(records);
+        }
         window.scrollTo(0, 0);
     },[page, pageSize, data])
 
