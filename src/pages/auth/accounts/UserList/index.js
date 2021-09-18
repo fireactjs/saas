@@ -3,9 +3,8 @@ import { BreadcrumbContext } from '../../../../components/Breadcrumb';
 import { AuthContext } from "../../../../components/FirebaseAuth";
 import { CloudFunctions } from "../../../../components/FirebaseAuth/firebase";
 import Loader from "../../../../components/Loader";
-import UserAvatar from '../../../../components/UserAvatar';
 import DataTable from "../../../../components/DataTable";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { Button, Paper, Box, Alert, Avatar } from "@mui/material";
 
 const UserList = () => {
@@ -67,7 +66,7 @@ const UserList = () => {
             if (!mountedRef.current) return null
             setError(err.message);
         });
-    },[userData, setBreadcrumb]);
+    },[userData, setBreadcrumb, history]);
 
     useEffect(() => {
         const startIndex = page * pageSize;
@@ -79,6 +78,7 @@ const UserList = () => {
             records.push(data[i]);
         }
         setUsers(records);
+        window.scrollTo(0, 0);
     },[page, pageSize, data])
 
     useEffect(() => {
@@ -114,6 +114,7 @@ const UserList = () => {
                             setPage(p);
                         }}
                         handlePageSizeChange={(e) => {
+                            setPage(0);
                             setPageSize(e.target.value);
                         }}
                         ></DataTable>
