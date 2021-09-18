@@ -16,6 +16,7 @@ const UserList = () => {
     const mountedRef = useRef(true);
     const { setBreadcrumb } = useContext(BreadcrumbContext);
     const [users, setUsers] = useState(null);
+    const [data, setData] = useState([]);
     const [error, setError] = useState(null);
     const [total, setTotal] = useState(0);
     const [page, setPage] = useState(0);
@@ -56,17 +57,29 @@ const UserList = () => {
                 record.roleCol = record.id===userData.currentAccount.owner?"Owner":(record.role.charAt(0).toUpperCase()+record.role.slice(1));
                 record.lastLoginTimeCol = (new Date(record.lastLoginTime)).toLocaleString();
                 if(record.roleCol !== 'Owner'){
-                    record.actionCol = <Link className="btn btn-primary" to={"/account/"+userData.currentAccount.id+"/users/change/"+record.id}>Change Role</Link>
+                    record.actionCol = <Button size="small" variant="contained" onClick={() => history.push("/account/"+userData.currentAccount.id+"/users/change/"+record.id)}>Change Role</Button>
                 }
                 totalCounter++;
             });
             setTotal(totalCounter);
-            setUsers(res.data);
+            setData(res.data);
         }).catch(err => {
             if (!mountedRef.current) return null
             setError(err.message);
         });
     },[userData, setBreadcrumb]);
+
+    useEffect(() => {
+        const startIndex = page * pageSize;
+        let records = [];
+        for(let i=startIndex; i<data.length; i++){
+            if(i>=startIndex+pageSize){
+                break;
+            }
+            records.push(data[i]);
+        }
+        setUsers(records);
+    },[page, pageSize, data])
 
     useEffect(() => {
         return () => { 
@@ -98,16 +111,10 @@ const UserList = () => {
                         pageSize={pageSize}
                         page={page}
                         handlePageChane={(e, p) => {
-                            if(p>page){
-                                
-                            }
-                            if(p<page){
-                                
-                            }
-                            
+                            setPage(p);
                         }}
                         handlePageSizeChange={(e) => {
-
+                            setPageSize(e.target.value);
                         }}
                         ></DataTable>
                     )}
