@@ -2,10 +2,10 @@ import React, { useContext, useEffect, useState } from "react";
 import { BreadcrumbContext } from '../../../../components/Breadcrumb';
 import { AuthContext } from "../../../../components/FirebaseAuth";
 import { CloudFunctions } from "../../../../components/FirebaseAuth/firebase";
-import Alert from "../../../../components/Alert";
-import {Form, Field, Input} from "../../../../components/Form";
+import {Form, Input} from "../../../../components/Form";
 import { Link } from "react-router-dom";
 import Loader from "../../../../components/Loader";
+import { Paper, Box, Alert, Select, MenuItem, FormControl, InputLabel } from "@mui/material";
 
 const AddUser = () => {
     const title = 'Add User';
@@ -50,61 +50,30 @@ const AddUser = () => {
 
     return (
         <>
-            <div className="container-fluid">
-                <div className="animated fadeIn">
-                    <div className="card">
-                        <div className="card-header">
-                            {title}
-                        </div>
-                        <div className="card-body">
-                            {success?(
-                                <>
-                                    {inviteDialog?(
-                                        <Alert type="success" message="The invite is sent to the email address." dismissible={false} onDismiss={() => setSuccess(false)}></Alert>
-                                    ):(
-                                        <Alert type="success" message="The user is added to the account." dismissible={false} onDismiss={() => setSuccess(false)}></Alert>
-                                    )}
-                                </>
+            <Paper>
+                <Box p={2}>
+                {success?(
+                    <>
+                        {inviteDialog?(
+                                <Alert severity="success">The invite is sent to the email address.</Alert>
                             ):(
+                                <Alert severity="success">The user is added to the account.</Alert>
+                            )}
+                        </>
+                    ):(
+                        <>
+                            {error !== null && 
+                                <Alert severity="error">{error}</Alert>
+                            }
+                            {inviteDialog?(
                                 <>
-                                    {error !== null && 
-                                        <Alert type="danger" message={error} dismissible={true} onDismiss={() => setError(null)}></Alert>
-                                    }
-                                    {inviteDialog?(
-                                        <>
-                                            <div className="text-center">The email is not registered by any existing user. Do you want to send an invite to the user?</div>
-                                            <div className="text-center mt-3">
-                                                <button className="btn btn-primary mr-2" disabled={inSubmit} onClick={e => {
-                                                    e.preventDefault();
-                                                    setInSubmit(true);
-                                                    const inviteEmailToAccount = CloudFunctions.httpsCallable('inviteEmailToAccount');
-                                                    inviteEmailToAccount({
-                                                        accountId: userData.currentAccount.id,
-                                                        email: emailAddress.value,
-                                                        role: selectedRole
-                                                    }).then(res => {
-                                                        setInSubmit(false);
-                                                        setSuccess(true);
-                                                    }).catch(err => {
-                                                        setError(err.message);
-                                                    });
-                                                }}>{inSubmit && <Loader />}
-                                                    Yes, send an invite</button>
-                                                <Link className={inSubmit?("btn btn-secondary ml-2 btn-disabled"):("btn btn-secondary ml-2")} disabled={inSubmit} to={"/account/"+userData.currentAccount.id+"/users"} onClick={e => {
-                                                    if(inSubmit){
-                                                        e.preventDefault();
-                                                    }
-                                                }}>No</Link>
-                                            </div>
-                                        </>
-                                    ):(
-                                        <Form handleSubmit={e => {
+                                    <div className="text-center">The email is not registered by any existing user. Do you want to send an invite to the user?</div>
+                                    <div className="text-center mt-3">
+                                        <button className="btn btn-primary mr-2" disabled={inSubmit} onClick={e => {
                                             e.preventDefault();
-                                            setError(null);
-                                            setSuccess(false);
                                             setInSubmit(true);
-                                            const addUserToAccount = CloudFunctions.httpsCallable('addUserToAccount');
-                                            addUserToAccount({
+                                            const inviteEmailToAccount = CloudFunctions.httpsCallable('inviteEmailToAccount');
+                                            inviteEmailToAccount({
                                                 accountId: userData.currentAccount.id,
                                                 email: emailAddress.value,
                                                 role: selectedRole
@@ -112,40 +81,64 @@ const AddUser = () => {
                                                 setInSubmit(false);
                                                 setSuccess(true);
                                             }).catch(err => {
-                                                setInSubmit(false);
-                                                if(err.details && err.details.code === 'auth/user-not-found'){
-                                                    setInviteDialog(true);
-                                                    setInSubmit(false);
-                                                }else{
-                                                    setError(err.message);
-                                                }
+                                                setError(err.message);
                                             });
-                                        }}
-                                        disabled={emailAddress.hasError || emailAddress.value===null || selectedRole===null || inSubmit}
-                                        submitBtnStyle={(selectedRole!=='remove')?"primary":"danger"}
-                                        inSubmit={inSubmit}
-                                        enableDefaultButtons={true}
-                                        backToUrl={"/account/"+userData.currentAccount.id+"/users"}
-                                        >
-                                            <Field label="Email Address">
-                                                <Input type="email" name="email-address" hasError={emailAddress.hasError} error={emailAddress.error} minLen={5} maxLen={50} required={true} validRegex="^[a-zA-Z0-9-_+\.]*@[a-zA-Z0-9-_\.]*\.[a-zA-Z0-9-_\.]*$" changeHandler={setEmailAddress} />
-                                            </Field>
-                                            <Field label="Role">
-                                                <select className="form-control col-md-6 col-sm-8" onChange={e => {
-                                                    setSelectedRole(e.target.value);
-                                                }}>
-                                                    <option value="user">user</option>
-                                                    <option value="admin">admin</option>
-                                                </select>
-                                            </Field>
-                                        </Form>
-                                    )}
+                                        }}>{inSubmit && <Loader />}
+                                            Yes, send an invite</button>
+                                        <Link className={inSubmit?("btn btn-secondary ml-2 btn-disabled"):("btn btn-secondary ml-2")} disabled={inSubmit} to={"/account/"+userData.currentAccount.id+"/users"} onClick={e => {
+                                            if(inSubmit){
+                                                e.preventDefault();
+                                            }
+                                        }}>No</Link>
+                                    </div>
                                 </>
+                            ):(
+                                <Form handleSubmit={e => {
+                                    e.preventDefault();
+                                    setError(null);
+                                    setSuccess(false);
+                                    setInSubmit(true);
+                                    const addUserToAccount = CloudFunctions.httpsCallable('addUserToAccount');
+                                    addUserToAccount({
+                                        accountId: userData.currentAccount.id,
+                                        email: emailAddress.value,
+                                        role: selectedRole
+                                    }).then(res => {
+                                        setInSubmit(false);
+                                        setSuccess(true);
+                                    }).catch(err => {
+                                        setInSubmit(false);
+                                        if(err.details && err.details.code === 'auth/user-not-found'){
+                                            setInviteDialog(true);
+                                            setInSubmit(false);
+                                        }else{
+                                            setError(err.message);
+                                        }
+                                    });
+                                }}
+                                disabled={emailAddress.hasError || emailAddress.value===null || selectedRole===null || inSubmit}
+                                submitBtnStyle={(selectedRole!=='remove')?"primary":"danger"}
+                                inSubmit={inSubmit}
+                                enableDefaultButtons={true}
+                                backToUrl={"/account/"+userData.currentAccount.id+"/users"}
+                                >
+
+                                    <Input label="Email Address" type="email" name="email-address" hasError={emailAddress.hasError} error={emailAddress.error} minLen={5} maxLen={50} required={true} validRegex="^[a-zA-Z0-9-_+\.]*@[a-zA-Z0-9-_\.]*\.[a-zA-Z0-9-_\.]*$" changeHandler={setEmailAddress} fullWidth />
+                                    <FormControl fullWidth>
+                                        <InputLabel>Role</InputLabel>
+                                        <Select label="Role" value={selectedRole} onChange={e => {
+                                            setSelectedRole(e.target.value);
+                                        }}>
+                                            <MenuItem value="user">user</MenuItem>
+                                            <MenuItem value="admin">admin</MenuItem>
+                                        </Select>
+                                    </FormControl>
+                                </Form>
                             )}
-                        </div>
-                    </div>
-                </div>
-            </div>
+                        </>
+                    )}                    
+                </Box>
+            </Paper>
         </>
 
     )
