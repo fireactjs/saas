@@ -1,6 +1,6 @@
 import React from "react";
 import { Link as RouterLink } from "react-router-dom";
-import { Breadcrumbs, Typography, Link } from "@material-ui/core";
+import { Breadcrumbs, Typography, Link } from "@mui/material";
 
 export const BreadcrumbContext = React.createContext();
 

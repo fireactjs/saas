@@ -1,5 +1,5 @@
 import React from 'react';
-import { Paper, Table, TableContainer, TableHead, TableRow, TableCell, TableBody, TablePagination } from '@material-ui/core';
+import { Paper, Table, TableContainer, TableHead, TableRow, TableCell, TableBody, TablePagination } from '@mui/material';
 
 const DataTable = ({columns, rows, totalRows, pageSize, page, handlePageChane, handlePageSizeChange}) => {
 

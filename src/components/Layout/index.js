@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import clsx from 'clsx';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
-import { Drawer, AppBar, Toolbar, CssBaseline, Divider, IconButton, Box, Paper } from '@material-ui/core';
+import { styled, useTheme } from '@mui/material/styles';
+import { AppBar as MuiAppBar, Drawer as MuiDrawer, Toolbar, CssBaseline, Divider, IconButton, Box, Paper } from '@mui/material';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
@@ -10,70 +9,72 @@ import {BreadcrumbContext, Breadcrumb} from '../Breadcrumb';
 
 const drawerWidth = 240;
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: 'flex',
+const openedMixin = (theme) => ({
+  width: drawerWidth,
+  transition: theme.transitions.create('width', {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.enteringScreen,
+  }),
+  overflowX: 'hidden',
+});
+
+const closedMixin = (theme) => ({
+  transition: theme.transitions.create('width', {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.leavingScreen,
+  }),
+  overflowX: 'hidden',
+  width: `calc(${theme.spacing(7)} + 1px)`,
+  [theme.breakpoints.up('sm')]: {
+    width: `calc(${theme.spacing(9)} + 1px)`,
   },
-  appBar: {
-    zIndex: theme.zIndex.drawer + 1,
-    transition: theme.transitions.create(['width', 'margin'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-  },
-  appBarShift: {
+});
+
+const DrawerHeader = styled('div')(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'flex-end',
+  padding: theme.spacing(0, 1),
+  // necessary for content to be below app bar
+  ...theme.mixins.toolbar,
+}));
+
+const AppBar = styled(MuiAppBar, {
+  shouldForwardProp: (prop) => prop !== 'open',
+})(({ theme, open }) => ({
+  zIndex: theme.zIndex.drawer + 1,
+  transition: theme.transitions.create(['width', 'margin'], {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.leavingScreen,
+  }),
+  ...(open && {
     marginLeft: drawerWidth,
     width: `calc(100% - ${drawerWidth}px)`,
     transition: theme.transitions.create(['width', 'margin'], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
     }),
-  },
-  menuButton: {
-    marginRight: 36,
-  },
-  hide: {
-    display: 'none',
-  },
-  drawer: {
+  }),
+}));
+
+const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
+  ({ theme, open }) => ({
     width: drawerWidth,
     flexShrink: 0,
     whiteSpace: 'nowrap',
-  },
-  drawerOpen: {
-    width: drawerWidth,
-    transition: theme.transitions.create('width', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
+    boxSizing: 'border-box',
+    ...(open && {
+      ...openedMixin(theme),
+      '& .MuiDrawer-paper': openedMixin(theme),
     }),
-  },
-  drawerClose: {
-    transition: theme.transitions.create('width', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
+    ...(!open && {
+      ...closedMixin(theme),
+      '& .MuiDrawer-paper': closedMixin(theme),
     }),
-    overflowX: 'hidden',
-    width: theme.spacing(7) + 1,
-    [theme.breakpoints.up('sm')]: {
-      width: theme.spacing(9) + 1,
-    },
-  },
-  toolbar: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    padding: theme.spacing(0, 1),
-    // necessary for content to be below app bar
-    ...theme.mixins.toolbar,
-  },
-  content: {
-    flexGrow: 1,
-    //padding: theme.spacing(3),
-  },
-}));
+  }),
+);
 
 const Layout = ({drawerMenu, toolbarChildren, toolBarMenu, children}) => {
-  const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
@@ -88,37 +89,24 @@ const Layout = ({drawerMenu, toolbarChildren, toolBarMenu, children}) => {
   const [breadcrumb, setBreadcrumb] = useState([]);
 
   return (
-    <div className={classes.root}>
+    <Box sx={{ display: 'flex'}}>
         <CssBaseline />
-        <AppBar
-            position="fixed"
-            className={clsx(classes.appBar, {
-            [classes.appBarShift]: open,
-            })}
-        >
+        <AppBar position="fixed" open={open}>
             <Toolbar>
-                <div
-                    className={clsx(classes.menuButton, {
-                        [classes.hide]: open,
-                    })}
-                >
-                    <div style={{
-                        display: 'inline-flex',
-                        overflow: 'visible',
-                        alignItems: 'center',
-                        position: 'relative',
-                    }}>
-                        <div style={{display: 'inline-flex', paddingRight: '20px'}}><Logo /></div>
-                        <IconButton
-                        color="inherit"
-                        aria-label="open drawer"
-                        edge="start"
-                        onClick={handleDrawerOpen}
-                        >
-                            <MenuIcon  />
-                        </IconButton>
-                    </div> 
-                </div>
+              <div style={{display: 'inline-flex', paddingRight: '20px', display: open?"none":null}}><Logo /></div>
+              <IconButton
+                color="inherit"
+                aria-label="open drawer"
+                onClick={handleDrawerOpen}
+                edge="start"
+                sx={{
+                  marginRight: '36px',
+                  ...(open && { display: 'none' }),
+                }}
+              >
+                
+                <MenuIcon />
+              </IconButton>
                 {toolbarChildren}
                 <div style={{
                     marginLeft: "auto",
@@ -128,18 +116,9 @@ const Layout = ({drawerMenu, toolbarChildren, toolBarMenu, children}) => {
         </AppBar>
         <Drawer
             variant="permanent"
-            className={clsx(classes.drawer, {
-                [classes.drawerOpen]: open,
-                [classes.drawerClose]: !open,
-            })}
-            classes={{
-            paper: clsx({
-                [classes.drawerOpen]: open,
-                [classes.drawerClose]: !open,
-            }),
-            }}
+            open={open}
         >
-        <div className={classes.toolbar}>
+          <DrawerHeader>
             {open && <div style={{marginLeft:'0px', marginRight:'auto', display:'inline-flex',alignItems: 'center', flexWrap: 'wrap',}}>
                 <div style={{display: 'inline-flex', paddingRight: '20px'}}>
                     <Logo />
@@ -147,15 +126,15 @@ const Layout = ({drawerMenu, toolbarChildren, toolBarMenu, children}) => {
                 <h2>FIREACT</h2>
             </div>}
             <IconButton onClick={handleDrawerClose}>
-                {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+              {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
             </IconButton>
-        </div>
+          </DrawerHeader>
         <Divider />
             {drawerMenu}
         <Divider />
         </Drawer>
-        <main className={classes.content}>
-            <div className={classes.toolbar} />
+        <Box component="main" sx={{ flexGrow: 1}}>
+            <DrawerHeader />
             <Box width={1} style={{position:'fixed'}}>
                 <Paper square>
                     <Box p={2}>
@@ -164,12 +143,12 @@ const Layout = ({drawerMenu, toolbarChildren, toolBarMenu, children}) => {
                 </Paper>
             </Box>
             <Box mt={10} ml={3} mr={3} mb={3}>
-            <BreadcrumbContext.Provider value={{setBreadcrumb}}>
-                {children}
-            </BreadcrumbContext.Provider>
+              <BreadcrumbContext.Provider value={{setBreadcrumb}}>
+                  {children}
+              </BreadcrumbContext.Provider>
             </Box>
-        </main>
-    </div>
+        </Box>
+    </Box>
   );
 }
 

@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { List, ListItem, ListItemText, ListItemIcon, Divider, Typography } from "@material-ui/core";
+import { List, ListItem, ListItemText, ListItemIcon, Divider, Typography } from "@mui/material";
 import AppIcon from '@material-ui/icons/Apps';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import ListAltIcon from '@material-ui/icons/ListAlt';

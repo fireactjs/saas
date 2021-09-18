@@ -1,6 +1,6 @@
 import React from "react";
 import { AuthContext } from '../../FirebaseAuth';
-import { Avatar, Box, Divider, Grid, List, ListItem, Typography } from "@material-ui/core";
+import { Avatar, Box, Divider, Grid, List, ListItem, Typography } from "@mui/material";
 import EditIcon from '@material-ui/icons/Edit';
 import SendIcon from '@material-ui/icons/Send';
 import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';

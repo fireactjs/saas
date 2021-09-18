@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { useHistory } from 'react-router-dom';
 import Loader from '../Loader';
-import { Button } from "@material-ui/core";
+import { Button } from "@mui/material";
 import ButtonRow from "./ButtonRow";
 
 const Form = (props) => {

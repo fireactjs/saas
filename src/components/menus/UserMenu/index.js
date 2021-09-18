@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { AuthContext } from '../../FirebaseAuth';
 import { userSignOut } from '../../../libs/user';
-import { IconButton, Menu, MenuItem, Avatar, Divider, makeStyles } from "@material-ui/core";
-import AccountBoxIcon from '@material-ui/icons/AccountBox';
-import ListAltIcon from '@material-ui/icons/ListAlt';
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import { IconButton, Menu, MenuItem, Avatar, Divider } from "@mui/material";
+import { makeStyles } from "@mui/styles";
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
+import ListAltIcon from '@mui/icons-material/ListAlt';
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 
 const UserMenu = () => {
     const [anchorEl, setAnchorEl] = useState(null);
@@ -16,12 +17,6 @@ const UserMenu = () => {
     const handleClose = () => {
         setAnchorEl(null);
     };
-    const useStyles = makeStyles((theme) => ({
-        icon: {
-            marginRight: theme.spacing(1),
-        }
-    }));
-    const classes = useStyles();
     const history = useHistory();
 
     return (
@@ -58,7 +53,7 @@ const UserMenu = () => {
                         handleClose();
                         history.push("/user/profile");
                     }}>
-                        <AccountBoxIcon className={classes.icon} />
+                        <AccountBoxIcon style={{marginRight: '10px'}} />
                         Profile
                     </MenuItem>
                     <MenuItem onClick={(e)=>{
@@ -66,12 +61,12 @@ const UserMenu = () => {
                         handleClose();
                         history.push("/user/log");
                         }}>
-                        <ListAltIcon className={classes.icon} />
+                        <ListAltIcon style={{marginRight: '10px'}} />
                         Activity Logs
                     </MenuItem>
                     <Divider />
                     <MenuItem onClick={() => userSignOut()}>
-                        <ExitToAppIcon className={classes.icon} />
+                        <ExitToAppIcon style={{marginRight: '10px'}} />
                         Sign Out
                     </MenuItem>
                 </Menu>

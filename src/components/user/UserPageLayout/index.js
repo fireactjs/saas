@@ -1,6 +1,6 @@
 import React, {useContext, useEffect} from "react";
 import {BreadcrumbContext} from '../../Breadcrumb';
-import { Box, Container, Paper } from "@material-ui/core";
+import { Box, Container, Paper } from "@mui/material";
 
 const UserPageLayout = (props) => {
     const {
