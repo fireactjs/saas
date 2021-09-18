@@ -83,10 +83,13 @@ const ViewLogs = () => {
             }
         ]);
         getTotal();
+    },[setBreadcrumb]);
+
+    useEffect(() => {
         return () => { 
             mountedRef.current = false
         }
-    },[setBreadcrumb]);
+    },[]);
 
     useEffect(() => {
         getLogs(pageSize);
