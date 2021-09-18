@@ -1,4 +1,4 @@
-import React, {useState, useContext, useEffect} from "react";
+import React, {useState, useContext, useEffect, useRef } from "react";
 import { CloudFunctions } from "../../../../components/FirebaseAuth/firebase";
 import { BreadcrumbContext } from '../../../../components/Breadcrumb';
 import { Form, Input } from '../../../../components/Form';
@@ -7,6 +7,7 @@ import { Container, Paper, Box, Alert } from "@mui/material";
 
 const NewAccount = () => {
     const title = 'Create New Account';
+    const mountedRef = useRef(true);
 
     const [accountName, setAccountName] = useState({
         hasError: false,
@@ -36,6 +37,12 @@ const NewAccount = () => {
         ]);
     }, [setBreadcrumb, title]);
 
+    useEffect(() => {
+        return () => { 
+            mountedRef.current = false
+        }
+    },[]);
+
 
     return (
         <Container>
@@ -56,9 +63,11 @@ const NewAccount = () => {
                                     createAccount({
                                         accountName: accountName.value,
                                     }).then(response => {
+                                        if (!mountedRef.current) return null 
                                         const accountId = response.data.accountId;
                                         setRedirect('/account/'+accountId+'/billing/plan');
                                     }).catch(err => {
+                                        if (!mountedRef.current) return null 
                                         setErrorMessage(err.message);
                                         setInSubmit(false);
                                     })
