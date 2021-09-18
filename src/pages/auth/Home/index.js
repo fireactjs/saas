@@ -70,7 +70,7 @@ const Home = () => {
                                     {account.subscriptionStatus?(
                                         <Button size="small" color="primary" onClick={() => history.push('/account/'+account.id+'/')}>Account Overview</Button>
                                     ):(
-                                        <Button size="small" color="secondary" onClick={() => history.push('/account/'+account.id+'/billing/plan')}>Activate the account</Button>
+                                        <Button size="small" color="warning" onClick={() => history.push('/account/'+account.id+'/billing/plan')}>Activate the account</Button>
                                     )}
                                 </CardActions>
                             </Card>

@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Alert } from "@material-ui/lab";
-import { Button } from "@mui/material";
+import { Button, Alert } from "@mui/material";
 import ButtonRow from "./ButtonRow";
 
 const FormResult = (props) => {

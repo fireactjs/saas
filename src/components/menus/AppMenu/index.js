@@ -1,9 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { List, ListItem, ListItemText, ListItemIcon, Divider, Typography } from "@mui/material";
-import AppIcon from '@material-ui/icons/Apps';
-import AccountBoxIcon from '@material-ui/icons/AccountBox';
-import ListAltIcon from '@material-ui/icons/ListAlt';
+import AppIcon from '@mui/icons-material/Apps';
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
+import ListAltIcon from '@mui/icons-material/ListAlt';
 
 const AppMenu = () => {
     return (

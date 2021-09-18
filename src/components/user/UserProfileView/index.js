@@ -1,9 +1,9 @@
 import React from "react";
 import { AuthContext } from '../../FirebaseAuth';
 import { Avatar, Box, Divider, Grid, List, ListItem, Typography } from "@mui/material";
-import EditIcon from '@material-ui/icons/Edit';
-import SendIcon from '@material-ui/icons/Send';
-import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
+import EditIcon from '@mui/icons-material/Edit';
+import SendIcon from '@mui/icons-material/Send';
+import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
 import { useHistory } from "react-router-dom";
 
 const UserProfileView = () => {

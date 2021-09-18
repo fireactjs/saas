@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import { AppBar as MuiAppBar, Drawer as MuiDrawer, Toolbar, CssBaseline, Divider, IconButton, Box, Paper } from '@mui/material';
-import MenuIcon from '@material-ui/icons/Menu';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import MenuIcon from '@mui/icons-material/Menu';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import Logo from '../Logo';
 import {BreadcrumbContext, Breadcrumb} from '../Breadcrumb';
 
