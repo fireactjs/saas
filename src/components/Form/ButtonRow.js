@@ -1,21 +1,11 @@
 import React from "react";
-import { makeStyles } from "@mui/styles";
-
-const useStyles = makeStyles((theme) => ({
-    root: {
-      '& > *': {
-        margin: theme.spacing(1),
-      },
-    },
-}));
+import { Stack } from "@mui/material";
 
 const ButtonRow = ({ children }) => {
-    const classes = useStyles();
-
     return (
-        <div className={classes.root}>
+        <Stack direction="row" spacing={1} mt={2}>
             {children}
-        </div>
+        </Stack>
     );
 }
 

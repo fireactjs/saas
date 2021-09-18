@@ -37,7 +37,7 @@ const Form = (props) => {
                         {submitBtnText || 'Submit'}
                     </Button>
                     {backToUrl && backToUrl !== "" &&
-                        <Button variant="contained" disabled={inSubmit} onClick={(e) => {
+                        <Button variant="contained" color="secondary" disabled={inSubmit} onClick={(e) => {
                             e.preventDefault();
                             history.push(backToUrl);
                         }}>

@@ -54,7 +54,7 @@ const DeleteUser = () => {
                     }
                 }}
                 submitBtnText='DELETE'
-                submitBtnStyle='secondary'
+                submitBtnStyle='error'
                 disabled={emailAddress.hasError || emailAddress.value===null || inSubmit}
                 inSubmit={inSubmit}
                 enableDefaultButtons={true}

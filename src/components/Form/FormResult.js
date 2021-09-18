@@ -18,7 +18,7 @@ const FormResult = (props) => {
             <Alert severity={severity}>{resultMessage}</Alert>
             <ButtonRow>
                 <Button variant="contained" color="primary" onClick={primaryAction} >{primaryText}</Button>
-                {secondaryText && <Button variant="contained" onClick={secondaryAction}>{secondaryText}</Button>}
+                {secondaryText && <Button variant="contained" color="secondary" onClick={secondaryAction}>{secondaryText}</Button>}
             </ButtonRow>
         </>
     );
