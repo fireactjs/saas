@@ -3,7 +3,6 @@ import { useHistory } from "react-router-dom";
 import { AuthContext } from '../../FirebaseAuth';
 import { userSignOut } from '../../../libs/user';
 import { IconButton, Menu, MenuItem, Avatar, Divider } from "@mui/material";
-import { makeStyles } from "@mui/styles";
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import ListAltIcon from '@mui/icons-material/ListAlt';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';

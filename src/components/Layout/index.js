@@ -93,7 +93,7 @@ const Layout = ({drawerMenu, toolbarChildren, toolBarMenu, children}) => {
         <CssBaseline />
         <AppBar position="fixed" open={open}>
             <Toolbar>
-              <div style={{display: 'inline-flex', paddingRight: '20px', display: open?"none":null}}><Logo /></div>
+              <div style={{paddingRight: '20px', display: open?"none":"inline-flex"}}><Logo /></div>
               <IconButton
                 color="inherit"
                 aria-label="open drawer"
