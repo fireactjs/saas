@@ -66,8 +66,7 @@ const UserRole = () => {
     },[]);
 
     return (
-        <>
-            <Paper>
+        <Paper>
                 <Box p={2}>
                 {(userId !== userData.currentAccount.owner)?(
                     success?(
@@ -141,8 +140,6 @@ const UserRole = () => {
                 )}
                 </Box>
             </Paper>
-        </>
-
     )
 }
 
