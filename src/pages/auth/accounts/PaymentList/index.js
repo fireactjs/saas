@@ -116,7 +116,6 @@ const PaymentList = () => {
 
 
     return (
-        <>
         <Stack spacing={3}>
             {userData.currentAccount.owner === authUser.user.uid &&
                 <Stack direction="row-reverse" spacing={1} mt={2}>
@@ -175,7 +174,6 @@ const PaymentList = () => {
                     )}
             </Paper>
         </Stack>
-        </>
     )
 }
 
