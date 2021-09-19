@@ -16,19 +16,22 @@ const ViewLogs = () => {
     const mountedRef = useRef(true);
     const [error, setError] = useState(null);
 
-    const getTotal = () => {
-        setLoading(true);
-        const userDocRef = FirebaseAuth.firestore().collection('users').doc(FirebaseAuth.auth().currentUser.uid);
-        userDocRef.get().then(function(userDoc){
-            if (!mountedRef.current) return null
-            if(userDoc.exists){
-                setTotal(userDoc.data().activityCount);
-                setLoading(false);
-            }
-        })
-    }
-
     const getLogs = (pz, direction, doc) => {
+        const getTotal = () => {
+            const userDocRef = FirebaseAuth.firestore().collection('users').doc(FirebaseAuth.auth().currentUser.uid);
+            return userDocRef.get().then(function(userDoc){
+                if (!mountedRef.current) return null
+                if(userDoc.exists){
+                    return userDoc.data().activityCount;
+                }else{
+                    return 0;
+                }
+            }).catch(() => {
+                return 0;
+            });
+        }
+    
+
         setLoading(true);
         let records = [];
         const collectionRef = FirebaseAuth.firestore().collection('users').doc(FirebaseAuth.auth().currentUser.uid).collection('activities');
@@ -40,9 +43,9 @@ const ViewLogs = () => {
             query = query.endBefore(doc);
         }
         query = query.limit(pz);
-        
-        query.get().then(documentSnapshots => {
-            if (!mountedRef.current) return null 
+        Promise.all([getTotal(), query.get()]).then(([activityCount, documentSnapshots]) => {
+            if (!mountedRef.current) return null
+            setTotal(activityCount);
             documentSnapshots.forEach(doc => {
                 records.push({
                     'timestamp': doc.id,
@@ -82,7 +85,6 @@ const ViewLogs = () => {
                 active: true
             }
         ]);
-        getTotal();
     },[setBreadcrumb]);
 
     useEffect(() => {
@@ -135,7 +137,6 @@ const ViewLogs = () => {
                 )}
                 </>
             )}
-            
         </UserPageLayout>
         
     )
