@@ -5,6 +5,7 @@ import { FirebaseAuth } from '../FirebaseAuth/firebase';
 import firebase from "firebase/app";
 import { userSignIn } from '../../libs/user';
 import Loader from "../Loader";
+import Logo from "../Logo";
 
 const FirebaseUI = () => {
 
@@ -65,7 +66,7 @@ const FirebaseUI = () => {
         }
         {signInSuccess === false &&
             <div className="text-center">
-                <i className="fa fa-5x fa-fire text-warning"></i>
+                <Logo size="80px" />
                 <h1>Server Error</h1>
                 <p>Oops, something went wrong, please try again.</p>
                 <Link to="/">Home</Link>
