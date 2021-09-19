@@ -1,13 +1,16 @@
-import React, {useState, useContext, useEffect} from "react";
+import React, {useState, useContext, useEffect, useRef} from "react";
+import { useHistory } from 'react-router-dom';
 import { CloudFunctions } from "../../../../components/FirebaseAuth/firebase";
 import { AuthContext } from "../../../../components/FirebaseAuth";
 import { BreadcrumbContext } from '../../../../components/Breadcrumb';
 import Loader from '../../../../components/Loader';
 import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
-import Alert from "../../../../components/Alert";
+import { Paper, Box, Alert, Stack, Button } from "@mui/material";
 
 const PaymentMethod = () => {
     const title = 'Update Payment Method';
+    const mountedRef = useRef(true);
+    const history = useHistory();
 
     const { userData, authUser } = useContext(AuthContext);
     const stripe = useStripe();
@@ -38,7 +41,7 @@ const PaymentMethod = () => {
     const [cardError, setCardError] = useState(null);
     const [errorMessage, setErrorMessage] = useState(null);
 
-    const subcribe = async(event) => {
+    const subscribe = async(event) => {
         event.preventDefault();
         setProcessing(true);
         setErrorMessage(null);
@@ -80,9 +83,11 @@ const PaymentMethod = () => {
                 accountId: userData.currentAccount.id,
                 paymentMethodId: paymentMethodId
             }).then(res => {
+                if (!mountedRef.current) return null
                 setSuccess(true);
                 setProcessing(false);
             }).catch(err => {
+                if (!mountedRef.current) return null
                 setProcessing(false);
                 setErrorMessage(err.message);
             });
@@ -114,63 +119,70 @@ const PaymentMethod = () => {
                 active: true
             }
         ]);
-    },[userData, setBreadcrumb, title])
+    },[userData, setBreadcrumb, title]);
+
+    useEffect(() => {
+        return () => { 
+            mountedRef.current = false
+        }
+    },[]);
 
     return (
         <>
-            <div className="container-fluid">
-                <div className="animated fadeIn">
+            <Paper>
+                <Box p={2}>
                     {userData.currentAccount.price > 0 ? (
-                        <>
-                            <div className="card-deck mb-3">
-                                <div className="card">
-                                    <div className="card-header text-center">{title}</div>
-                                    <div className="card-body">
-                                        {(userData.currentAccount.owner === authUser.user.uid)?(
-                                            <>
-                                                {success && 
-                                                <Alert type="success" message="The payment method has been successfully updated." dismissible={true} onDismiss={() => setSuccess(false)}></Alert>
-                                                }
-                                                {errorMessage !== null && 
-                                                <Alert type="danger" message={errorMessage} dismissible={true} onDismiss={() => setErrorMessage(null)}></Alert>
-                                                }
-                                                <div className="row justify-content-md-center">
-                                                    <div className="col col-sm-12 col-md-8 col-lg-8 col-xl-6">
-                                                    <div className="card-deck">
-                                                        <div className="card mb-4">
-                                                            <div className="card-header text-center">
-                                                                Credit or debit card
-                                                            </div>
-                                                            <div className="card-body">
-                                                                <div className="row justify-content-md-center">
-                                                                    <div className="col col-12">
-                                                                        {cardError !== null && 
-                                                                            <Alert type="danger" message={cardError} dismissible={true} onDismiss={() => setCardError(null)}></Alert>
-                                                                        }
-                                                                        <CardElement options={CARD_ELEMENT_OPTIONS}></CardElement>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <button className="btn btn-lg btn-block btn-primary" disabled={processing?true:false} onClick={e => {
-                                                        subcribe(e);
-                                                    }}>{processing?(<Loader text="Please wait..."></Loader>):(<>Save</>)}</button>
-                                                    </div>
-                                                </div>
-                                            </>
-                                        ):(
-                                            <Alert type="danger" message="Access Denied." dismissible={false} ></Alert>
-                                        )}
+                        <Stack spacing={3}>
+                            {(userData.currentAccount.owner === authUser.user.uid)?(
+                                <>
+                                    {success && 
+                                    <Alert severity="success" onClose={() => setSuccess(false)}>The payment method has been successfully updated.</Alert>
+                                    }
+                                    {errorMessage !== null && 
+                                    <Alert severity="error" onClose={() => setErrorMessage(null)}>{errorMessage}</Alert>
+                                    }
+                                    {cardError !== null && 
+                                        <Alert severity="error" onClose={() => setCardError(null)}>{cardError}</Alert>
+                                    }
+                                    <div style={{position: "relative", minHeight: '56px', padding: '15px'}}>
+                                        <CardElement options={CARD_ELEMENT_OPTIONS}></CardElement>
+                                        <fieldset style={{
+                                            borderColor: 'rgba(0, 0, 0, 0.23)',
+                                            borderStyle: 'solid',
+                                            borderWidth: '1px',
+                                            borderRadius: '4px',
+                                            position: 'absolute',
+                                            top: '-5px',
+                                            left: '0',
+                                            right: '0',
+                                            bottom: '0',
+                                            margin: '0',
+                                            padding: '0 8px',
+                                            overflow: 'hidden',
+                                            pointerEvents: 'none'
+                                            
+                                        }}></fieldset>
                                     </div>
-                                </div>
-                            </div>
-                        </>
+                                    <Stack direction="row" spacing={1} mt={2}>
+                                        <Button variant="contained" disabled={processing} onClick={(e) => subscribe(e)}>
+                                            {processing?(
+                                                <><Loader /> Processing...</>
+                                            ):(
+                                                <>Save</>
+                                            )}
+                                        </Button>
+                                        <Button variant="contained" color="secondary" disabled={processing} onClick={() => history.push("/account/"+userData.currentAccount.id+"/billing")}>Back</Button>
+                                    </Stack>
+                                </>
+                            ):(
+                                <Alert type="danger" message="Access Denied." dismissible={false} ></Alert>
+                            )}
+                        </Stack>
                     ):(
-                        <div>The account doesn't support payment methods.</div>
+                        <Alert severity="error">The account doesn't support payment methods.</Alert>
                     )}
-                </div>
-            </div>
+                </Box>
+            </Paper>
         </>
 
     )

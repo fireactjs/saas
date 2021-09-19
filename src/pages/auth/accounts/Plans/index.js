@@ -98,7 +98,7 @@ const Plans = () => {
         }
     },[]);
 
-    const subcribe = async(event) => {
+    const subscribe = async(event) => {
         event.preventDefault();
         setProcessing(true);
         setErrorMessage(null);
@@ -353,7 +353,7 @@ const Plans = () => {
                                     <Alert severity="error" onClose={() => setErrorMessage(null)}>{errorMessage}</Alert>
                                 }
                                 <Button color="success" size="large" variant="contained" disabled={selectedPlan.id===0||processing?true:false} onClick={e => {
-                                    subcribe(e);
+                                    subscribe(e);
                                 }}>{processing?(<><Loader /> Processing...</>):(<>Subscribe Now</>)}</Button>
                                 </Stack>
                             </Container>
