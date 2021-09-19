@@ -79,7 +79,7 @@ const PaymentList = () => {
             setLoading(false);
         }).catch(e => {
             if (!mountedRef.current) return null
-            setError(e);
+            setError(e.message);
             setLoading(false);
         });
     }

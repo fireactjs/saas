@@ -1,20 +1,21 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import { BreadcrumbContext } from '../../../../components/Breadcrumb';
 import { AuthContext } from "../../../../components/FirebaseAuth";
 import { CloudFunctions } from "../../../../components/FirebaseAuth/firebase";
-import Alert from "../../../../components/Alert";
-import { Link, Redirect } from "react-router-dom";
+import { useHistory, Redirect } from "react-router-dom";
 import Loader from "../../../../components/Loader";
 import { currency } from "../../../../inc/currency.json";
+import { Paper, Box, Alert, Button, Stack} from "@mui/material";
 
 const DeleteAccount = () => {
     const title = 'Delete Account';
-
+    const history = useHistory();
     const { userData } = useContext(AuthContext);
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(false);
     const [inSubmit, setInSubmit] = useState(false);
     const { setBreadcrumb } = useContext(BreadcrumbContext);
+    const mountedRef = useRef(true);
 
     useEffect(() => {
         setBreadcrumb([
@@ -39,7 +40,13 @@ const DeleteAccount = () => {
                 active: true
             }
         ]);
-    },[userData,setBreadcrumb,title])
+    },[userData,setBreadcrumb,title]);
+
+    useEffect(() => {
+        return () => { 
+            mountedRef.current = false
+        }
+    },[]);
 
     return (
         <>
@@ -47,40 +54,40 @@ const DeleteAccount = () => {
                 <Redirect to="/"></Redirect>
             ):(
                 <>
-                    <div className="container-fluid">
-                        <div className="animated fadeIn">
-                            <div className="card">
-                                    <div className="card-header">
-                                        {title}
-                                    </div>
-                                    <div className="card-body">
-                                        {error !== null && 
-                                            <Alert type="danger" message={error} dismissible={true} onDismiss={() => setError(null)}></Alert>
-                                        }
-                                        <p>Your current subscription period will end on {(new Date(userData.currentAccount.subscriptionCurrentPeriodEnd * 1000)).toLocaleDateString()}. The system will charge {currency[userData.currentAccount.currency].sign}{userData.currentAccount.price}/{userData.currentAccount.paymentCycle} to renew the subscription. Deleting the account will stop the subscription and no renewal payment will be charged.</p>
-                                        <p className="text-danger">Are you sure you want to delete your account?</p>
-                                        <button className="btn btn-danger mr-3" disabled={inSubmit?true:false} onClick={e => {
-                                            setInSubmit(true);
-                                            const cancelSubscription = CloudFunctions.httpsCallable('cancelSubscription');
-                                            cancelSubscription({
-                                                accountId: userData.currentAccount.id
-                                            }).then(res => {
-                                                setInSubmit(false);
-                                                setSuccess(true);
-                                            }).catch(err => {
-                                                setInSubmit(false);
-                                                setError(err.message);
-                                            })
-                                        }}>
-                                            {inSubmit && 
-                                                <Loader />
-                                            }
-                                            Yes, I want to delete the account</button>
-                                        <Link className="btn btn-secondary" to={"/account/"+userData.currentAccount.id+"/billing"}>No</Link>
-                                    </div>
-                            </div>
-                        </div>
-                    </div>
+                    <Paper>
+                        <Box p={2}>
+                            {error !== null && 
+                                <Box p={3}>
+                                    <Alert severity="error">{error}</Alert>
+                                </Box>
+                            }
+                            <p>Your current subscription period will end on <strong>{(new Date(userData.currentAccount.subscriptionCurrentPeriodEnd * 1000)).toLocaleDateString()}</strong>.</p>
+                            <p>The system will charge <strong>{currency[userData.currentAccount.currency].sign}{userData.currentAccount.price}/{userData.currentAccount.paymentCycle}</strong> to renew the subscription. Deleting the account will stop the subscription and no renewal payment will be charged.</p>
+                            <p className="text-danger">Are you sure you want to delete your account?</p>
+                            <Stack direction="row" spacing={1} mt={2}>
+                                <Button variant="contained" color="error" disabled={inSubmit} onClick={() => {
+                                    setInSubmit(true);
+                                    const cancelSubscription = CloudFunctions.httpsCallable('cancelSubscription');
+                                    cancelSubscription({
+                                        accountId: userData.currentAccount.id
+                                    }).then(res => {
+                                        if (!mountedRef.current) return null
+                                        setSuccess(true);
+                                        setInSubmit(false);
+                                    }).catch(err => {
+                                        if (!mountedRef.current) return null
+                                        setError(err.message);
+                                        setInSubmit(false);
+                                    })
+                                }}>
+                                {inSubmit && 
+                                    <Loader />
+                                }
+                                    Yes, I want to delete the account</Button>
+                                <Button variant="contained" color="secondary" onClick={() => history.push("/account/"+userData.currentAccount.id+"/billing")}>No, Go Back</Button>
+                            </Stack>
+                        </Box>
+                    </Paper>
                 </>
             )}
             

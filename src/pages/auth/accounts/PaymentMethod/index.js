@@ -144,7 +144,7 @@ const PaymentMethod = () => {
                                     {cardError !== null && 
                                         <Alert severity="error" onClose={() => setCardError(null)}>{cardError}</Alert>
                                     }
-                                    <div style={{position: "relative", minHeight: '56px', padding: '15px'}}>
+                                    <div style={{position: "relative", minHeight: '56px', padding: '15px', maxWidth: '500px'}}>
                                         <CardElement options={CARD_ELEMENT_OPTIONS}></CardElement>
                                         <fieldset style={{
                                             borderColor: 'rgba(0, 0, 0, 0.23)',

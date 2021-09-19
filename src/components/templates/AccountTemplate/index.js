@@ -36,7 +36,10 @@ const AccountTemplate = ({ role, allowInactive, children }) => {
                     account.planId = doc.data().plan.id;
                 }
                 account.price = doc.data().price;
+                account.currency = doc.data().currency;
+                account.paymentCycle = doc.data().paymentCycle;
                 account.subscriptionStatus = doc.data().subscriptionStatus;
+                account.subscriptionCurrentPeriodEnd = doc.data().subscriptionCurrentPeriodEnd;
                 account.role = (doc.data().admins.indexOf(authUser.user.uid) === -1?('user'):('admin'));
                 setUserData(userData => ({
                     ...userData,

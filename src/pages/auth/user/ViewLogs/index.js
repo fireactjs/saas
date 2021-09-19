@@ -59,7 +59,7 @@ const ViewLogs = () => {
             }
             setLoading(false);
         }).catch(e => {
-            setError(e);
+            setError(e.message);
             setLoading(false);
         });
     }
