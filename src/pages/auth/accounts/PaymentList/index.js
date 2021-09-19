@@ -56,15 +56,15 @@ const PaymentList = () => {
             documentSnapshots.forEach(doc => {
                 records.push({
                     'id': doc.id,
-                    'total': (Math.round(doc.data().total / 100)).toFixed(2),
-                    'subTotal': (Math.round(doc.data().subTotal / 100)).toFixed(2),
-                    'tax': (Math.round((doc.data().tax || 0) / 100)).toFixed(2),
+                    'total': (doc.data().total / 100).toFixed(2),
+                    'subTotal': (doc.data().subTotal / 100).toFixed(2),
+                    'tax': ((doc.data().tax || 0) / 100).toFixed(2),
                     'amountPaid': (Math.round(doc.data().amountPaid / 100)).toFixed(2),
                     'created': (new Date(doc.data().created * 1000)).toLocaleString(),
                     'hostedInvoiceUrl': doc.data().hostedInvoiceUrl,
                     'currency': doc.data().currency,
                     'status': doc.data().status,
-                    'amountCol': <>{currency[doc.data().currency].sign}{(Math.round(doc.data().total / 100)).toFixed(2)}</>,
+                    'amountCol': <>{currency[doc.data().currency].sign}{(doc.data().total / 100).toFixed(2)}</>,
                     'statusCol': <>{doc.data().status.toUpperCase()}</>,
                     'urlCol': doc.data().hostedInvoiceUrl?(
                         <Button href={doc.data().hostedInvoiceUrl} rel="noreferrer" target="_blank" variant="contained" size="small">View Invoice</Button>
