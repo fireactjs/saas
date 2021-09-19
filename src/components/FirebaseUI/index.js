@@ -52,7 +52,7 @@ const FirebaseUI = () => {
     return (
         <>
         {signInSuccess &&
-            <Loader size={50} text={"Loading..."}/>
+            <Loader />
         }
         {signInSuccess === null &&
             <>
@@ -60,7 +60,7 @@ const FirebaseUI = () => {
                     <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={FirebaseAuth.auth()} />
                 </div>
                 <div id="loader">
-                    <Loader size={50} />
+                    <Loader />
                 </div>
             </>
         }
