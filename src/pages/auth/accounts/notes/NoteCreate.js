@@ -4,11 +4,11 @@ import firebase from "firebase/app";
 import { Paper, Box, Stack, Button } from '@mui/material';
 import { BreadcrumbContext } from '../../../../components/Breadcrumb';
 import { AuthContext } from "../../../../components/FirebaseAuth";
-import { post } from "./post.json";
+import { note } from "./note.json";
 import { FirebaseAuth } from '../../../../components/FirebaseAuth/firebase';
 import Loader from '../../../../components/Loader';
 
-const PostCreate = () => {
+const NoteCreate = () => {
     const { userData } = useContext(AuthContext);
 
     const validation = () => {
@@ -24,7 +24,7 @@ const PostCreate = () => {
             }
         });
         return serverValidation.then(() => {
-            return FireStoreCreateDoc('/accounts/'+userData.currentAccount.id+'/posts', data);
+            return FireStoreCreateDoc('/accounts/'+userData.currentAccount.id+'/notes', data);
         }).then(() => {
             return "success";
         }).catch(err => {
@@ -36,7 +36,7 @@ const PostCreate = () => {
     const [formFocused, setFormFocused] = useState(false);
 
     return (
-        <Create title="Create Post" schema={post} validation={validation} api={createApi} success={<Alert severity="success">Post is created</Alert>}>
+        <Create title="Create Note" schema={note} validation={validation} api={createApi} success={<Alert severity="success">Note is created</Alert>}>
             <TextField
                 label="Subject"
                 name="subject"
@@ -150,4 +150,4 @@ const Create = ({schema, title, validation, api, success, children}) => {
     )
 }
 
-export default PostCreate;
+export default NoteCreate;
