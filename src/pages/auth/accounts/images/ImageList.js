@@ -17,7 +17,7 @@ const ImageList = () => {
                     <Button variant="contained" onClick={() => history.push("/account/"+userData.currentAccount.id+"/images/create")} >Create Image Link</Button>
                 </Stack>
             </div>
-            <DataList title="Links" api={ListImageApi} schema={listResponse} />
+            <DataList title="Images" api={ListImageApi} schema={listResponse} />
         </Stack>
         
     )
