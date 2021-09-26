@@ -5,7 +5,7 @@ import { BreadcrumbContext } from '../Breadcrumb';
 import { AuthContext } from "../FirebaseAuth";
 import Loader from '../Loader';
 
-const DataCreate = ({schema, title, listName, validation, api, success, children}) => {
+const DataCreate = ({schema, title, listName, validation, handleSubmit, success, children}) => {
 
     const { userData } = useContext(AuthContext);
 
@@ -58,7 +58,7 @@ const DataCreate = ({schema, title, listName, validation, api, success, children
                 schema.forEach(field => {
                     data[field.name] = e.target.elements[field.name][field.prop]
                 });
-                api(data).then(res => {
+                handleSubmit(data).then(res => {
                     setResult({
                         response: true,
                         error: null
