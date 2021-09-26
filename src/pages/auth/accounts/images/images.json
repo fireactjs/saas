@@ -52,11 +52,23 @@
     "listResponse": [
         {
             "name": "Image",
-            "field": "image"
+            "field": "image",
+            "style": {"width": "20%"}
         },
         {
             "name": "Image Title",
-            "field": "title"
+            "field": "title",
+            "style": {"width": "20%"}
+        },
+        {
+            "name": "Image URL",
+            "field": "url",
+            "style": {"width": "45%"}
+        },
+        {
+            "name": "Actions",
+            "field": "action",
+            "style": {"width": "15%"}
         }
     ],
     "formSchema": [

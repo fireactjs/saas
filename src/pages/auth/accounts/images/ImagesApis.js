@@ -1,3 +1,4 @@
+import { Button, Stack } from "@mui/material";
 import { images } from "./images.json";
 
 const ListImageApi = (page, pageSize) => {
@@ -13,7 +14,8 @@ const ListImageApi = (page, pageSize) => {
                 const record = {
                     url: images[i].url,
                     title: images[i].title,
-                    image: <img alt={images[i].title} src={images[i].url+"&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"} width={200} />
+                    image: <img alt={images[i].title} src={images[i].url+"&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"} width={200} />,
+                    action: <Stack direction="row" spacing={1} mt={2}><Button variant="contained">Edit</Button><Button variant="contained" color="error">Delete</Button></Stack>
                 }
                 records.push(record);
             }
