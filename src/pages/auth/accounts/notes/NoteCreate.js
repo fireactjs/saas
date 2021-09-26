@@ -89,6 +89,11 @@ const Create = ({schema, title, validation, api, success, children}) => {
                 active: false
             },
             {
+                to: "/account/"+userData.currentAccount.id+"/notes",
+                text: "Notes",
+                active: false
+            },
+            {
                 to: null,
                 text: title,
                 active: true

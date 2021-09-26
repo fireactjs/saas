@@ -37,6 +37,7 @@ import PaymentList from './pages/auth/accounts/PaymentList';
 import PaymentMethod from './pages/auth/accounts/PaymentMethod';
 import DeleteAccount from './pages/auth/accounts/DeleteAccount';
 import NoteCreate from './pages/auth/accounts/notes/NoteCreate';
+import NoteList from './pages/auth/accounts/notes/NoteList';
 const stripePromise = loadStripe(stripeConfig.public_api_key);
 
 
@@ -48,6 +49,7 @@ function App() {
 					<Switch>
 						<AuthRouter exact path="/" component={Home} template={AppTemplate} title="My Accounts" />
 						<AuthRouter exact path="/account/:accountId/notes/create" component={NoteCreate} template={AccountTemplate} title="Create Note" role="*" />
+						<AuthRouter exact path="/account/:accountId/notes" component={NoteList} template={AccountTemplate} title="List Notes" role="*" />
 						<AuthRouter exact path="/account/:accountId/billing/plan" component={Plans} template={AccountTemplate} title="Select Plan" role="admin" allowInactive={true} />
 						<AuthRouter exact path="/account/:accountId/billing/payment-method" component={PaymentMethod} template={AccountTemplate} title="Update Payment Method" role="admin" />
 						<AuthRouter exact path="/account/:accountId/billing/delete" component={DeleteAccount} template={AccountTemplate} title="Delete Account" role="admin" />
