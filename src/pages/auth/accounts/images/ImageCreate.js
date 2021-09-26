@@ -20,7 +20,7 @@ const ImageCreate = () => {
             listName = "images"
             validation = {validate}
             success = {<Alert severity="success">Success! No data is saved because the database is a static file. This is just a demo.</Alert>}
-            handleSubmit = {CreateImageApi}
+            handleCreation = {CreateImageApi}
         >
             <TextField
                 label="Image URL"
