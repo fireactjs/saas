@@ -34,7 +34,7 @@ const NoteList = () => {
     return (
         <DataList
             title="Note List"
-            api={ListApi}
+            handleFetch={ListApi}
             schema={[
                 {
                     name: "ID",

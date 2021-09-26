@@ -5,7 +5,7 @@ import { Paper, Box } from '@mui/material';
 import DataTable from '../DataTable';
 import Loader from '../Loader';
 
-const DataList = ({title, api, schema}) => {
+const DataList = ({title, handleFetch, schema}) => {
     const { userData } = useContext(AuthContext);
     const { setBreadcrumb } = useContext(BreadcrumbContext);
     const [rows, setRows] = useState([]);
@@ -36,14 +36,14 @@ const DataList = ({title, api, schema}) => {
     
     useEffect(() => {
         setIsLoading(true);
-        api(page, pageSize).then(
+        handleFetch(page, pageSize).then(
             res => {
                 setRows(res.data);
                 setTotal(res.total);
                 setIsLoading(false);
             }
         )
-    },[api, page, pageSize]);
+    },[handleFetch, page, pageSize]);
 
     return (
         <>
@@ -63,11 +63,9 @@ const DataList = ({title, api, schema}) => {
                             pageSize = {pageSize}
                             page={page}
                             handlePageChane = {(e, p) => {
-                                //api(p, pageSize);
                                 setPage(p);
                             }}
                             handlePageSizeChange = {(e) => {
-                                //api(0, e.target.value);
                                 setPage(0);
                                 setPageSize(e.target.value);
                             }}
