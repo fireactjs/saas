@@ -1,53 +1,15 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Alert } from '@mui/material';
 import { Paper, Box, Stack, Button } from '@mui/material';
-import { BreadcrumbContext } from '../Breadcrumb';
-import { AuthContext } from "../FirebaseAuth";
 import Loader from '../Loader';
 
-const DataCreate = ({schema, title, listName, validation, handleCreation, success, children}) => {
-
-    const { userData } = useContext(AuthContext);
+const DataCreate = ({schema, validation, handleCreation, success, children}) => {
 
     const [inSubmit, setInSubmit] = useState(false);
     const [result, setResult] = useState({
         response: null,
         error: null
     });
-
-    const titleCase = (str) => {
-        let splitStr = str.toLowerCase().split(' ');
-        for (let i = 0; i < splitStr.length; i++) {
-            splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);     
-        }
-        return splitStr.join(' '); 
-    }
-
-    const { setBreadcrumb } = useContext(BreadcrumbContext);
-    useEffect(() => {
-        setBreadcrumb([
-            {
-                to: "/",
-                text: "Home",
-                active: false
-            },
-            {
-                to: "/account/"+userData.currentAccount.id+"/",
-                text: userData.currentAccount.name,
-                active: false
-            },
-            {
-                to: "/account/"+userData.currentAccount.id+"/"+listName,
-                text: titleCase(listName),
-                active: false
-            },
-            {
-                to: null,
-                text: title,
-                active: true
-            }
-        ]);
-    },[setBreadcrumb, title, listName, userData]);
 
     return (
         <form onSubmit={e => {
