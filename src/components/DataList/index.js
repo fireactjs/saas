@@ -1,38 +1,14 @@
-import React, { useState, useContext, useEffect} from 'react';
-import { BreadcrumbContext } from '../Breadcrumb';
-import { AuthContext } from "../FirebaseAuth";
+import React, { useState, useEffect} from 'react';
 import { Paper, Box } from '@mui/material';
 import DataTable from '../DataTable';
 import Loader from '../Loader';
 
-const DataList = ({title, handleFetch, schema}) => {
-    const { userData } = useContext(AuthContext);
-    const { setBreadcrumb } = useContext(BreadcrumbContext);
+const DataList = ({handleFetch, schema}) => {
     const [rows, setRows] = useState([]);
     const [total, setTotal] = useState(-1);
     const [page, setPage] = useState(0);
     const [pageSize, setPageSize] = useState(10);
     const [isLoading, setIsLoading] = useState(true);
-
-    useEffect(() => {
-        setBreadcrumb([
-            {
-                to: "/",
-                text: "Home",
-                active: false
-            },
-            {
-                to: "/account/"+userData.currentAccount.id+"/",
-                text: userData.currentAccount.name,
-                active: false
-            },
-            {
-                to: null,
-                text: title,
-                active: false
-            }
-        ]);
-    },[setBreadcrumb, title, userData]);
     
     useEffect(() => {
         setIsLoading(true);
