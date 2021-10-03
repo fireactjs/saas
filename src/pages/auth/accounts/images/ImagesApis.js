@@ -12,7 +12,6 @@ const ActionButtons = ({id}) => {
     return (
         <Stack direction="row" spacing={1} mt={2}>
             <Button variant="contained" onClick={() => history.push(url)}>Edit</Button>
-            <Button variant="contained" color="error">Delete</Button>
         </Stack>
     )
 }
