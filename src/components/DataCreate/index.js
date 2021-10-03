@@ -1,15 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Alert } from '@mui/material';
 import { Paper, Box, Stack, Button } from '@mui/material';
 import Loader from '../Loader';
 
 const DataCreate = ({schema, validation, handleCreation, success, children}) => {
+    const mountedRef = useRef(true);
 
     const [inSubmit, setInSubmit] = useState(false);
     const [result, setResult] = useState({
         response: null,
         error: null
     });
+
+    useEffect(() => {
+        return () => { 
+            mountedRef.current = false
+        }
+    },[]);
 
     return (
         <form onSubmit={e => {
@@ -21,12 +28,14 @@ const DataCreate = ({schema, validation, handleCreation, success, children}) => 
                     data[field.name] = e.target.elements[field.name][field.prop]
                 });
                 handleCreation(data).then(res => {
+                    if (!mountedRef.current) return null
                     setResult({
                         response: true,
                         error: null
                     });
                     setInSubmit(false);
                 }).catch(err => {
+                    if (!mountedRef.current) return null
                     setResult({
                         response: false,
                         error: err

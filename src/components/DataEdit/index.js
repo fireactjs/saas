@@ -1,15 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Alert } from '@mui/material';
 import { Paper, Box, Stack, Button } from '@mui/material';
 import Loader from '../Loader';
 
 const DataEdit = ({id, schema, validation, handleEdit, success, children}) => {
 
+    const mountedRef = useRef(true);
+
     const [inSubmit, setInSubmit] = useState(false);
     const [result, setResult] = useState({
         response: null,
         error: null
     });
+
+    useEffect(() => {
+        return () => { 
+            mountedRef.current = false
+        }
+    },[]);
 
     return (
         <form onSubmit={e => {
@@ -21,12 +29,14 @@ const DataEdit = ({id, schema, validation, handleEdit, success, children}) => {
                     data[field.name] = e.target.elements[field.name][field.prop]
                 });
                 handleEdit(id, data).then(res => {
+                    if (!mountedRef.current) return null
                     setResult({
                         response: true,
                         error: null
                     });
                     setInSubmit(false);
                 }).catch(err => {
+                    if (!mountedRef.current) return null
                     setResult({
                         response: false,
                         error: err

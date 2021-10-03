@@ -1,9 +1,10 @@
-import React, { useState, useEffect} from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Paper, Box } from '@mui/material';
 import DataTable from '../DataTable';
 import Loader from '../Loader';
 
 const DataList = ({handleFetch, schema}) => {
+    const mountedRef = useRef(true);
     const [rows, setRows] = useState([]);
     const [total, setTotal] = useState(-1);
     const [page, setPage] = useState(0);
@@ -14,12 +15,19 @@ const DataList = ({handleFetch, schema}) => {
         setIsLoading(true);
         handleFetch(page, pageSize).then(
             res => {
+                if (!mountedRef.current) return null
                 setRows(res.data);
                 setTotal(res.total);
                 setIsLoading(false);
             }
         )
     },[handleFetch, page, pageSize]);
+
+    useEffect(() => {
+        return () => { 
+            mountedRef.current = false
+        }
+    },[]);
 
     return (
         <>

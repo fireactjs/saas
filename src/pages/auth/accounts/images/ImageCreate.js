@@ -19,8 +19,6 @@ const ImageCreate = () => {
     }
     const { userData } = useContext(AuthContext);
 
-
-
     const titleCase = (str) => {
         let splitStr = str.toLowerCase().split(' ');
         for (let i = 0; i < splitStr.length; i++) {

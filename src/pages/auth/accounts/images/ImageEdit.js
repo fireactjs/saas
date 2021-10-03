@@ -1,4 +1,4 @@
-import React, {useState, useContext, useEffect} from 'react';
+import React, {useState, useContext, useEffect, useRef } from 'react';
 import { BreadcrumbContext } from '../../../../components/Breadcrumb';
 import { AuthContext } from "../../../../components/FirebaseAuth";
 import { formSchema } from './images.json';
@@ -10,6 +10,7 @@ import Loader from '../../../../components/Loader';
 import { Box } from '@mui/system';
 
 const ImageEdit = () => {
+    const mountedRef = useRef(true);
 
     const listName = 'images'
     const title = 'Edit Image';
@@ -59,10 +60,17 @@ const ImageEdit = () => {
         ]);
         setIsLoading(true);
         GetImageApi(imageId).then(data => {
+            if (!mountedRef.current) return null
             setData(data);
             setIsLoading(false);
         })
     },[setBreadcrumb, title, listName, userData, imageId]);
+
+    useEffect(() => {
+        return () => { 
+            mountedRef.current = false
+        }
+    },[]);
 
     return (
         <>
