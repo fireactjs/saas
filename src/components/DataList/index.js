@@ -25,7 +25,7 @@ const DataList = ({handleFetch, schema}) => {
         <>
             {isLoading?(
                 <Paper>
-                    <Box p={3}>
+                    <Box p={2}>
                         <Loader text="Loading..." />
                     </Box>
                 </Paper>
