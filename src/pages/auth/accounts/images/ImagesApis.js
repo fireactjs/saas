@@ -28,7 +28,7 @@ const ListImageApi = (page, pageSize) => {
                 const record = {
                     url: images[i].url,
                     title: images[i].title,
-                    image: <img alt={images[i].title} src={images[i].url+"&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"} width={200} />,
+                    image: <img alt={images[i].title} src={images[i].url} width={200} />,
                     action: <ActionButtons id={i} />
                 }
                 records.push(record);
