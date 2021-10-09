@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useCallback } from "react";
 import DataList from '../../../../components/DataList';
 import { AuthContext } from "../../../../components/FirebaseAuth";
 import { BreadcrumbContext } from '../../../../components/Breadcrumb';
@@ -28,7 +28,7 @@ const ImageList = () => {
     const history = useHistory();
     const [refreshCount, setRefreshCount] = useState(0);
 
-    const handleFetch = (page, pageSize) => {
+    const handleFetch = useCallback((page, pageSize) => {
         return new Promise((resolve, reject) => {
             ListImageApi(page, pageSize).then(images => {
                 const handleDeletion = (id) => {
@@ -57,7 +57,7 @@ const ImageList = () => {
                 reject(err);
             });
         });
-    }
+    },[refreshCount]);
 
     useEffect(() => {
         setBreadcrumb([
@@ -86,7 +86,7 @@ const ImageList = () => {
                     <Button variant="contained" onClick={() => history.push("/account/"+userData.currentAccount.id+"/images/create")} >Create Image Link</Button>
                 </Stack>
             </div>
-            <DataList handleFetch={handleFetch} schema={listResponse} refreshCount={refreshCount} />
+            <DataList handleFetch={handleFetch} schema={listResponse} />
         </Stack>
     )
 }
