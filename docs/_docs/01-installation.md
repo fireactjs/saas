@@ -164,7 +164,7 @@ First, you will need to create tax rates in your Stripe account via the console 
 
 Once you created the tax rates in Stripe, copy the tax rate IDs from Stripe to create the tax rates in your Firestore database.
 
-Create a new collection called "taxes" in Firesotre, and use the Stripe tax rate ID as the document ID for each tax rate document in Firestore.
+Create a new collection called "taxes" in Firestore, and use the Stripe tax rate ID as the document ID for each tax rate document in Firestore.
 
 Below is the JSON object of the Australia GST tax rate in Firestore:
 
