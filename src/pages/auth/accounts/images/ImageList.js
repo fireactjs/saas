@@ -5,7 +5,7 @@ import { BreadcrumbContext } from '../../../../components/Breadcrumb';
 import { useHistory } from "react-router-dom";
 import { ListImageApi, DeleteImageApi } from './ImagesApis';
 import { listResponse } from './images.json';
-import { Stack, Button } from '@mui/material';
+import { Stack, Button, Alert } from '@mui/material';
 import DataDelete from "../../../../components/DataDelete";
 
 const ActionButtons = ({id, handleDeletion}) => {
@@ -81,6 +81,9 @@ const ImageList = () => {
 
     return (
         <Stack spacing={3}>
+            <Alert severity="info">
+                This is a demo
+            </Alert>
             <div style={{marginLeft: "auto"}}>
                 <Stack direction="row" spacing={1}>
                     <Button variant="contained" onClick={() => history.push("/account/"+userData.currentAccount.id+"/images/create")} >Create Image Link</Button>

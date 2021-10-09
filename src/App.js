@@ -36,8 +36,6 @@ import Invite from './pages/auth/user/Invite';
 import PaymentList from './pages/auth/accounts/PaymentList';
 import PaymentMethod from './pages/auth/accounts/PaymentMethod';
 import DeleteAccount from './pages/auth/accounts/DeleteAccount';
-import NoteCreate from './pages/auth/accounts/notes/NoteCreate';
-import NoteList from './pages/auth/accounts/notes/NoteList';
 import ImageList from './pages/auth/accounts/images/ImageList';
 import ImageCreate from './pages/auth/accounts/images/ImageCreate';
 import ImageEdit from './pages/auth/accounts/images/ImageEdit';
@@ -51,8 +49,6 @@ function App() {
 				<Router>
 					<Switch>
 						<AuthRouter exact path="/" component={Home} template={AppTemplate} title="My Accounts" />
-						<AuthRouter exact path="/account/:accountId/notes/create" component={NoteCreate} template={AccountTemplate} title="Create Note" role="*" />
-						<AuthRouter exact path="/account/:accountId/notes" component={NoteList} template={AccountTemplate} title="List Notes" role="*" />
 						<AuthRouter exact path="/account/:accountId/images/edit/:imageId" component={ImageEdit} template={AccountTemplate} title="Edit Image" role="*" />
 						<AuthRouter exact path="/account/:accountId/images/create" component={ImageCreate} template={AccountTemplate} title="Create Image" role="*" />
 						<AuthRouter exact path="/account/:accountId/images" component={ImageList} template={AccountTemplate} title="Images" role="*" />
