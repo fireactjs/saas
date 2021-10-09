@@ -1,20 +1,4 @@
-import React, { useContext } from "react";
-import { Button, Stack } from "@mui/material";
 import { images } from "./images.json";
-import { useHistory } from "react-router-dom";
-import { AuthContext } from "../../../../components/FirebaseAuth";
-
-const ActionButtons = ({id}) => {
-    const history = useHistory();
-    const { userData } = useContext(AuthContext);
-    const url = '/account/'+userData.currentAccount.id+'/images/edit/'+id;
-
-    return (
-        <Stack direction="row" spacing={1} mt={2}>
-            <Button variant="contained" onClick={() => history.push(url)}>Edit</Button>
-        </Stack>
-    )
-}
 
 const ListImageApi = (page, pageSize) => {
     return new Promise((resolve, reject) => {
@@ -26,10 +10,9 @@ const ListImageApi = (page, pageSize) => {
                     break;
                 }
                 const record = {
+                    id: i,
                     url: images[i].url,
-                    title: images[i].title,
-                    image: <img alt={images[i].title} src={images[i].url} width={200} />,
-                    action: <ActionButtons id={i} />
+                    title: images[i].title
                 }
                 records.push(record);
             }
@@ -48,7 +31,7 @@ const GetImageApi = (id) => {
     return new Promise((resolve, reject) => {
         if(id >= 0 && id<images.length){
             setTimeout(() =>
-                resolve(images[id]), 2000);
+                resolve(images[id]), 1000);
         }else{
             reject('out of range');
         }
@@ -58,7 +41,7 @@ const GetImageApi = (id) => {
 const CreateImageApi = (data) => {
     return new Promise((resolve, reject) => {
         if(data.title.indexOf('error') === -1){
-            setTimeout(() => resolve("success"), 2000);
+            setTimeout(() => resolve("success"), 1000);
         }else{
             reject("This is an error demo");
         }
@@ -69,7 +52,7 @@ const EditImageApi = (id, data) => {
     return new Promise((resolve, reject) => {
         if(id >= 0 && id<images.length){
             if(data.title.indexOf('error') === -1){
-                setTimeout(() => resolve("success"), 2000);
+                setTimeout(() => resolve("success"), 1000);
             }else{
                 reject("This is an error demo");
             }
@@ -80,9 +63,20 @@ const EditImageApi = (id, data) => {
     })
 }
 
+const DeleteImageApi = (id) => {
+    return new Promise((resolve, reject) => {
+        if(id >= 0 && id<images.length){
+            setTimeout(() => resolve("success"), 1000);
+        }else{
+            reject('out of range');
+        }
+    })
+}
+
 export {
     ListImageApi,
     CreateImageApi,
     GetImageApi,
-    EditImageApi
+    EditImageApi,
+    DeleteImageApi
 }
