@@ -228,6 +228,6 @@ Now, everything is ready, you can deploy your Firebase project with the followin
 
 `firebase deploy`
 
-Please note that Firebase assumes the folder is `public` but `npm run build` builds the application in the folder `build`. So when you initalise Firebase hosting in command line, you should change the folder from `public` to `build` otherwise you will see a blank page only as [issue #2](https://github.com/chaoming/fireact/issues/2).
+Please note that Firebase assumes the folder is `public` but `npm run build` builds the application in the folder `build`. So when you initialise Firebase hosting in command line, you should change the folder from `public` to `build` otherwise you will see a blank page only as [issue #2](https://github.com/chaoming/fireact/issues/2).
 
 For more details on how to deploy Firebase, please see [https://firebase.google.com/docs/hosting/test-preview-deploy](https://firebase.google.com/docs/hosting/test-preview-deploy)
