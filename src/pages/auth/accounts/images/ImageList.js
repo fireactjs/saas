@@ -30,6 +30,7 @@ const ImageList = () => {
 
     const handleFetch = useCallback((page, pageSize) => {
         return new Promise((resolve, reject) => {
+            // apply custom filter here if you wish to pass additional parameters to the api calls
             ListImageApi(page, pageSize).then(images => {
                 const handleDeletion = (id) => {
                     DeleteImageApi(id).then(() => {
