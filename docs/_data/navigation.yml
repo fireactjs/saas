@@ -13,6 +13,12 @@ docs:
     children:
       - title: "Installation"
         url: /docs/installation/
+  - title: "Configurations"
+    children:
+      - title: "Currency"
+        url: /docs/currency/
+      - title: "Authentication Methods"
+        url: /docs/authentication-methods/
   - title: "Development"
     children:
       - title: "Hello World"
