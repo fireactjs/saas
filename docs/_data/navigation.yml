@@ -27,3 +27,9 @@ docs:
         url: /docs/demo-data-explained/
       - title: "<DataList> Component"
         url: /docs/datalist-component/
+      - title: "<DataCreate> Component"
+        url: /docs/datacreate-component/
+      - title: "<DataEdit> Component"
+        url: /docs/dataedit-component/
+      - title: "<DataDelete> Component"
+        url: /docs/datadelete-component/
