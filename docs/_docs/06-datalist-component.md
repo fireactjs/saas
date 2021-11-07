@@ -9,6 +9,8 @@ last_modified_at: 2021-11-05
 
 &lt;DataList&gt; component displays data in a table list format with pagination functionality as the screenshot shows below.
 
+![&lt;DataList&gt; component screenshot](/assets/images/datalist-component-screenshot.png)
+
 The component accepts two props: `handleFetch` and `listResponse`.
 
 ## handleFetch prop
