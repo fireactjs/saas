@@ -217,7 +217,6 @@ invoice.payment_action_required
 invoice.payment_failed
 invoice.payment_succeeded
 invoice.sent
-invoice.upcoming
 invoice.updated
 invoice.voided
 ```
