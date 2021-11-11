@@ -13,7 +13,7 @@ header:
 excerpt: >
   Reactjs + Firebase + Stripe<br />
   Built for subscription based SaaS web applications.<br />
-  <small><a href="https://github.com/chaoming/fireact/releases/tag/v2.1.0">Latest release v2.1.0</a></small>
+  <small><a href="https://github.com/chaoming/fireact/releases/tag/v3.0.0">Latest release v2.1.0</a></small>
 feature_row:
   - alt: "installation"
     title: "Installation"

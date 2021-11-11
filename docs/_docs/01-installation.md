@@ -32,7 +32,7 @@ You will also need to create a hosting in the Firebase project to host your Fire
 
 After you created a project, go to your [Firebase console](https://console.firebase.google.com/), click on your project, and go to the project settings page. Add a web app to your project, and you will see the settings in a JSON object `firebaseConfig` in the Firebase SDK snippet.
 
-Copy the settings to create a file in the repo as `/src/components/FirebaseAuth/firebase-config.json` following the format below:
+Copy the settings to create a file in the repo as `/src/inc/firebase.json` following the format below:
 
 ```
 {

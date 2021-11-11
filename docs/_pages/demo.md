@@ -37,5 +37,5 @@ You can invite other users to your subscription account. However, due to securit
 
 ### Launch Live Demo
 
-[Launch Live Demo](https://fireact-e1bdc.firebaseapp.com/){: .btn .btn--success}
+[Launch Live Demo](https://demo.fireact.dev/){: .btn .btn--success}
 
