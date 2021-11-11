@@ -26,7 +26,7 @@ If you select `Australia` as your billing country, 10% GST will be applied to th
 
 If you select `California, United States` as your billing country and state, 7.25% sales tax will be applied to the subscription price via Stripe charges.
 
-[Launch Live Demo](https://fireact-e1bdc.firebaseapp.com/)
+[Launch Live Demo](https://demo.fireact.dev/)
 
 ## Documentation
 
