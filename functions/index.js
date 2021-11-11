@@ -630,6 +630,7 @@ exports.stripeWebHook = functions.https.onRequest((req, res) => {
     try {
         let result = false;
         event = stripe.webhooks.constructEvent(req.rawBody, sig, endpointSecret);
+        console.log("[Stripe Event]", event.type);
         if(event.type.indexOf('invoice.') === 0){
             result = updateInvoice(event.data.object);
         }

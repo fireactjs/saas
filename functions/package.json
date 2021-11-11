@@ -15,7 +15,7 @@
   "dependencies": {
     "crypto": "^1.0.1",
     "firebase-admin": "^9.5.0",
-    "firebase-functions": "^3.6.1",
+    "firebase-functions": "^3.16.0",
     "mailgun-js": "^0.22.0",
     "stripe": "^8.90.0"
   },
