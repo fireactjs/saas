@@ -46,6 +46,7 @@ Fireact comes with:
 - User permission management in subscription accounts
 - Estiablished user permission framework for development of your SaaS functionalities
 - Supporting sales tax, GST and VAT in subscription payments
+- Data UI and APIs to interact with backend data
 
 {% include feature_row %}
 
