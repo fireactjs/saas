@@ -5,7 +5,6 @@ import { AuthProvider } from './components/FirebaseAuth';
 import PublicRouter from './components/routers/PublicRouter';
 import PublicTemplate from './components/templates/PublicTemplate';
 import AccountTemplate from './components/templates/AccountTemplate';
-import ActiveAccountTemplate from './components/templates/ActiveAccountTemplate';
 
 import AuthRouter from './components/routers/AuthRouter';
 
@@ -37,6 +36,9 @@ import Invite from './pages/auth/user/Invite';
 import PaymentList from './pages/auth/accounts/PaymentList';
 import PaymentMethod from './pages/auth/accounts/PaymentMethod';
 import DeleteAccount from './pages/auth/accounts/DeleteAccount';
+import ImageList from './pages/auth/accounts/images/ImageList';
+import ImageCreate from './pages/auth/accounts/images/ImageCreate';
+import ImageEdit from './pages/auth/accounts/images/ImageEdit';
 const stripePromise = loadStripe(stripeConfig.public_api_key);
 
 
@@ -47,14 +49,17 @@ function App() {
 				<Router>
 					<Switch>
 						<AuthRouter exact path="/" component={Home} template={AppTemplate} title="My Accounts" />
-						<AuthRouter exact path="/account/:accountId/billing/plan" component={Plans} template={AccountTemplate} title="Select Plan" role="admin" />
-						<AuthRouter exact path="/account/:accountId/billing/payment-method" component={PaymentMethod} template={ActiveAccountTemplate} title="Update Payment Method" role="admin" />
-						<AuthRouter exact path="/account/:accountId/billing/delete" component={DeleteAccount} template={ActiveAccountTemplate} title="Delete Account" role="admin" />
-						<AuthRouter exact path="/account/:accountId/users/change/:userId" component={UserRole} template={ActiveAccountTemplate} title="Change Role" role="admin" />
-						<AuthRouter exact path="/account/:accountId/users" component={UserList} template={ActiveAccountTemplate} title="Users" role="admin" />
-						<AuthRouter exact path="/account/:accountId/users/add" component={AddUser} template={ActiveAccountTemplate} title="Add User" role="admin" />
-						<AuthRouter exact path="/account/:accountId/billing" component={PaymentList} template={ActiveAccountTemplate} title="Billing" role="admin" />
-						<AuthRouter exact path="/account/:accountId/" component={Overview} template={ActiveAccountTemplate} title="Overview" role="*" />
+						<AuthRouter exact path="/account/:accountId/images/edit/:imageId" component={ImageEdit} template={AccountTemplate} title="Edit Image" role="*" />
+						<AuthRouter exact path="/account/:accountId/images/create" component={ImageCreate} template={AccountTemplate} title="Create Image" role="*" />
+						<AuthRouter exact path="/account/:accountId/images" component={ImageList} template={AccountTemplate} title="Images" role="*" />
+						<AuthRouter exact path="/account/:accountId/billing/plan" component={Plans} template={AccountTemplate} title="Select Plan" role="admin" allowInactive={true} />
+						<AuthRouter exact path="/account/:accountId/billing/payment-method" component={PaymentMethod} template={AccountTemplate} title="Update Payment Method" role="admin" />
+						<AuthRouter exact path="/account/:accountId/billing/delete" component={DeleteAccount} template={AccountTemplate} title="Delete Account" role="admin" />
+						<AuthRouter exact path="/account/:accountId/users/change/:userId" component={UserRole} template={AccountTemplate} title="Change Role" role="admin" />
+						<AuthRouter exact path="/account/:accountId/users" component={UserList} template={AccountTemplate} title="Users" role="admin" />
+						<AuthRouter exact path="/account/:accountId/users/add" component={AddUser} template={AccountTemplate} title="Add User" role="admin" />
+						<AuthRouter exact path="/account/:accountId/billing" component={PaymentList} template={AccountTemplate} title="Billing" role="admin" />
+						<AuthRouter exact path="/account/:accountId/" component={Overview} template={AccountTemplate} title="Overview" role="*" />
 						<AuthRouter exact path="/new-account" component={NewAccount} template={AppTemplate} title="Create New Account" />
 						<AuthRouter exact path="/user/profile" component={UserProfile} template={AppTemplate} title="User Profile" />
 						<AuthRouter exact path="/invite/:code" component={Invite} template={AppTemplate} title="View Invite" />

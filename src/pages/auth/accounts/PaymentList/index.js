@@ -2,57 +2,84 @@ import React, { useContext, useState, useEffect, useRef } from "react";
 import { BreadcrumbContext } from '../../../../components/Breadcrumb';
 import { AuthContext } from "../../../../components/FirebaseAuth";
 import { FirebaseAuth } from "../../../../components/FirebaseAuth/firebase";
-import { Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import Loader from "../../../../components/Loader";
+import DataTable from "../../../../components/DataTable";
 import { currency } from "../../../../inc/currency.json";
+import { Paper, Box, Stack, Button, Alert } from "@mui/material";
 
 const PaymentList = () => {
-    const title = 'Payment History';
+    const title = 'Billing History';
+    const history = useHistory();
 
     const { userData, authUser } = useContext(AuthContext);
     const { setBreadcrumb } = useContext(BreadcrumbContext);
 
     // document snapshots
-    const pageSize = 10;
     const [qs, setQs] = useState(null);
     const mountedRef = useRef(true);
-
+    const [total, setTotal] = useState(0);
+    const [pageSize, setPageSize] = useState(10);
+    const [page, setPage] = useState(0);
     const [rows, setRows] = useState([]);
-    const [toEnd, setToEnd] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
 
-    const getInvoices = (accountId, pageSize, lastDoc) => {
+    const getInvoices = (accountId, pageSize, direction, doc) => {
+        const getInvoiceCollectionCount = (accountId) => {
+            const accountDocRef = FirebaseAuth.firestore().collection('accounts').doc(accountId);
+            return accountDocRef.get().then(accountDoc => {
+                if(accountDoc.exists){
+                    return accountDoc.data().invoicesColCount;
+                }else{
+                    return 0;
+                }
+            }).catch(() => {
+                return 0;
+            })
+        }
+    
         setLoading(true);
         let records = [];
         const collectionRef = FirebaseAuth.firestore().collection('accounts').doc(accountId).collection('invoices');
         let query = collectionRef.orderBy('created', 'desc');
-        if(lastDoc){
-            query = query.startAfter(lastDoc);
+        if(direction && direction === 'next'){
+            query = query.startAfter(doc);
+        }
+        if(direction && direction === 'previous'){
+            query = query.endBefore(doc);
         }
         query = query.limit(pageSize);
-        query.get().then(documentSnapshots => {
+        Promise.all([getInvoiceCollectionCount(accountId), query.get()]).then(([invoiceCount, documentSnapshots]) => {
             if (!mountedRef.current) return null
-            if(documentSnapshots.empty){
-                setToEnd(true);
-            }else{
-                documentSnapshots.forEach(doc => {
-                    records.push({
-                        'id': doc.id,
-                        'total': (Math.round(doc.data().total / 100)).toFixed(2),
-                        'subTotal': (Math.round(doc.data().subTotal / 100)).toFixed(2),
-                        'tax': (Math.round((doc.data().tax || 0) / 100)).toFixed(2),
-                        'amountPaid': (Math.round(doc.data().amountPaid / 100)).toFixed(2),
-                        'created': (new Date(doc.data().created * 1000)).toLocaleString(),
-                        'hostedInvoiceUrl': doc.data().hostedInvoiceUrl,
-                        'currency': doc.data().currency,
-                        'status': doc.data().status
-                    });
+            setTotal(invoiceCount);
+            documentSnapshots.forEach(doc => {
+                records.push({
+                    'id': doc.id,
+                    'total': (doc.data().total / 100).toFixed(2),
+                    'subTotal': (doc.data().subTotal / 100).toFixed(2),
+                    'tax': ((doc.data().tax || 0) / 100).toFixed(2),
+                    'amountPaid': (Math.round(doc.data().amountPaid / 100)).toFixed(2),
+                    'created': (new Date(doc.data().created * 1000)).toLocaleString(),
+                    'hostedInvoiceUrl': doc.data().hostedInvoiceUrl,
+                    'currency': doc.data().currency,
+                    'status': doc.data().status,
+                    'amountCol': <>{currency[doc.data().currency].sign}{(doc.data().total / 100).toFixed(2)}</>,
+                    'statusCol': <>{doc.data().status.toUpperCase()}</>,
+                    'urlCol': doc.data().hostedInvoiceUrl?(
+                        <Button href={doc.data().hostedInvoiceUrl} rel="noreferrer" target="_blank" variant="contained" size="small">View Invoice</Button>
+                    ):(<></>)
                 });
-                if(records.length > 0){
-                    setRows(rows => rows.concat(records));
-                    setQs(documentSnapshots);
-                }
+            });
+            
+            if(records.length > 0){
+                setRows(records);
+                setQs(documentSnapshots);
             }
+            setLoading(false);
+        }).catch(e => {
+            if (!mountedRef.current) return null
+            setError(e.message);
             setLoading(false);
         });
     }
@@ -71,81 +98,82 @@ const PaymentList = () => {
             },
             {
                 to: null,
-                text: "Billing",
+                text: title,
                 active: true
             }
         ]);
+    },[userData, setBreadcrumb]);
+
+    useEffect(() => {
         getInvoices(userData.currentAccount.id, pageSize);
+    },[pageSize, userData]);
+
+    useEffect(() => {
         return () => { 
             mountedRef.current = false
         }
-    },[userData, setBreadcrumb]);
+    },[]);
 
 
     return (
-        <>
-            <div className="container-fluid">
-                <div className="animated fadeIn">
-                    <div className="text-right mb-3">
-                        {userData.currentAccount.owner === authUser.user.uid &&
+        <Stack spacing={3}>
+            {userData.currentAccount.owner === authUser.user.uid &&
+                <Stack direction="row-reverse" spacing={1} mt={2}>
+                    <Button color="error" variant="contained" onClick={() => history.push("/account/"+userData.currentAccount.id+"/billing/delete")}>Delete Account</Button>
+                    <Button color="info" variant="contained" onClick={() => history.push("/account/"+userData.currentAccount.id+"/billing/plan")}>Change Subscription Plan</Button>
+                    {userData.currentAccount.price > 0 && 
+                    <Button color="info" variant="contained" onClick={() => history.push("/account/"+userData.currentAccount.id+"/billing/payment-method")}>Update Payment Method</Button>
+                    }
+                </Stack>
+            }
+            <Paper>
+                    {loading?(
+                        <Box p={3}>
+                            <Loader text="Loading billing history..."></Loader>
+                        </Box>
+                    ):(
+                        <>
+                        {error?(
+                            <Box p={3}>
+                                <Alert severity="error">{error}</Alert>
+                            </Box>
+                        ):(
                             <>
-                                {userData.currentAccount.price > 0 && 
-                                    <Link to={"/account/"+userData.currentAccount.id+"/billing/payment-method"} className="btn btn-primary mr-2">Update Payment Method</Link>
-                                }
-                                <Link to={"/account/"+userData.currentAccount.id+"/billing/plan"} className="btn btn-primary mr-2">Change Subscription Plan</Link>
-                                <Link to={"/account/"+userData.currentAccount.id+"/billing/delete"} className="btn btn-danger">Delete Account</Link>
-                            </>
-                        }
-                    </div>
-                    <div className="card">
-                        <div className="card-header">
-                            {title}
-                        </div>
-                        <div className="card-body">
-                            {rows.length > 0 &&
-                                <>
-                                    <table className="table table-responsive-sm table-hover table-outline">
-                                        <thead className="thead-light">
-                                            <tr>
-                                                <th scope="col">Invoice ID</th>
-                                                <th scope="col">Amount</th>
-                                                <th scope="col">Status</th>
-                                                <th scope="col">Invoice Date</th>
-                                                <th scope="col">Invoice URL</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                        {rows.map((r,i) => 
-                                            <tr key={r.id}>
-                                                <td><a className="btn btn-link" rel="noreferrer" href={r.hostedInvoiceUrl} target="_blank">{r.id}</a></td>
-                                                <td>{currency[r.currency].sign}{r.total}</td>
-                                                <td>{r.status.toUpperCase()}</td>
-                                                <td>{r.created}</td>
-                                                <td><a href={r.hostedInvoiceUrl} rel="noreferrer" target="_blank" className="btn btn-info">View Invoice</a></td>
-                                            </tr>
-                                        )}
-                                        </tbody>
-                                    </table>
-                                </>
-                            }
-                            {loading?(
-                                <Loader text="Loading data..."></Loader>
-                            ):(
-                                <>
-                                {toEnd?(
-                                    <span>End of all invoices</span>
+                                {total > 0 ? (
+                                    <DataTable columns={[
+                                        {name: "Invoice ID", field: "id", style: {width: '30%'}},
+                                        {name: "Amount", field: "amountCol", style: {width: '15%'}},
+                                        {name: "Status", field: "statusCol", style: {width: '15%'}},
+                                        {name: "Invoice Date", field: "created", style: {width: '30%'}},
+                                        {name: "Invoice URL", field: "urlCol", style: {width: '10%'}}
+                                    ]}
+                                    rows={rows}
+                                    totalRows={total}
+                                    pageSize={pageSize}
+                                    page={page}
+                                    handlePageChane={(e, p) => {
+                                        if(p>page){
+                                            getInvoices(userData.currentAccount.id, pageSize, 'next', qs.docs[qs.docs.length-1]);
+                                        }
+                                        if(p<page){
+                                            getInvoices(userData.currentAccount.id, pageSize, 'previous', qs.docs[0]);
+                                        }
+                                        setPage(p);
+                                    }}
+                                    handlePageSizeChange={(e) => {
+                                        setPageSize(e.target.value);
+                                        setPage(0);
+                                    }}
+                                    ></DataTable>
                                 ):(
-                                    <button className="btn btn-primary" onClick={e => {
-                                        getInvoices(userData.currentAccount.id, pageSize, qs.docs[qs.docs.length-1]);
-                                    }}>View More</button>
+                                    <Box p={3}>No invoice is found</Box>
                                 )}
-                                </>
-                            )}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </>
+                            </>
+                        )}
+                        </>
+                    )}
+            </Paper>
+        </Stack>
     )
 }
 

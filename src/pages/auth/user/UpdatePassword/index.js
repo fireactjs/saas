@@ -1,15 +1,17 @@
-import React, { useState, useContext } from "react";
-import { Link } from 'react-router-dom';
-import { Form, Field, Input } from '../../../../components/Form';
+import React, { useState, useContext, useEffect, useRef } from "react";
+import { useHistory } from 'react-router-dom';
+import { Form, FormResult, Input } from '../../../../components/Form';
 import firebase from "firebase/app";
 import { FirebaseAuth } from '../../../../components/FirebaseAuth/firebase';
 import { AuthContext } from '../../../../components/FirebaseAuth';
-import Alert from '../../../../components/Alert';
 import UserPageLayout from '../../../../components/user/UserPageLayout';
 import { log, UPDATE_PASSWORD } from '../../../../libs/log';
 
 const UpdatePassword = () => {
     const title = "Change Your Password";
+    const backToUrl = "/user/profile";
+    const history = useHistory(); 
+    const mountedRef = useRef(true);  
     
     const [password, setPassword] = useState({
         hasError: false,
@@ -38,6 +40,12 @@ const UpdatePassword = () => {
 
     const [inSubmit, setInSubmit] = useState(false);
 
+    useEffect(() => {
+        return () => { 
+            mountedRef.current = false
+        }
+    },[]);
+
     return (
         <UserPageLayout title={title} >
             { result.status === null &&
@@ -60,8 +68,10 @@ const UpdatePassword = () => {
                         // update email address
                         authUser.user.reauthenticateWithCredential(credential)
                         .then(() => {
+                            if (!mountedRef.current) return null
                             FirebaseAuth.auth().currentUser.updatePassword(newPassword.value)
                             .then(() => {
+                                if (!mountedRef.current) return null
                                 log(UPDATE_PASSWORD);
                                 setResult({
                                     status: true,
@@ -69,6 +79,7 @@ const UpdatePassword = () => {
                                 });
                                 setInSubmit(false);
                             }).catch(err => {
+                                if (!mountedRef.current) return null
                                 setResult({
                                     status: false,
                                     message: err.message
@@ -76,6 +87,7 @@ const UpdatePassword = () => {
                                 setInSubmit(false);
                             })
                         }).catch(() => {
+                            if (!mountedRef.current) return null
                             setPassword({
                                 hasError: true,
                                 error: 'Incorrect password, authentication failed.',
@@ -90,34 +102,37 @@ const UpdatePassword = () => {
                 enableDefaultButtons={true}
                 backToUrl="/user/profile"
                 >
-                    <Field label="Current Password">
-                        <Input type="password" name="password" hasError={password.hasError} error={password.error} required={true} changeHandler={setPassword} />
-                    </Field>
-                    <Field label="New Password">
-                        <Input type="password" name="newPassword" hasError={newPassword.hasError} error={newPassword.error} required={true} minLen={6} maxLen={20} changeHandler={setNewPassword} />
-                    </Field>
-                    <Field label="Confirm Password">
-                        <Input type="password" name="confirmPassword" hasError={confirmPassword.hasError} error={confirmPassword.error} required={true} minLen={6} maxLen={20} changeHandler={setConfirmPassword} />
-                    </Field>
+                    <Input label="Current Password" type="password" name="password" hasError={password.hasError} error={password.error} required={true} changeHandler={setPassword} fullWidth variant="outlined" />
+                    <Input label="New Password" type="password" name="newPassword" hasError={newPassword.hasError} error={newPassword.error} required={true} minLen={6} maxLen={20} changeHandler={setNewPassword} fullWidth variant="outlined" />
+                    <Input label="Confirm Password" type="password" name="confirmPassword" hasError={confirmPassword.hasError} error={confirmPassword.error} required={true} minLen={6} maxLen={20} changeHandler={setConfirmPassword} fullWidth variant="outlined" />
                 </Form>
             }
             { result.status === false &&
-                <>
-                    <Alert type="danger" dismissible={false} message={result.message} />
-                    <button className="btn btn-primary mr-2" onClick={() => {
+                <FormResult 
+                    severity="error"
+                    resultMessage={result.message}
+                    primaryText="Try Again"
+                    primaryAction={() => {
                         setResult({
                             status: null,
                             message: ''
                         })
-                    }} >Try Again</button>
-                    <Link className="btn btn-secondary" to="/user/profile">View Profile</Link>
-                </>
+                    }}
+                    secondaryText="View Profile"
+                    secondaryAction={() => {
+                        history.push(backToUrl);
+                    }}
+                />
             }
             { result.status === true &&
-                <>
-                    <Alert type="success" dismissible={false} message={result.message} />
-                    <Link className="btn btn-primary" to="/user/profile">View Profile</Link>
-                </>
+                <FormResult 
+                    severity="success"
+                    resultMessage={result.message}
+                    primaryText="View Profile"
+                    primaryAction={() => {
+                        history.push(backToUrl);
+                    }}
+                />
             }
         </UserPageLayout>
     )

@@ -1,5 +1,6 @@
 import React, {useContext, useEffect} from "react";
 import {BreadcrumbContext} from '../../Breadcrumb';
+import { Box, Container, Paper } from "@mui/material";
 
 const UserPageLayout = (props) => {
     const {
@@ -32,20 +33,13 @@ const UserPageLayout = (props) => {
     
 
     return (
-        <>
-            <div className="container-fluid">
-                <div className="animated fadeIn">
-                    <div className="card">
-                        <div className="card-header">
-                            {title}
-                        </div>
-                        <div className="card-body">
-                            {children}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </>
+        <Container>
+            <Paper>
+                <Box p={2}>
+                    {children}
+                </Box>
+            </Paper>
+        </Container>
     )
 }
 

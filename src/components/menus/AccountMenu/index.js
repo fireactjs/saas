@@ -1,7 +1,11 @@
 import React, { useContext, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import SidebarLink from '../SidebarLink';
+import { Link } from "react-router-dom";
+import { List, ListItem, ListItemText, ListItemIcon, Divider, Typography } from "@mui/material";
 import { AuthContext } from '../../FirebaseAuth';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import PeopleIcon from '@mui/icons-material/People';
+import PaymentIcon from '@mui/icons-material/Payment';
 
 const AccountMenu = () => {
 
@@ -16,30 +20,31 @@ const AccountMenu = () => {
     })
 
     return (
-
-            <ul className="c-sidebar-nav ps ps--active-y">
-                <li className="c-sidebar-nav-title">Account</li>
-                <li className="c-sidebar-nav-item">
-                    <SidebarLink className={"c-sidebar-nav-link"+(window.location.pathname==='/account/'+accountId+'/'?" active":"")} to={'/account/'+accountId+'/'}>
-                        <i className="c-sidebar-nav-icon fa fa-tachometer-alt"></i>Overview
-                    </SidebarLink>
-                </li>
-                {userData.currentAccount.role === 'admin' && 
-                <>
-                    <li className="c-sidebar-nav-title">Settings</li>
-                    <li className="c-sidebar-nav-item">
-                        <SidebarLink className={"c-sidebar-nav-link"+(window.location.pathname.startsWith('/account/'+accountId+'/users')?" active":"")} to={'/account/'+accountId+'/users'}>
-                            <i className="c-sidebar-nav-icon fa fa-users"></i>Manage Users
-                        </SidebarLink>
-                    </li>
-                    <li className="c-sidebar-nav-item">
-                        <SidebarLink className={"c-sidebar-nav-link"+(window.location.pathname.startsWith('/account/'+accountId+'/billing')?" active":"")} to={'/account/'+accountId+'/billing'}>
-                            <i className="c-sidebar-nav-icon fa fa-file-invoice-dollar"></i>Billing
-                        </SidebarLink>
-                    </li>
-                </>
-                }
-            </ul>
+        <List>
+            <Link to={'/account/'+accountId+'/'} style={{textDecoration:'none'}}>
+                <ListItem button key="Demo App">
+                    <ListItemIcon><DashboardIcon /></ListItemIcon>
+                    <ListItemText primary={<Typography color="textPrimary">Demo App</Typography>} />
+                </ListItem>
+            </Link>
+            {userData.currentAccount.role === 'admin' && 
+            <>
+                <Divider />
+                <Link to={'/account/'+accountId+'/users'} style={{textDecoration:'none'}}>
+                    <ListItem button key="Users">
+                        <ListItemIcon><PeopleIcon /></ListItemIcon>
+                        <ListItemText primary={<Typography color="textPrimary">Users</Typography>} />
+                    </ListItem>
+                </Link>
+                <Link to={'/account/'+accountId+'/billing'} style={{textDecoration:'none'}}>
+                    <ListItem button key="Billing">
+                        <ListItemIcon><PaymentIcon /></ListItemIcon>
+                        <ListItemText primary={<Typography color="textPrimary">Billing</Typography>} />
+                    </ListItem>
+                </Link>
+            </>
+            }
+        </List>
     )
 }
 

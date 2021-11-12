@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useContext} from "react";
-import { useParams } from "react-router-dom";
+import { Redirect, useParams } from "react-router-dom";
 import { FirebaseAuth } from "../../FirebaseAuth/firebase";
 import UserMenu from '../../menus/UserMenu';
 import AppMenu from '../../menus/AppMenu';
@@ -7,17 +7,17 @@ import PublicTemplate from "../../templates/PublicTemplate";
 import Loader from "../../Loader";
 import { AuthContext } from "../../FirebaseAuth";
 import AccountMenu from "../../menus/AccountMenu";
-import Logo from '../../Logo';
-import {BreadcrumbContext, Breadcrumb} from '../../Breadcrumb';
+import Layout from '../../Layout';
 
-const AccountTemplate = ({ role, children }) => {
+const AccountTemplate = ({ role, allowInactive, children }) => {
 
     const { accountId } = useParams();
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const { setUserData, authUser } = useContext(AuthContext);
     const [isActive, setIsActive] = useState(false);
-    const [breadcrumb, setBreadcrumb] = useState([]);
+
+    allowInactive = allowInactive || false;
 
     useEffect(() => {
         let account = {}
@@ -36,7 +36,10 @@ const AccountTemplate = ({ role, children }) => {
                     account.planId = doc.data().plan.id;
                 }
                 account.price = doc.data().price;
+                account.currency = doc.data().currency;
+                account.paymentCycle = doc.data().paymentCycle;
                 account.subscriptionStatus = doc.data().subscriptionStatus;
+                account.subscriptionCurrentPeriodEnd = doc.data().subscriptionCurrentPeriodEnd;
                 account.role = (doc.data().admins.indexOf(authUser.user.uid) === -1?('user'):('admin'));
                 setUserData(userData => ({
                     ...userData,
@@ -60,47 +63,22 @@ const AccountTemplate = ({ role, children }) => {
         <>
             {loading ? (
                 <PublicTemplate>
-                    <Loader size="5x" text="Loading..."/>
+                    <Loader text="Loading..."/>
                 </PublicTemplate>
             ):(
                 <>
                 {error === null ? (
-                    <div className="c-app">
-                        <div className="c-sidebar c-sidebar-dark c-sidebar-fixed c-sidebar-lg-show" id="sidebar">
-                            <div className="c-sidebar-brand d-md-down-none">
-                                <Logo />
-                            </div>
-                            {isActive?(
-                                    <AccountMenu />
-                                ):(
-                                    <AppMenu />
-                            )}
-                            <button className="c-sidebar-minimizer c-class-toggler" data-target="_parent" data-class="c-sidebar-minimized" type="button" />
-                        </div>
-                        <div className="c-wrapper">
-                            <header className="c-header c-header-light c-header-fixed">
-                                <button className="c-header-toggler c-class-toggler d-lg-none mfe-auto" type="button" data-target="#sidebar" data-class="c-sidebar-show">
-                                    <i className="mt-3 fa fa-bars" />
-                                </button>
-                                <div className="mfe-auto">
-                                    <button className="c-header-toggler c-class-toggler mfs-3 d-md-down-none" data-target="#sidebar" data-class="c-sidebar-lg-show">
-                                        <i className="mt-3 fa fa-bars" />
-                                    </button>
-                                </div>
-                                <ul className="c-header-nav">
-                                    <UserMenu />
-                                </ul>
-                                <Breadcrumb links={breadcrumb} />
-                            </header>
-                            <div className="c-body">
-                                <main className="c-main">
-                                <BreadcrumbContext.Provider value={{setBreadcrumb}}>
-                                {children}
-                                </BreadcrumbContext.Provider>
-                                </main>
-                            </div>
-                        </div>
-                    </div>
+                    (isActive || (!isActive && allowInactive)) ? (
+                        <Layout drawerMenu={isActive?(
+                            <AccountMenu />
+                        ):(
+                            <AppMenu />
+                        )} toolBarMenu={<UserMenu />} >
+                            {children}
+                        </Layout>
+                    ):(
+                        <Redirect to={'/account/'+accountId+'/billing/plan'}></Redirect>
+                    ) 
                 ):(
                     <PublicTemplate>
                         {error}

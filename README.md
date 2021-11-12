@@ -17,6 +17,7 @@ Fireact comes with:
 - User permission management in subscription accounts
 - Estiablished user permission framework for development of your SaaS functionalities
 - Supporting sales tax, GST and VAT in subscription payments
+- Data UI and APIs to interact with backend data
 
 ## Live Demo
 
@@ -26,7 +27,7 @@ If you select `Australia` as your billing country, 10% GST will be applied to th
 
 If you select `California, United States` as your billing country and state, 7.25% sales tax will be applied to the subscription price via Stripe charges.
 
-[Launch Live Demo](https://fireact-e1bdc.firebaseapp.com/)
+[Launch Live Demo](https://demo.fireact.dev/)
 
 ## Documentation
 

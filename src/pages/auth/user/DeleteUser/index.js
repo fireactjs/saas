@@ -1,13 +1,14 @@
-import React, { useState, useContext } from "react";
-import { Link } from 'react-router-dom';
-import { Form, Field, Input } from '../../../../components/Form';
+import React, { useState, useContext, useEffect, useRef } from "react";
+import { useHistory } from 'react-router-dom';
+import { Form, FormResult, Input } from '../../../../components/Form';
 import { AuthContext } from '../../../../components/FirebaseAuth';
-import Alert from '../../../../components/Alert';
 import UserPageLayout from '../../../../components/user/UserPageLayout';
 
 const DeleteUser = () => {
     const title = "Delete Your Account";
-    
+    const backToUrl = "/user/profile";
+    const history = useHistory();
+    const mountedRef = useRef(true);
 
     const [emailAddress, setEmailAddress] = useState({
         hasError: false,
@@ -24,6 +25,12 @@ const DeleteUser = () => {
 
     const [inSubmit, setInSubmit] = useState(false);
 
+    useEffect(() => {
+        return () => { 
+            mountedRef.current = false
+        }
+    },[]);
+
     return (
         <UserPageLayout title={title} >
             { result.status === null &&
@@ -31,13 +38,16 @@ const DeleteUser = () => {
                     e.preventDefault();
                     setInSubmit(true);
                     if(emailAddress.value === authUser.user.email){
+                        if (!mountedRef.current) return null 
                         authUser.user.delete().then(() => {
+                            if (!mountedRef.current) return null 
                             setResult({
                                 status: true,
                                 message: 'Your account has been deleted.'
                             });
                             setInSubmit(false);
                         }).catch(err => {
+                            if (!mountedRef.current) return null 
                             setResult({
                                 status: false,
                                 message: err.message
@@ -45,6 +55,7 @@ const DeleteUser = () => {
                             setInSubmit(false);
                         });
                     }else{
+                        if (!mountedRef.current) return null 
                         setEmailAddress({
                             hasError: true,
                             error: 'The email address does not match your email address.',
@@ -54,34 +65,41 @@ const DeleteUser = () => {
                     }
                 }}
                 submitBtnText='DELETE'
-                submitBtnStyle='danger'
+                submitBtnStyle='error'
                 disabled={emailAddress.hasError || emailAddress.value===null || inSubmit}
                 inSubmit={inSubmit}
                 enableDefaultButtons={true}
                 backToUrl="/user/profile"
                 >
-                    <Field label="Confirm Your Email">
-                        <Input type="email" name="email-address" hasError={emailAddress.hasError} error={emailAddress.error} minLen={5} maxLen={50} required={true} validRegex="^[a-zA-Z0-9-_+\.]*@[a-zA-Z0-9-_\.]*\.[a-zA-Z0-9-_\.]*$" changeHandler={setEmailAddress} />
-                    </Field>
+                    <Input label="Confirm Your Email" type="email" name="email-address" hasError={emailAddress.hasError} error={emailAddress.error} minLen={5} maxLen={50} required={true} validRegex="^[a-zA-Z0-9-_+\.]*@[a-zA-Z0-9-_\.]*\.[a-zA-Z0-9-_\.]*$" changeHandler={setEmailAddress} fullWidth variant="outlined" />
                 </Form>
             }
             { result.status === false &&
-                <>
-                    <Alert type="danger" dismissible={false} message={result.message} />
-                    <button className="btn btn-primary mr-2" onClick={() => {
+                <FormResult 
+                    severity="error"
+                    resultMessage={result.message}
+                    primaryText="Try Again"
+                    primaryAction={() => {
                         setResult({
                             status: null,
                             message: ''
                         })
-                    }} >Try Again</button>
-                    <Link className="btn btn-secondary" to="/user/profile">View Profile</Link>
-                </>
+                    }}
+                    secondaryText="View Profile"
+                    secondaryAction={() => {
+                        history.push(backToUrl);
+                    }}
+                />
             }
             { result.status === true &&
-                <>
-                    <Alert type="success" dismissible={false} message={result.message} />
-                    <Link className="btn btn-primary" to="/user/profile">View Profile</Link>
-                </>
+                <FormResult 
+                    severity="success"
+                    resultMessage={result.message}
+                    primaryText="View Profile"
+                    primaryAction={() => {
+                        history.push(backToUrl);
+                    }}
+                />
             }
         </UserPageLayout>
     )

@@ -2,40 +2,50 @@ import React, { useState, useEffect, useContext, useRef } from "react";
 import { BreadcrumbContext } from '../../../../components/Breadcrumb';
 import { FirebaseAuth } from "../../../../components/FirebaseAuth/firebase";
 import Loader from '../../../../components/Loader';
+import UserPageLayout from '../../../../components/user/UserPageLayout';
+import DataTable from "../../../../components/DataTable";
+import { Alert } from "@mui/material";
 
 const ViewLogs = () => {
-    const pageSize = 10;
-
     const [total, setTotal] = useState(0);
-    const getTotal = () => {
-        const userDocRef = FirebaseAuth.firestore().collection('users').doc(FirebaseAuth.auth().currentUser.uid);
-        userDocRef.get().then(function(userDoc){
-            if (!mountedRef.current) return null
-            if(userDoc.exists){
-                setTotal(userDoc.data().activityCount);
-            }
-        })
-    }
-
-    // document snapshots
+    const [pageSize, setPageSize] = useState(10);
+    const [page, setPage] = useState(0);
+    const [rows, setRows] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [qs, setQs] = useState(null);
     const mountedRef = useRef(true);
+    const [error, setError] = useState(null);
 
-    const [rows, setRows] = useState([]);
-    const [count, setCount] = useState(0);
-    const [loading, setLoading] = useState(false);
+    const getLogs = (pz, direction, doc) => {
+        const getTotal = () => {
+            const userDocRef = FirebaseAuth.firestore().collection('users').doc(FirebaseAuth.auth().currentUser.uid);
+            return userDocRef.get().then(function(userDoc){
+                if (!mountedRef.current) return null
+                if(userDoc.exists){
+                    return userDoc.data().activityCount;
+                }else{
+                    return 0;
+                }
+            }).catch(() => {
+                return 0;
+            });
+        }
+    
 
-    const getLogs = (pageSize, lastDoc) => {
         setLoading(true);
         let records = [];
         const collectionRef = FirebaseAuth.firestore().collection('users').doc(FirebaseAuth.auth().currentUser.uid).collection('activities');
         let query = collectionRef.orderBy('time', 'desc');
-        if(lastDoc){
-            query = query.startAfter(lastDoc);
+        if(direction && direction === 'next'){
+            query = query.startAfter(doc);
         }
-        query = query.limit(pageSize);
-        query.get().then(documentSnapshots => {
+        if(direction && direction === 'previous'){
+            query = query.endBefore(doc);
+        }
+        query = query.limit(pz);
+        Promise.all([getTotal(), query.get()]).then(([activityCount, documentSnapshots]) => {
             if (!mountedRef.current) return null
+            setTotal(activityCount);
             documentSnapshots.forEach(doc => {
                 records.push({
                     'timestamp': doc.id,
@@ -44,10 +54,12 @@ const ViewLogs = () => {
                 });
             });
             if(records.length > 0){
-                setRows(rows => rows.concat(records));
+                setRows(records);
                 setQs(documentSnapshots);
-                setCount(count => documentSnapshots.size+count);
             }
+            setLoading(false);
+        }).catch(e => {
+            setError(e.message);
             setLoading(false);
         });
     }
@@ -73,69 +85,59 @@ const ViewLogs = () => {
                 active: true
             }
         ]);
-        getTotal();
-        getLogs(pageSize);
+    },[setBreadcrumb]);
+
+    useEffect(() => {
         return () => { 
             mountedRef.current = false
         }
-    },[setBreadcrumb]);
+    },[]);
+
+    useEffect(() => {
+        getLogs(pageSize);
+    },[pageSize]);
 
     return (
-        <>
-            <div className="container-fluid">
-                <div className="animated fadeIn">
-                    <div className="card">
-                        <div className="card-header">
-                            {title}
-                        </div>
-                        <div className="card-body">
-                            {total > 0 ? (
-                                <>
-                                    <div className="col-sm-12 table-responsive">
-                                        <table className="table table-responsive-sm table-hover table-outline">
-                                            <thead className="thead-light">
-                                                <tr role="row">
-                                                    <th>Activity</th>
-                                                    <th>Time</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {rows.map((r,i) => 
-                                                    <tr key={r.timestamp+i} row="row">
-                                                        <td>{r.action}</td>
-                                                        <td>{r.time}</td>
-                                                    </tr>
-                                                )}
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div className="row">
-                                        <div className="col-5">
-                                            {count} of {total}
-                                        </div>
-                                        <div className="col-7 text-right">
-                                            <button className="btn btn-primary" disabled={(total===count || loading)?'disabled':''} onClick={e => {
-                                                e.preventDefault();
-                                                getLogs(pageSize, qs.docs[qs.docs.length-1]);
-                                            }} >{loading && <Loader />} More activities...</button>
-                                        </div>
-                                    </div>
-                                </>
-                            ):(
-                                <>
-                                {(qs === null) ? (
-                                    <Loader text="loading logs..."></Loader>
-                                ):(
-                                    <div>No activity is found</div>
-                                )}
-                                </>
-                            )}
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-        </>
+        <UserPageLayout>
+            {loading?(
+                <Loader text="Loading logs..."></Loader>
+            ):(
+                <>
+                {error?(
+                    <Alert severity="error">{error}</Alert>
+                ):(
+                    <>
+                        {total > 0 ? (
+                            <DataTable columns={[
+                                {name: "Activity", field: "action", style: {width: '50%'}},
+                                {name: "Time", field: "time", style: {width: '50%'}}
+                            ]}
+                            rows={rows}
+                            totalRows={total}
+                            pageSize={pageSize}
+                            page={page}
+                            handlePageChane={(e, p) => {
+                                if(p>page){
+                                    getLogs(pageSize, 'next', qs.docs[qs.docs.length-1]);
+                                }
+                                if(p<page){
+                                    getLogs(pageSize, 'previous', qs.docs[0]);
+                                }
+                                setPage(p);
+                            }}
+                            handlePageSizeChange={(e) => {
+                                setPageSize(e.target.value);
+                                setPage(0);
+                            }}
+                            ></DataTable>
+                        ):(
+                            <div>No activity is found</div>
+                        )}
+                    </>
+                )}
+                </>
+            )}
+        </UserPageLayout>
         
     )
 }

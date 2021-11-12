@@ -3,18 +3,23 @@ import { BreadcrumbContext } from '../../../../components/Breadcrumb';
 import { AuthContext } from "../../../../components/FirebaseAuth";
 import { CloudFunctions } from "../../../../components/FirebaseAuth/firebase";
 import Loader from "../../../../components/Loader";
-import UserAvatar from '../../../../components/UserAvatar';
-import Alert from "../../../../components/Alert";
-import { Link } from "react-router-dom";
+import DataTable from "../../../../components/DataTable";
+import { useHistory } from "react-router-dom";
+import { Button, Paper, Box, Alert, Avatar } from "@mui/material";
 
 const UserList = () => {
     const title = 'Users';
+    const history = useHistory();  
 
     const { userData } = useContext(AuthContext);
     const mountedRef = useRef(true);
     const { setBreadcrumb } = useContext(BreadcrumbContext);
     const [users, setUsers] = useState(null);
+    const [data, setData] = useState([]);
     const [error, setError] = useState(null);
+    const [total, setTotal] = useState(0);
+    const [page, setPage] = useState(0);
+    const [pageSize, setPageSize] = useState(10);
 
     useEffect(() => {
         setBreadcrumb(
@@ -41,73 +46,83 @@ const UserList = () => {
             accountId: userData.currentAccount.id
         }).then(res => {
             if (!mountedRef.current) return null
+            let totalCounter = 0;
             res.data.forEach(record => {
-                record.lastLoginTime = new Date(record.lastLoginTime);
+                record.nameCol = <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    flexWrap: 'wrap',
+                }}><Avatar alt={record.displayName} src={record.photoUrl} /><strong style={{marginLeft: '15px'}}>{record.displayName}</strong></div>
+                record.roleCol = record.id===userData.currentAccount.owner?"Owner":(record.role.charAt(0).toUpperCase()+record.role.slice(1));
+                record.lastLoginTimeCol = (new Date(record.lastLoginTime)).toLocaleString();
+                if(record.roleCol !== 'Owner'){
+                    record.actionCol = <Button size="small" variant="contained" onClick={() => history.push("/account/"+userData.currentAccount.id+"/users/change/"+record.id)}>Change Role</Button>
+                }
+                totalCounter++;
             });
-            setUsers(res.data);
+            setTotal(totalCounter);
+            setData(res.data);
         }).catch(err => {
             if (!mountedRef.current) return null
             setError(err.message);
         });
+    },[userData, setBreadcrumb, history]);
+
+    useEffect(() => {
+        const startIndex = page * pageSize;
+        let records = [];
+        for(let i=startIndex; i<data.length; i++){
+            if(i>=startIndex+pageSize){
+                break;
+            }
+            records.push(data[i]);
+        }
+        if(records.length > 0){
+            setUsers(records);
+        }
+        window.scrollTo(0, 0);
+    },[page, pageSize, data])
+
+    useEffect(() => {
         return () => { 
             mountedRef.current = false
         }
-    },[userData, setBreadcrumb])
+    },[]);
 
     return (
         <>
-            <div className="container-fluid">
-                <div className="animated fadeIn">
-                    <div className="text-right mb-3">
-                        <Link to={"/account/"+userData.currentAccount.id+"/users/add"} className="btn btn-primary"><i className="fa fa-plus"></i> Add User</Link>
-                    </div>
-                    <div className="card">
-                        <div className="card-header">
-                            {title}
-                        </div>
-                        <div className="card-body">
-                            {error !== null && 
-                                <Alert type="danger" message={error} dismissible={true} onDismiss={() => setError(null)}></Alert>
-                            }
-                            {users === null ? (
-                                <Loader text="Loading users" />
-                            ):(
-                                <table className="table table-responsive-sm table-hover table-outline mb-0">
-                                    <thead className="thead-light">
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Role</th>
-                                            <th>Last Login</th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    {users.map((user, i) => 
-                                        <tr key={i}>
-                                            <th>
-                                                <div className="row col">
-                                                    <UserAvatar className="c-avatar-img" name={user.displayName} photoUrl={user.photoUrl} ></UserAvatar>
-                                                    <div className="pt-2 ml-1">
-                                                        <strong>{user.displayName}</strong>
-                                                    </div>
-                                                </div>
-                                            </th>
-                                            <td>{user.id===userData.currentAccount.owner?"Owner":(user.role.charAt(0).toUpperCase()+user.role.slice(1))}</td>
-                                            <td>{user.lastLoginTime.toLocaleTimeString()} {user.lastLoginTime.toLocaleDateString()}</td>
-                                            <td className="text-right">
-                                                {user.id!==userData.currentAccount.owner && 
-                                                    <Link className="btn btn-primary" to={"/account/"+userData.currentAccount.id+"/users/change/"+user.id}>Change Role</Link>
-                                                }
-                                            </td>
-                                        </tr>
-                                    )}
-                                    </tbody>
-                                </table>
-                            )}
-                        </div>
-                    </div>
-                </div>
+            <div style={{marginTop: '20px', marginBottom: '20px', textAlign: 'right'}}>
+                <Button onClick={() => history.push("/account/"+userData.currentAccount.id+"/users/add")} color="primary" variant="contained"><i className="fa fa-plus"></i> Add User</Button>
             </div>
+            <Paper width={1}>
+                <Box p={2}>
+                    {error !== null && 
+                        <Alert severity="error">{error}</Alert>
+                    }
+                    {users === null ? (
+                        <Loader text="Loading users" />
+                    ):(
+                        <DataTable columns={[
+                            {name: "Name", field: "nameCol", style: {width: '40%'}},
+                            {name: "Role", field: "roleCol", style: {width: '20%'}},
+                            {name: "Last Login", field: "lastLoginTimeCol", style: {width: '30%'}},
+                            {name: "Action", field: "actionCol", style: {width: '10%'}}
+                        ]}
+                        rows={users}
+                        totalRows={total}
+                        pageSize={pageSize}
+                        page={page}
+                        handlePageChane={(e, p) => {
+                            setPage(p);
+                        }}
+                        handlePageSizeChange={(e) => {
+                            setPage(0);
+                            setPageSize(e.target.value);
+                        }}
+                        ></DataTable>
+                    )}
+                </Box>
+            </Paper>
         </>
 
     )

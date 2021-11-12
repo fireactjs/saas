@@ -4,8 +4,9 @@ import { AuthContext } from "../../../../components/FirebaseAuth";
 import { BreadcrumbContext } from '../../../../components/Breadcrumb';
 import Loader from '../../../../components/Loader';
 import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
-import Alert from "../../../../components/Alert";
 import { countries } from "../../../../inc/country.json";
+import { Paper, Box, Grid, Card, CardHeader, CardContent, CardActions, Button, Divider, Container, Autocomplete, TextField, Stack, Alert } from "@mui/material";
+
 
 const Plans = () => {
     const title = 'Select a Plan';
@@ -44,6 +45,7 @@ const Plans = () => {
     const [country, setCountry] = useState("");
     const [countryError, setCountryError] = useState(null);
     const [state, setState] = useState("");
+    const [states, setStates] = useState([]);
     const [stateError, setStateError] = useState(null);
 
     useEffect(() => {
@@ -88,12 +90,15 @@ const Plans = () => {
             }
             setLoading(false);
         });
+    },[userData, setBreadcrumb, title]);
+
+    useEffect(() => {
         return () => { 
             mountedRef.current = false
         }
-    },[userData, setBreadcrumb, title]);
+    },[]);
 
-    const subcribe = async(event) => {
+    const subscribe = async(event) => {
         event.preventDefault();
         setProcessing(true);
         setErrorMessage(null);
@@ -152,8 +157,10 @@ const Plans = () => {
                 }
             }).then(res => {
                 // physical page load to reload the account data
+                if (!mountedRef.current) return null
                 document.location = '/account/'+userData.currentAccount.id+'/';
             }).catch(err => {
+                if (!mountedRef.current) return null
                 setProcessing(false);
                 setErrorMessage(err.message);
             });
@@ -164,146 +171,205 @@ const Plans = () => {
 
     return (
         <>
-            <div className="container-fluid">
-                <div className="animated fadeIn">
-                    <div className="card-deck mb-3">
-                        <div className="card">
-                            <div className="card-header text-center"><h3>{title}</h3></div>
-                            <div className="card-body">
-                                {(userData.currentAccount.owner === authUser.user.uid)?(
-                                    <>
-                                        {errorMessage !== null && 
-                                        <Alert type="danger" message={errorMessage} dismissible={true} onDismiss={() => setErrorMessage(null)}></Alert>
-                                        }
-                                        {plans.length > 0 ? (
-                                            <div className="row justify-content-md-center">
-                                            <div className="col col-sm-12 col-md-8 col-lg-8 col-xl-8">
-
-                                            <div className="card-deck mb-5 text-center">
-                                            {plans.map((plan,i) => 
-                                                    <div className="card" key={i+plan.id}>
-                                                        <div className="card-header">
-                                                            <h4 className="my-0 font-weight-normal">
-                                                                {plan.name}
-                                                            </h4>
-                                                            <h1 className="card-title">
-                                                                ${plan.price}
-                                                                <small className="text-muted">
-                                                                    /{plan.paymentCycle}
-                                                                </small>
-                                                            </h1>
-                                                        </div>
-                                                        <div className="card-body">
-                                                            <ul className="list-unstyled mt-3 mb-4">
-                                                                {plan.features.map((feature, i) => 
-                                                                    <li key={i}><i className="fa fa-check text-success"></i> {feature}</li>
-                                                                )}
-                                                            </ul>
-                                                        </div>
-                                                        <div className="card-footer bg-white">
-                                                            {plan.current?(
-                                                                <button type="button" className="btn btn-block btn-secondary" disabled={true}>Current Plan</button>
-                                                            ):(
-                                                                <button type="button" className={(plan.id!==selectedPlan.id)?"btn btn-block btn-outline-success":"btn btn-block btn-success"} onClick={() => {
-                                                                    for(let i=0; i<plans.length; i++){
-                                                                        if(plans[i].id === plan.id){
-                                                                            setSelectedPlan(plan);
-                                                                        }
-                                                                    }
-                                                                }}>{plan.id===selectedPlan.id && <><i className="fa fa-check"></i> </>}{(plan.id!==selectedPlan.id)?"Select":"Selected"}</button>    
-                                                            )}
-                                                        </div>
-                                                    </div>
-                                                )
-                                            }
-                                            </div>
-                                        
-                                            {selectedPlan.id !== 0 && selectedPlan.price > 0 && 
-                                            <div className="card-deck">
-                                                <div className="card mb-4">
-                                                    <div className="card-header text-center">
-                                                        <h3>Billing Details</h3>
-                                                    </div>
-                                                    <div className="card-body">
-                                                        <div className="form-group row">
-                                                            <label className="col-lg-3 col-form-label mt-2 text-lg-right"><b>Country/Territory</b></label>
-                                                            <div className="col-lg-9 mt-2">
-                                                                {countryError !== null && 
-                                                                    <Alert type="danger" message={countryError} dismissible={true} onDismiss={() => setCountryError(null)}></Alert>
-                                                                }
-                                                                <select className="form-control" defaultValue={country} onChange={e => {
-                                                                    const countryCode = e.target.selectedOptions[0].value;
-                                                                    setCountry(countryCode);
-                                                                    setState("");
-                                                                    setCountryError(null);
-                                                                }}>
-                                                                    <option value=''>-- Select a country --</option>
-                                                                    {Object.keys(countries).map((countryCode) => 
-                                                                        <option value={countryCode} key={countryCode}>{countries[countryCode].name}</option>
-                                                                    )}
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                        {countries[country] && countries[country].states &&
-                                                            <div className="form-group row">
-                                                                <label className="col-lg-3 col-form-label mt-2 text-lg-right"><b>State/Province</b></label>
-                                                                <div className="col-lg-9 mt-2">
-                                                                    {stateError !== null && 
-                                                                        <Alert type="danger" message={stateError} dismissible={true} onDismiss={() => setStateError(null)}></Alert>
-                                                                    }
-                                                                    <select className="form-control" defaultValue={state} onChange={e => {
-                                                                        setState(e.target.selectedOptions[0].value);
-                                                                        setStateError(null);
-                                                                    }}>
-                                                                        <option value=''>-- Select a state --</option>
-                                                                        {Object.keys(countries[country].states).map(stateCode => 
-                                                                            <option value={stateCode} key={stateCode}>{countries[country].states[stateCode]}</option>
-                                                                        )}
-                                                                    </select>
-                                                                </div>
-                                                            </div>
+        {(!loading)?(
+            <>{(userData.currentAccount.owner === authUser.user.uid)?(
+            <>{plans.length > 0 ? (
+            <Paper>
+                <Box p={3} style={{textAlign: 'center'}} >
+                    <h2>{title}</h2>
+                    <Grid container spacing={3}>
+                        
+                            <>
+                            {plans.map((plan,i) => 
+                                <Grid container item xs={12} md={4} key={i} >
+                                    <Card style={{
+                                        width: '100%',
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        paddingBottom: '20px',
+                                    }}>
+                                        <CardHeader title={plan.name} subheader={"$"+plan.price+"/"+plan.paymentCycle} />
+                                        <CardContent>
+                                            <Divider />
+                                            <ul style={{listStyleType: 'none', paddingLeft: '0px'}}>
+                                            {plan.features.map((feature, i) => 
+                                                <li key={i}>
+                                                    <i className="fa fa-check" style={{color: "#2e7d32"}} /> {feature}
+                                                </li>
+                                            )}
+                                            </ul>
+                                        </CardContent>
+                                        <CardActions style={{
+                                            marginTop: 'auto',
+                                            justifyContent: 'center',
+                                        }}>
+                                            {plan.current?(
+                                                <Button color="success" variant="contained" disabled={true}>Current Plan</Button>
+                                            ):(
+                                                <Button color="success" variant={(plan.id!==selectedPlan.id)?"outlined":"contained"} onClick={() => {
+                                                    for(let i=0; i<plans.length; i++){
+                                                        if(plans[i].id === plan.id){
+                                                            setSelectedPlan(plan);
                                                         }
-                                                        <div className="form-group row mb-0">
-                                                            <label className="col-lg-3 col-form-label mt-2 text-lg-right"><b>Credit/Debit Card</b></label>
-                                                            <div className="col-lg-9 mt-2">
-                                                                {cardError !== null && 
-                                                                    <Alert type="danger" message={cardError} dismissible={true} onDismiss={() => setCardError(null)}></Alert>
+                                                    }
+                                                }}>{plan.id===selectedPlan.id && <><i className="fa fa-check" /> </>}{(plan.id!==selectedPlan.id)?"Select":"Selected"}</Button>    
+                                            )}
+                                        </CardActions>
+                                    </Card>
+                                </Grid>
+                            )}
+                            </>
+                        
+                    </Grid>
+                    {selectedPlan.id !== 0 && selectedPlan.price > 0 && 
+                        <div style={{justifyContent: 'center', marginTop: '50px'}}>
+                            <h2>Billing Details</h2>
+                            <Grid container spacing={3}>
+                                <Grid container item xs={12}>
+                                    <Card style={{
+                                        width: '100%',
+                                        paddingBottom: '20px',
+                                    }}>
+                                        <CardContent>
+                                            <Container maxWidth="sm">
+                                                <Stack spacing={3}>
+                                                    {countryError !== null && 
+                                                        <Alert severity="error" onClose={() => setCountryError(null)}>{countryError}</Alert>
+                                                    }
+                                                    <Autocomplete
+                                                        value={(country !== '')?(countries.find(obj =>{
+                                                            return obj.code === country
+                                                        })):(null)}
+                                                        options={countries}
+                                                        autoHighlight
+                                                        getOptionLabel={(option) => option.label}
+                                                        renderOption={(props, option) => (
+                                                            <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                                                                <img
+                                                                    loading="lazy"
+                                                                    width="20"
+                                                                    src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`}
+                                                                    srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
+                                                                    alt=""
+                                                                />
+                                                                {option.label}
+                                                            </Box>
+                                                        )}
+                                                        renderInput={(params) => (
+                                                            <TextField
+                                                                {...params}
+                                                                label="Country"
+                                                                inputProps={{
+                                                                    ...params.inputProps,
+                                                                    autoComplete: 'new-password',
+                                                                }}
+                                                            />
+                                                        )}
+                                                        onChange={(event, newValue) => {
+                                                            if(newValue && newValue.code){
+                                                                setCountry(newValue.code);
+                                                                setState("");
+                                                                if(newValue.states){
+                                                                    setStates(newValue.states);
+                                                                }else{
+                                                                    setStates([]);
                                                                 }
-                                                                <div className="form-control">
-                                                                    <CardElement options={CARD_ELEMENT_OPTIONS}></CardElement>
-                                                                </div>
-                                                            </div>
-                                                        </div>
+                                                                setCountryError(null);
+                                                            }
+                                                        }}
+                                                    />
+                                                    {states.length > 0 &&
+                                                    <>
+                                                        {stateError !== null && 
+                                                            <Alert severity="error" onClose={() => setStateError(null)}>{stateError}</Alert>
+                                                        }
+                                                        <Autocomplete
+                                                            value={(state !== '')?(states.find(obj =>{
+                                                                return obj.code === state
+                                                            })):(null)}
+                                                            options={states}
+                                                            autoHighlight
+                                                            getOptionLabel={(option) => option.label}
+                                                            renderOption={(props, option) => (
+                                                                <Box component="li" {...props}>
+                                                                    {option.label}
+                                                                </Box>
+                                                            )}
+                                                            renderInput={(params) => (
+                                                                <TextField
+                                                                    {...params}
+                                                                    label="State"
+                                                                    inputProps={{
+                                                                        ...params.inputProps,
+                                                                        autoComplete: 'new-password',
+                                                                    }}
+                                                                />
+                                                            )}
+                                                            onChange={(event, newValue) => {
+                                                                if(newValue && newValue.code){
+                                                                    setState(newValue.code);
+                                                                    setStateError(null);
+                                                                }
+                                                                
+                                                            }}
+                                                        />
+                                                    </>
+                                                    }
+                                                    {cardError !== null && 
+                                                        <Alert severity="error" onClose={() => setCardError(null)}>{cardError}</Alert>
+                                                    }
+                                                    <div style={{position: "relative", minHeight: '56px', padding: '15px'}}>
+                                                        <CardElement options={CARD_ELEMENT_OPTIONS}></CardElement>
+                                                        <fieldset style={{
+                                                            borderColor: 'rgba(0, 0, 0, 0.23)',
+                                                            borderStyle: 'solid',
+                                                            borderWidth: '1px',
+                                                            borderRadius: '4px',
+                                                            position: 'absolute',
+                                                            top: '-5px',
+                                                            left: '0',
+                                                            right: '0',
+                                                            bottom: '0',
+                                                            margin: '0',
+                                                            padding: '0 8px',
+                                                            overflow: 'hidden',
+                                                            pointerEvents: 'none'
+                                                            
+                                                        }}></fieldset>
                                                     </div>
-                                                </div>
-                                            </div>
-                                            }
-                                            {selectedPlan.id!==0 &&                                             
-                                                <button className="btn btn-lg btn-block btn-primary" disabled={selectedPlan.id===0||processing?true:false} onClick={e => {
-                                                    subcribe(e);
-                                                }}>{processing?(<Loader text="Please wait while subscription being processed..."></Loader>):(<>Subscribe</>)}</button>
-                                            }
-                                            </div>
-                                        </div>
-                                        ):(
-                                            <>
-                                                {(loading) ? (
-                                                    <Loader text="loading plans..."></Loader>
-                                                ):(
-                                                    <div>No plan is found</div>
-                                                )}
-                                            </>
-                                        )}
-                                    </>
-                                ):(
-                                    <Alert type="danger" message="Access Denied." dismissible={false} ></Alert>
-                                )}
-
-                            </div>
+                                                </Stack>
+                                            </Container>
+                                        </CardContent>
+                                    </Card>
+                                </Grid>
+                            </Grid>
                         </div>
-                    </div>
-                </div>
-            </div>
+                    }
+                    {selectedPlan.id!==0 &&
+                        <div style={{marginTop: '50px'}}>
+                            <Container maxWidth="sm">
+                                <Stack spacing={3}>
+                                {errorMessage !== null && 
+                                    <Alert severity="error" onClose={() => setErrorMessage(null)}>{errorMessage}</Alert>
+                                }
+                                <Button color="success" size="large" variant="contained" disabled={selectedPlan.id===0||processing?true:false} onClick={e => {
+                                    subscribe(e);
+                                }}>{processing?(<><Loader /> Processing...</>):(<>Subscribe Now</>)}</Button>
+                                </Stack>
+                            </Container>
+                        </div>
+                    }
+                </Box>
+            </Paper>
+            ):(
+                <Alert severity="warning">No plan is found.</Alert>
+            )}</>
+            ):(
+                <Alert severity="error" >Access Denied.</Alert>
+            )}</>
+        ):(
+            <Loader text="loading plans..." />
+        )}
         </>
 
     )

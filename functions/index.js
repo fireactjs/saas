@@ -630,6 +630,7 @@ exports.stripeWebHook = functions.https.onRequest((req, res) => {
     try {
         let result = false;
         event = stripe.webhooks.constructEvent(req.rawBody, sig, endpointSecret);
+        console.log("[Stripe Event]", event.type);
         if(event.type.indexOf('invoice.') === 0){
             result = updateInvoice(event.data.object);
         }
@@ -645,4 +646,8 @@ exports.stripeWebHook = functions.https.onRequest((req, res) => {
         console.log(`Webhook Error: ${err.message}`);
         res.status(400).send(`Webhook Error: ${err.message}`);
     }
+});
+
+exports.incrementInvoicesCollectionCount = functions.firestore.document('accounts/{accountId}/invoices/{invoiceId}').onCreate((snap, context) => {
+    return admin.firestore().doc('/accounts/'+context.params.accountId).update({invoicesColCount: admin.firestore.FieldValue.increment(1)});
 });

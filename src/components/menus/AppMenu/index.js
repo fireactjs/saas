@@ -1,36 +1,33 @@
-import React, { useEffect } from "react";
-import SidebarLink from '../SidebarLink';
+import React from "react";
+import { Link } from "react-router-dom";
+import { List, ListItem, ListItemText, ListItemIcon, Divider, Typography } from "@mui/material";
+import AppIcon from '@mui/icons-material/Apps';
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
+import ListAltIcon from '@mui/icons-material/ListAlt';
 
 const AppMenu = () => {
-
-    useEffect(() => {
-        document.querySelectorAll('.c-sidebar').forEach(element => {
-            window.coreui.Sidebar._sidebarInterface(element)
-        });
-    })
-
     return (
-
-            <ul className="c-sidebar-nav ps ps--active-y">
-                <li className="c-sidebar-nav-title">Application</li>
-                <li className="c-sidebar-nav-item">
-                    <SidebarLink className={"c-sidebar-nav-link"+(window.location.pathname==='/'?" active":"")} to="/">
-                        <i className="c-sidebar-nav-icon fa fa-th-large"></i>My Accounts
-                    </SidebarLink>
-                </li>
-                <li className="c-sidebar-nav-title">User</li>
-                <li className="c-sidebar-nav-item">
-                    <SidebarLink className={"c-sidebar-nav-link"+(window.location.pathname.startsWith('/user/profile')?" active":"")} to="/user/profile">
-                        <i className="c-sidebar-nav-icon fa fa-user"></i> Profile
-                    </SidebarLink>
-                </li>
-                <li className="c-sidebar-nav-item">
-                    <SidebarLink className={"c-sidebar-nav-link"+(window.location.pathname.startsWith('/user/log')?" active":"")} to="/user/log">
-                        <i className="c-sidebar-nav-icon fa fa-list"></i> Activity Logs
-                    </SidebarLink>
-                </li>
-            </ul>
-
+        <List>
+            <Link to="/" style={{textDecoration:'none'}}>
+                <ListItem button key="My Accounts">
+                    <ListItemIcon><AppIcon /></ListItemIcon>
+                    <ListItemText primary={<Typography color="textPrimary">My Accounts</Typography>} />
+                </ListItem>
+            </Link>
+            <Divider />
+            <Link to="/user/profile" style={{textDecoration:'none'}}>
+                <ListItem button key="Profile">
+                    <ListItemIcon><AccountBoxIcon /></ListItemIcon>
+                    <ListItemText primary={<Typography color="textPrimary">Profile</Typography>} />
+                </ListItem>
+            </Link>
+            <Link to="/user/log" style={{textDecoration:'none'}}>
+                <ListItem button key="Activity Logs">
+                    <ListItemIcon><ListAltIcon /></ListItemIcon>
+                    <ListItemText primary={<Typography color="textPrimary">Activity Logs</Typography>} />
+                </ListItem>
+            </Link>
+        </List>
     )
 }
 

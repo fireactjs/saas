@@ -13,7 +13,7 @@ header:
 excerpt: >
   Reactjs + Firebase + Stripe<br />
   Built for subscription based SaaS web applications.<br />
-  <small><a href="https://github.com/chaoming/fireact/releases/tag/v2.1.0">Latest release v2.1.0</a></small>
+  <small><a href="https://github.com/chaoming/fireact/releases/tag/v3.0.0">Latest release v2.1.0</a></small>
 feature_row:
   - alt: "installation"
     title: "Installation"
@@ -46,6 +46,7 @@ Fireact comes with:
 - User permission management in subscription accounts
 - Estiablished user permission framework for development of your SaaS functionalities
 - Supporting sales tax, GST and VAT in subscription payments
+- Data UI and APIs to interact with backend data
 
 {% include feature_row %}
 

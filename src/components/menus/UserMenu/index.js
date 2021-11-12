@@ -1,37 +1,75 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
 import { AuthContext } from '../../FirebaseAuth';
 import { userSignOut } from '../../../libs/user';
-import UserAvatar from '../../UserAvatar';
+import { IconButton, Menu, MenuItem, Avatar, Divider } from "@mui/material";
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
+import ListAltIcon from '@mui/icons-material/ListAlt';
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 
 const UserMenu = () => {
+    const [anchorEl, setAnchorEl] = useState(null);
+    const open = Boolean(anchorEl);
+    const handleMenu = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+    const history = useHistory();
+
     return (
         <>
         <AuthContext.Consumer>
             {(context) => (
-                <li className="c-header-nav-item dropdown" id="user-menu">
-                    <Link to="/" data-target="#root" className="c-header-nav-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <UserAvatar name={context.authUser.user.displayName} photoUrl={context.authUser.user.photoURL} className="c-avatar-img" />
-                    </Link>
-                    <div className="dropdown-menu dropdown-menu-right" style={{minWidth: '182px'}}>
-                        <Link className="dropdown-item" to="/user/profile">
-                            <i className="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                            Profile
-                        </Link>
-                        <Link className="dropdown-item" to="/user/log">
-                            <i className="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
-                            Activity Logs
-                        </Link>
-                        <div className="dropdown-divider"></div>
-                        <Link to="/" data-target="#root" className="dropdown-item" onClick={(e) => {
-                            e.preventDefault();
-                            userSignOut();
+                <>
+                <IconButton 
+                    ria-label="account of current user"
+                    aria-controls="menu-appbar"
+                    aria-haspopup="true"
+                    onClick={handleMenu}
+                    color="inherit"
+                >
+                    <Avatar alt={context.authUser.user.displayName} src={context.authUser.user.photoURL} />
+                </IconButton>
+                <Menu
+                    id="menu-appbar"
+                    anchorEl={anchorEl}
+                    anchorOrigin={{
+                        vertical: 'top',
+                        horizontal: 'right',
+                    }}
+                    keepMounted
+                    transformOrigin={{
+                        vertical: 'top',
+                        horizontal: 'right',
+                    }}
+                    open={open}
+                    onClose={handleClose}
+                >
+                    <MenuItem onClick={(e)=>{
+                        e.preventDefault();
+                        handleClose();
+                        history.push("/user/profile");
+                    }}>
+                        <AccountBoxIcon style={{marginRight: '10px'}} />
+                        Profile
+                    </MenuItem>
+                    <MenuItem onClick={(e)=>{
+                        e.preventDefault();
+                        handleClose();
+                        history.push("/user/log");
                         }}>
-                            <i className="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                            Sign Out
-                        </Link>
-                    </div>
-                </li>
+                        <ListAltIcon style={{marginRight: '10px'}} />
+                        Activity Logs
+                    </MenuItem>
+                    <Divider />
+                    <MenuItem onClick={() => userSignOut()}>
+                        <ExitToAppIcon style={{marginRight: '10px'}} />
+                        Sign Out
+                    </MenuItem>
+                </Menu>
+                </>
             )}
         </AuthContext.Consumer>
         </>

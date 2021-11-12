@@ -1,27 +1,26 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
+import { Breadcrumbs, Typography, Link } from "@mui/material";
 
 export const BreadcrumbContext = React.createContext();
 
 export const Breadcrumb = ({links}) => {
     return (
-        <div className="c-subheader justify-content-between px-3">
-            <ol className="breadcrumb border-0 m-0 px-0 px-md-3">
-                {links !== null && links.map((link, key) => {
+        <Breadcrumbs>
+            {links !== null && links.map((link, key) => {
+                    if(link.to !== null){
                         return (
-                            <li key={key} className={link.active?"active breadcrumb-item":"breadcrumb-item"}>
-                                {link.to !== null && 
-                                    <Link to={link.to}>{link.text}</Link>
-                                }
-                                {link.to === null && 
-                                    <>{link.text}</>
-                                }
-                            </li>
+                            <Link key={key} to={link.to} component={RouterLink}>{link.text}</Link>  
                         )
-                    })
-                }
-            </ol>
-        </div>
+                    }else{
+                        return (
+                            <Typography key={key} color="textPrimary">{link.text}</Typography>
+                        )
+                    }
+                    
+                })
+            }
+        </Breadcrumbs>
     )
 }
 

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
+import { TextField } from "@mui/material";
 
 const Input = (props) => {
 
@@ -23,8 +24,8 @@ const Input = (props) => {
     }, [hasError, error]);
 
     return (
-        <>
-            <input className={"form-control"+(hasErrorState?' is-invalid':'')} {...others} onChange={e => {
+        <div style={{marginTop:'20px',marginBottom:'20px'}}>
+            <TextField error={hasErrorState} helperText={hasErrorState && errorMessage} {...others} onChange={e => {
                 let foundError = false;
                 let foundErrorMessage = '';
                 // validae required
@@ -68,12 +69,7 @@ const Input = (props) => {
                     value: e.target.value
                 });
             }} />
-            {hasErrorState && 
-                <div className="invalid-feedback">
-                    {errorMessage}
-                </div>
-            }
-        </>
+        </div>
     )
 }
 
