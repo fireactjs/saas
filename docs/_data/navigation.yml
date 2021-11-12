@@ -25,11 +25,11 @@ docs:
         url: /docs/hello-world/
       - title: "Demo Data Explained"
         url: /docs/demo-data-explained/
-      - title: "<DataList> Component"
+      - title: "&lt;DataList&gt; Component"
         url: /docs/datalist-component/
-      - title: "<DataCreate> Component"
+      - title: "&lt;DataCreate&gt; Component"
         url: /docs/datacreate-component/
-      - title: "<DataEdit> Component"
+      - title: "&lt;DataEdit&gt; Component"
         url: /docs/dataedit-component/
-      - title: "<DataDelete> Component"
+      - title: "&lt;DataDelete&gt; Component"
         url: /docs/datadelete-component/
