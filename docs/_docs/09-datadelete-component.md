@@ -1,6 +1,6 @@
 ---
 title: "<DataDelete> Component"
-permalink: /docs/datadelete-components/
+permalink: /docs/datadelete-component/
 excerpt: "UI component to delete existing data records"
 last_modified_at: 2021-11-07
 ---

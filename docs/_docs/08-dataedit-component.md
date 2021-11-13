@@ -1,6 +1,6 @@
 ---
 title: "<DataEdit> Component"
-permalink: /docs/dataedit-components/
+permalink: /docs/dataedit-component/
 excerpt: "UI component to edit existing data records"
 last_modified_at: 2021-11-07
 ---

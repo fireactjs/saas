@@ -1,6 +1,6 @@
 ---
 title: "<DataList> Component"
-permalink: /docs/datalist-components/
+permalink: /docs/datalist-component/
 excerpt: "UI component to list data with pagination"
 last_modified_at: 2021-11-05
 ---

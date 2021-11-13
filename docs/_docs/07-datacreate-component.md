@@ -1,6 +1,6 @@
 ---
 title: "<DataCreate> Component"
-permalink: /docs/datacreate-components/
+permalink: /docs/datacreate-component/
 excerpt: "UI component to create new data records"
 last_modified_at: 2021-11-07
 ---
