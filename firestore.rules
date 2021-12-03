@@ -22,5 +22,8 @@ service cloud.firestore {
     match /taxes/{taxRateId} {
       allow read: if true;
     }
+    match /accounts/{accountId}/images/{imageId} {
+      allow read, create, update, delete: if request.auth.uid != null && request.auth.uid in get(/databases/$(database)/documents/accounts/$(accountId)).data.access;
+    }
   }
 }

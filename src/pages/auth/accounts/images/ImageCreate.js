@@ -2,9 +2,10 @@ import React, {useState, useContext, useEffect} from 'react';
 import DataCreate from '../../../../components/DataCreate';
 import { BreadcrumbContext } from '../../../../components/Breadcrumb';
 import { AuthContext } from "../../../../components/FirebaseAuth";
-import { formSchema } from './images.json';
+import { useStaticData, formSchema } from './images.json';
 import { Alert, TextField } from '@mui/material';
-import { CreateImageApi } from './ImagesApis';
+import { FirebaseAuth } from '../../../../components/FirebaseAuth/firebase';
+import firebase from "firebase/app";
 
 const ImageCreate = () => {
 
@@ -26,6 +27,25 @@ const ImageCreate = () => {
         }
         return splitStr.join(' '); 
     }
+
+    const CreateImageApiStatic = (data) => {
+        return new Promise((resolve, reject) => {
+            if(data.title.indexOf('error') === -1){
+                setTimeout(() => resolve("success"), 1000);
+            }else{
+                reject("This is an error demo");
+            }
+        })
+    }
+
+    const createImageApiFirestore = (data) => {
+        const Firestore = FirebaseAuth.firestore();
+        const colRef = Firestore.collection('/accounts/'+userData.currentAccount.id+'/images');
+        data.createAt = firebase.firestore.FieldValue.serverTimestamp();
+        data.lastUpdateAt = firebase.firestore.FieldValue.serverTimestamp();
+        return colRef.add(data);
+    }
+
 
     const { setBreadcrumb } = useContext(BreadcrumbContext);
     useEffect(() => {
@@ -57,8 +77,8 @@ const ImageCreate = () => {
         <DataCreate
             schema = {formSchema}
             validation = {validate}
-            success = {<Alert severity="success">Success! No data is saved because the database is a static file. This is just a demo.</Alert>}
-            handleCreation = {CreateImageApi}
+            success = {<Alert severity="success">{useStaticData?"Success! No data is saved because the database is a static file. This is just a demo.":"Success! The data is saved."}</Alert>}
+            handleCreation = {useStaticData?CreateImageApiStatic:createImageApiFirestore}
         >
             <TextField
                 label="Image URL"

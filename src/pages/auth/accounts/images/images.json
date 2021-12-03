@@ -80,5 +80,6 @@
             "name": "title",
             "prop": "value"
         }
-    ]
+    ],
+    "useStaticData": false
 }
