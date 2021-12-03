@@ -3,6 +3,7 @@ import DataCreate from '../../../../components/DataCreate';
 import { BreadcrumbContext } from '../../../../components/Breadcrumb';
 import { AuthContext } from "../../../../components/FirebaseAuth";
 import { useStaticData, formSchema } from './images.json';
+import { CreateImageApiStatic } from './ImagesApis';
 import { Alert, TextField } from '@mui/material';
 import { FirebaseAuth } from '../../../../components/FirebaseAuth/firebase';
 import firebase from "firebase/app";
@@ -26,16 +27,6 @@ const ImageCreate = () => {
             splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);     
         }
         return splitStr.join(' '); 
-    }
-
-    const CreateImageApiStatic = (data) => {
-        return new Promise((resolve, reject) => {
-            if(data.title.indexOf('error') === -1){
-                setTimeout(() => resolve("success"), 1000);
-            }else{
-                reject("This is an error demo");
-            }
-        })
     }
 
     const createImageApiFirestore = (data) => {

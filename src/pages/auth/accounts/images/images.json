@@ -49,7 +49,7 @@
             "title": "Moutain"
         }
     ],
-    "listResponse": [
+    "listFields": [
         {
             "name": "Image",
             "field": "image",
@@ -81,5 +81,5 @@
             "prop": "value"
         }
     ],
-    "useStaticData": false
+    "useStaticData": true
 }

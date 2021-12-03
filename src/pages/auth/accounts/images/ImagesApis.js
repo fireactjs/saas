@@ -1,6 +1,6 @@
 import { images } from "./images.json";
 
-const ListImageApi = (page, pageSize) => {
+const ListImageApiStatic = (page, pageSize) => {
     return new Promise((resolve, reject) => {
         const start = page * pageSize;
         if(start >= 0 && start < images.length-1){
@@ -27,7 +27,7 @@ const ListImageApi = (page, pageSize) => {
     });
 }
 
-const GetImageApi = (id) => {
+const GetImageApiStatic = (id) => {
     return new Promise((resolve, reject) => {
         if(id >= 0 && id<images.length){
             setTimeout(() =>
@@ -38,7 +38,7 @@ const GetImageApi = (id) => {
     })
 }
 
-const CreateImageApi = (data) => {
+const CreateImageApiStatic = (data) => {
     return new Promise((resolve, reject) => {
         if(data.title.indexOf('error') === -1){
             setTimeout(() => resolve("success"), 1000);
@@ -48,7 +48,7 @@ const CreateImageApi = (data) => {
     })
 }
 
-const EditImageApi = (id, data) => {
+const EditImageApiStatic = (id, data) => {
     return new Promise((resolve, reject) => {
         if(id >= 0 && id<images.length){
             if(data.title.indexOf('error') === -1){
@@ -63,7 +63,7 @@ const EditImageApi = (id, data) => {
     })
 }
 
-const DeleteImageApi = (id) => {
+const DeleteImageApiStatic = (id) => {
     return new Promise((resolve, reject) => {
         if(id >= 0 && id<images.length){
             setTimeout(() => resolve("success"), 1000);
@@ -74,9 +74,9 @@ const DeleteImageApi = (id) => {
 }
 
 export {
-    ListImageApi,
-    CreateImageApi,
-    GetImageApi,
-    EditImageApi,
-    DeleteImageApi
+    ListImageApiStatic,
+    CreateImageApiStatic,
+    GetImageApiStatic,
+    EditImageApiStatic,
+    DeleteImageApiStatic
 }

@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Alert } from '@mui/material';
-import { Paper, Box, Stack, Button } from '@mui/material';
+import { Paper, Box, Stack, Button, Alert } from '@mui/material';
 import Loader from '../Loader';
 
 const DataCreate = ({schema, validation, handleCreation, success, children}) => {

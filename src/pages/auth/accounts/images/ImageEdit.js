@@ -1,13 +1,13 @@
 import React, {useState, useContext, useEffect, useRef } from 'react';
 import { BreadcrumbContext } from '../../../../components/Breadcrumb';
 import { AuthContext } from "../../../../components/FirebaseAuth";
-import { formSchema } from './images.json';
-import { Alert, Paper, TextField } from '@mui/material';
-import { EditImageApi, GetImageApi } from './ImagesApis';
+import { useStaticData, formSchema } from './images.json';
+import { Alert, Paper, Box, TextField } from '@mui/material';
+import { EditImageApiStatic, GetImageApiStatic } from './ImagesApis';
 import { useParams } from 'react-router';
 import DataEdit from '../../../../components/DataEdit';
 import Loader from '../../../../components/Loader';
-import { Box } from '@mui/system';
+import { FirebaseAuth } from '../../../../components/FirebaseAuth/firebase';
 
 const ImageEdit = () => {
     const mountedRef = useRef(true);
@@ -59,11 +59,22 @@ const ImageEdit = () => {
             }
         ]);
         setIsLoading(true);
-        GetImageApi(imageId).then(data => {
-            if (!mountedRef.current) return null
-            setData(data);
-            setIsLoading(false);
-        })
+        if(useStaticData){
+            GetImageApiStatic(imageId).then(data => {
+                if (!mountedRef.current) return null
+                setData(data);
+                setIsLoading(false);
+            })
+        }else{
+            const Firestore = FirebaseAuth.firestore();
+            const DocRef = Firestore.doc('/accounts/'+userData.currentAccount.id+'/images/'+imageId);
+            DocRef.get().then(doc => {
+                if (!mountedRef.current) return null
+                setData(doc.data());
+                setIsLoading(false);
+            })
+        }
+        
     },[setBreadcrumb, title, listName, userData, imageId]);
 
     useEffect(() => {
@@ -71,6 +82,12 @@ const ImageEdit = () => {
             mountedRef.current = false
         }
     },[]);
+
+    const EditImageApiFirestore = (id, data) => {
+        const Firestore = FirebaseAuth.firestore();
+        const DocRef = Firestore.doc('/accounts/'+userData.currentAccount.id+'/images/'+id);
+        return DocRef.set(data, {merge: true});
+    }
 
     return (
         <>
@@ -85,8 +102,8 @@ const ImageEdit = () => {
                 id = {imageId}
                 schema = {formSchema}
                 validation = {validate}
-                success = {<Alert severity="success">Success! No data is saved because the database is a static file. This is just a demo.</Alert>}
-                handleEdit = {EditImageApi}
+                success = {<Alert severity="success">{useStaticData?"Success! No data is saved because the database is a static file. This is just a demo.":"Success! The data is updated."}</Alert>}
+                handleEdit = {useStaticData?EditImageApiStatic:EditImageApiFirestore}
             >
                 <TextField
                     label="Image URL"

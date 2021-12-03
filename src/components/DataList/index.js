@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Paper, Box } from '@mui/material';
+import { Paper, Box, Stack, Alert } from '@mui/material';
 import DataTable from '../DataTable';
 import Loader from '../Loader';
 
@@ -38,24 +38,30 @@ const DataList = ({handleFetch, schema}) => {
                     </Box>
                 </Paper>
             ):(
-                <Paper>
-                    <Box>
-                        <DataTable
-                            columns={schema}
-                            rows = {rows}
-                            totalRows = {total}
-                            pageSize = {pageSize}
-                            page={page}
-                            handlePageChane = {(e, p) => {
-                                setPage(p);
-                            }}
-                            handlePageSizeChange = {(e) => {
-                                setPage(0);
-                                setPageSize(e.target.value);
-                            }}
-                        />
-                    </Box>
-                </Paper>
+                <Stack spacing={3}>
+                {rows.length === 0 &&
+                    <Alert severity="error">No data is found.</Alert>
+                }
+                    <Paper>
+                        <Box>
+                            <DataTable
+                                columns={schema}
+                                rows = {rows}
+                                totalRows = {total}
+                                pageSize = {pageSize}
+                                page={page}
+                                handlePageChane = {(e, p) => {
+                                    setPage(p);
+                                }}
+                                handlePageSizeChange = {(e) => {
+                                    setPage(0);
+                                    setPageSize(e.target.value);
+                                }}
+                            />
+                            
+                        </Box>
+                    </Paper>
+                </Stack>
             )}
         </>
     )
