@@ -29,7 +29,7 @@ let ListImageApi = useStaticData?ListImageApiStatic:ListImageApiFirestore;
 
 `ListImageApiStatic` function reads the image records from the static JSON file `/src/pages/auth/accounts/images/image.json`.
 
-`ListImageApiFirestore` function reads the image records from Firestore. As Firestore doesn't support jumping to a record in the result list, the implementation of pagination is done by loading the records for the next page from Firestore and caching the records. When going back to the previous page, the function simply reads from the cached data without interacting with Firestore. This approach increases the data loading speed as well as saves the costs of reading the data documents from Firestore. Each document is read once only when the users go back and forth.
+`ListImageApiFirestore` function reads the image records from Firestore. As Firestore doesn't support jumping to a record in the result list, the implementation of pagination is done by loading the records for the next page from Firestore and caching the records. When going back to the previous page, the function simply reads from the cached data without interacting with Firestore. This approach increases the data loading speed as well as saves the costs of reading the data documents from Firestore. Each document is read once only when the users go back and forth. Because there is no easy way to count the total number of image records in Firestore, `total` in the response data is hardcoded to be `-1` so that the users can keep going beyond the end of the record list.
 
 ## schema prop
 
