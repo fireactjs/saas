@@ -14,3 +14,23 @@ The demo application is powered by the data in `/src/pages/auth/accounts/images/
 - &lt;DataEdit&gt; component: modify data records
 - &lt;DataDelete&gt; component: delete data records
 
+# Switch to Firestore
+
+You can switch the static dataset to Firestore database, which will allow users to create, modify and delete image records. The switch can be activated by simply changing the `useStaticData` property to `false` in the file `/src/pages/auth/accounts/images/image.json`.
+
+
+Use the static data set:
+```
+{
+    ...
+    "useStaticData": true
+}
+```
+
+Use Firestore as database:
+```
+{
+    ...
+    "useStaticData": false
+}
+```
