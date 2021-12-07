@@ -15,11 +15,13 @@ The component accepts two props: `handleFetch` and `listResponse`.
 
 ## handleFetch prop
 
-The handleFetch prop is a function that fetches the data for the page. The component passes two variables to the function: page and pageSize. The page variable is the page number. The pageSize variable is the number of records per page. The function can be an API call to the backend to fetch data for the list.
+The handleFetch prop is a function that fetches the data for the page. The component passes two variables to the function: `page` and `pageSize`. The `page` variable is the page number. The `pageSize` variable is the number of records per page. The function can be an API call to the backend to fetch data for the list.
 
 In `/src/pages/auth/accounts/images/ImageList.js`, you can find an example of the `handleFetch` function which acts as a medium to the actual API that returns the data. The advantage of this approach is that you can transform the data (e.g. including visual components) before passing the data into the &lt;DataList&gt; component.
 
-The component supplies the function with only two variables: `page` and `pageSize`. If you wish to implement search filters, you will need to add the feature with custom React components and apply the rules in your handleFetch function before calling the backend API.
+The component supplies the function with only two variables: `page` and `pageSize`. If you wish to implement search filters, you will need to add the feature with custom React components and apply the rules in your `handleFetch` function before calling the backend API.
+
+`ListImageApiFirestore` is the function to read image record data from Firestore. As Firestore doesn't support jumping to a record in the result list, the implementation of pagination is done by loading the records for the next page from Firestore and caching the records. When going back to the previous page, the function simply reads from the cached data without interacting with Firestore. This approach increase the data loading speed as well as save the costs of reading the data documents from Firestore. Each document is read only once when the users go back and forth.
 
 ## schema prop
 
