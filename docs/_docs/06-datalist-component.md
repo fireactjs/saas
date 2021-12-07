@@ -28,3 +28,30 @@ The schema prop is a JSON array that describes the columns of the table list. Ea
 - name - The name of the column, which will be displayed in the header row
 - field - The property name of the data in the record. The component will populate the column with the record’s data with which the property name is matched.
 - style - The style sheet of the column, which is used to control the width of the column
+
+Example of the demo image list which defines the list table to be 4 columns as "Image", "Image Title", "Image URL" and "Actions".
+
+```
+[
+    {
+        "name": "Image",
+        "field": "image",
+        "style": {"width": "20%"}
+    },
+    {
+        "name": "Image Title",
+        "field": "title",
+        "style": {"width": "20%"}
+    },
+    {
+        "name": "Image URL",
+        "field": "url",
+        "style": {"width": "45%"}
+    },
+    {
+        "name": "Actions",
+        "field": "action",
+        "style": {"width": "15%"}
+    }
+]
+```
