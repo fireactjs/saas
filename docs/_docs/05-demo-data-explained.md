@@ -37,4 +37,4 @@ Use Firestore as database:
 
 Firestore is NoSQL database in the Firebase infrastructure. It is used in the demo code to demonstrate how to communicate with backend database via APIs. You can use any database to support the backend to build your own SaaS application with Fireact.
 
-The demo application stores data in `accounts\{accountId}\images` collection. Each image record is a Firestore document in the collection. The [live demo](https://demo.fireact.dev) doesn't support using Firestore as database. To experience the demo feature, you must install an instance of Fireact in your own Firebase project, and update the `/src/pages/auth/accounts/images/image.json` file as above.
+The demo application stores data in `accounts\{accountId}\images` collection. Each image record is a Firestore document in the collection. The [live demo](https://demo.fireact.dev) doesn't support using Firestore as database. To experience the demo feature, you must [install an instance of Fireact](/docs/installation/) in your own Firebase project, and update the `/src/pages/auth/accounts/images/image.json` file as above.
