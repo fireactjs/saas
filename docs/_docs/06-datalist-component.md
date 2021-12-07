@@ -13,7 +13,7 @@ last_modified_at: 2021-11-05
 
 The component accepts two props: `handleFetch` and `listResponse`.
 
-## `handleFetch` prop
+## handleFetch prop
 
 The `handleFetch` prop is a function that fetches the data for the page. The component passes two variables to the function: `page` and `pageSize`. The `page` variable is the page number. The `pageSize` variable is the number of records per page. The function can be an API call to the backend to fetch data for the list.
 
@@ -31,7 +31,7 @@ let ListImageApi = useStaticData?ListImageApiStatic:ListImageApiFirestore;
 
 `ListImageApiFirestore` function reads the image records from Firestore. As Firestore doesn't support jumping to a record in the result list, the implementation of pagination is done by loading the records for the next page from Firestore and caching the records. When going back to the previous page, the function simply reads from the cached data without interacting with Firestore. This approach increase the data loading speed as well as save the costs of reading the data documents from Firestore. Each document is read only once when the users go back and forth.
 
-## `schema` prop
+## schema prop
 
 The `schema` prop is a JSON array that describes the columns of the table list. Each object is a column, and each column contains three properties: name, field and style.
 
