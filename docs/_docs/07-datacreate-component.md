@@ -71,6 +71,7 @@ The schema prop is a JSON array of form fields. Each object represents a form fi
     }
 ]
 ```
+The `name` property specifies the matched field name, and the `prop` property specifies which HTML attribute contains the field value. In the above example, there are two fields called "url" and "title", and the field values are in the "value" attribute of the fields.
 
 ## validation prop
 
