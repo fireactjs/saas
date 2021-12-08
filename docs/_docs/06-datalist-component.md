@@ -39,7 +39,7 @@ The `schema` prop is a JSON array that describes the columns of the table list. 
 - field - The property name of the data in the record. The component will populate the column with the record’s data with which the property name is matched.
 - style - The style sheet of the column, which is used to control the width of the column
 
-Example of the demo image list which defines the list table to be 4 columns as "Image", "Image Title", "Image URL" and "Actions".
+Below is an example of the demo image list schema which defines the list table as 4 columns: "Image", "Image Title", "Image URL" and "Actions".
 
 ```
 [
@@ -65,3 +65,18 @@ Example of the demo image list which defines the list table to be 4 columns as "
     }
 ]
 ```
+
+The `field` properties matche the data returned from the `handleFetch` function as the example shows:
+```
+// loop through the data to add the visual components in to the list
+for(let i=0; i<images.data.length; i++){
+    const row = {
+        id: images.data[i].id,
+        url: images.data[i].url,
+        title: images.data[i].title,
+        image: <img alt={images.data[i].title} src={images.data[i].url} width={200} />,
+        action: <ActionButtons id={images.data[i].id} handleDeletion={handleDeletion} />
+    }
+    rows.push(row);
+}
+``` 
