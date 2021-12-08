@@ -66,7 +66,7 @@ Below is an example of the demo image list schema which defines the list table a
 ]
 ```
 
-The `field` properties matche the data returned from the `handleFetch` function as the example shows:
+The `field` properties matche the data returned from the `handleFetch` function as the example in `/src/pages/auth/accounts/images/ImageList.js` shows:
 ```
 // loop through the data to add the visual components in to the list
 for(let i=0; i<images.data.length; i++){
