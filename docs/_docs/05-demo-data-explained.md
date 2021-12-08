@@ -2,7 +2,7 @@
 title: "Demo Data Explained"
 permalink: /docs/demo-data-explained/
 excerpt: "The demo data"
-last_modified_at: 2021-11-05
+last_modified_at: 2021-12-06
 ---
 
 After you create a demo account in the system, you will see a list of images as a demo application to showcase how Fireact interacts with databases.

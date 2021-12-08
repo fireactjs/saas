@@ -2,7 +2,7 @@
 title: "<DataList> Component"
 permalink: /docs/datalist-component/
 excerpt: "UI component to list data with pagination"
-last_modified_at: 2021-11-05
+last_modified_at: 2021-12-08
 ---
 
 # &lt;DataList&gt; Component

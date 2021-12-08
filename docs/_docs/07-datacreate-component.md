@@ -2,7 +2,7 @@
 title: "<DataCreate> Component"
 permalink: /docs/datacreate-component/
 excerpt: "UI component to create new data records"
-last_modified_at: 2021-11-07
+last_modified_at: 2021-12-08
 ---
 
 # &lt;DataCreate&gt; Component
