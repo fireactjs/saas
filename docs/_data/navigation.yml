@@ -5,8 +5,6 @@ main:
     url: "/demo/"
   - title: "Discussions"
     url: "https://github.com/chaoming/fireact/discussions"
-  - title: "Show Cases"
-    url: "/showcases/"
 
 docs:
   - title: "Getting Started"
