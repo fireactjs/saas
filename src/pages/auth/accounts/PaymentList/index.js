@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect, useRef } from "react";
+import React, { useContext, useState, useEffect, useRef, useCallback } from "react";
 import { BreadcrumbContext } from '../../../../components/Breadcrumb';
 import { AuthContext } from "../../../../components/FirebaseAuth";
 import { FirebaseAuth } from "../../../../components/FirebaseAuth/firebase";
@@ -26,7 +26,7 @@ const PaymentList = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    const getInvoices = (accountId, pageSize, direction, doc) => {
+    const getInvoices = useCallback((accountId, pageSize, direction, doc) => {
         const getInvoiceCollectionCount = (accountId) => {
             const accountDocRef = FirebaseAuth.firestore().collection('accounts').doc(accountId);
             return accountDocRef.get().then(accountDoc => {
@@ -83,7 +83,7 @@ const PaymentList = () => {
             setError(e.message);
             setLoading(false);
         });
-    }
+    },[currency]);
 
     useEffect(() => {
         setBreadcrumb([
@@ -107,7 +107,7 @@ const PaymentList = () => {
 
     useEffect(() => {
         getInvoices(userData.currentAccount.id, pageSize);
-    },[pageSize, userData]);
+    },[pageSize, userData, getInvoices]);
 
     useEffect(() => {
         return () => { 

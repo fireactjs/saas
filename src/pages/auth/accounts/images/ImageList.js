@@ -135,7 +135,7 @@ const ImageList = () => {
                 reject(err);
             });
         });
-    },[refreshCount, userData]);
+    },[refreshCount, userData, useStaticData]);
 
     useEffect(() => {
         setBreadcrumb([

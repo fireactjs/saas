@@ -78,7 +78,7 @@ const ImageEdit = () => {
             })
         }
         
-    },[setBreadcrumb, title, listName, userData, imageId]);
+    },[setBreadcrumb, title, listName, userData, imageId, useStaticData]);
 
     useEffect(() => {
         return () => { 
