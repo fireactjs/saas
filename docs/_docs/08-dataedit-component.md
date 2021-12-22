@@ -21,7 +21,21 @@ The id prop is the ID of the data record to be edited. It will be passed to the 
 
 ## schema prop
 
-The schema prop is a JSON array of form fields. Each object represents a form field and the name property of the object must match the correspondent field name. The prop property is the attribute name to retrieve data from the field element.
+The schema prop is a JSON array of form fields. Each object represents a form field and the name property of the object must match the correspondent field name. The prop property is the attribute name to retrieve data from the field element. See `formSchema` example in `/src/pages/auth/accounts/images/image.json`.
+
+```
+"formSchema": [
+    {
+        "name": "url",
+        "prop": "value"
+    },
+    {
+        "name": "title",
+        "prop": "value"
+    }
+]
+```
+The `name` property specifies the matched field name, and the `prop` property specifies which HTML attribute contains the field value. In the above example, there are two fields called "url" and "title", and the field values are in the "value" attribute of the fields.
 
 ## validation prop
 
@@ -35,4 +49,4 @@ The success prop contains the component to display a success message after the A
 
 The handleEdit prop is the API function called on form submission to edit the record on the server side. In the demo, if the image title contains “error”, the demo API will return an error to simulate the server side error scenario.
 
-
+The function will also pass the value of the `id` prop with the data in a JSON format to the API, so that the server side can update the data accordingly.
