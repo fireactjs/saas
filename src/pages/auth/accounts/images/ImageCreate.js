@@ -2,16 +2,19 @@ import React, {useState, useContext, useEffect} from 'react';
 import DataCreate from '../../../../components/DataCreate';
 import { BreadcrumbContext } from '../../../../components/Breadcrumb';
 import { AuthContext } from "../../../../components/FirebaseAuth";
-import { useStaticData, formSchema } from './images.json';
+import imagesJson from './images.json';
 import { CreateImageApiStatic } from './ImagesApis';
 import { Alert, TextField } from '@mui/material';
 import { FirebaseAuth } from '../../../../components/FirebaseAuth/firebase';
-import firebase from "firebase/app";
+import firebase from "firebase/compat/app";
 
 const ImageCreate = () => {
 
     const listName = 'images'
     const title = 'Create Image';
+
+    const formSchema = imagesJson.formSchema;
+    const useStaticData = imagesJson.useStaticData;
 
     const [formFocused, setFormFocused] = useState(false);
     const [urlError, setUrlError] = useState(null);

@@ -1,7 +1,7 @@
 import React, {useState, useContext, useEffect, useRef } from 'react';
 import { BreadcrumbContext } from '../../../../components/Breadcrumb';
 import { AuthContext } from "../../../../components/FirebaseAuth";
-import { useStaticData, formSchema } from './images.json';
+import imagesJson from './images.json';
 import { Alert, Paper, Box, TextField } from '@mui/material';
 import { EditImageApiStatic, GetImageApiStatic } from './ImagesApis';
 import { useParams } from 'react-router';
@@ -14,6 +14,9 @@ const ImageEdit = () => {
 
     const listName = 'images'
     const title = 'Edit Image';
+
+    const useStaticData = imagesJson.useStaticData;
+    const formSchema = imagesJson.formSchema;
 
     const [urlError, setUrlError] = useState(null);
     const [titleError, setTitleError] = useState(null);

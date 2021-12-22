@@ -4,7 +4,7 @@ import { AuthContext } from "../../../../components/FirebaseAuth";
 import { CloudFunctions } from "../../../../components/FirebaseAuth/firebase";
 import { useHistory, Redirect } from "react-router-dom";
 import Loader from "../../../../components/Loader";
-import { currency } from "../../../../inc/currency.json";
+import currencyJSON from "../../../../inc/currency.json";
 import { Paper, Box, Alert, Button, Stack} from "@mui/material";
 
 const DeleteAccount = () => {
@@ -16,6 +16,7 @@ const DeleteAccount = () => {
     const [inSubmit, setInSubmit] = useState(false);
     const { setBreadcrumb } = useContext(BreadcrumbContext);
     const mountedRef = useRef(true);
+    const currency = currencyJSON.currency
 
     useEffect(() => {
         setBreadcrumb([

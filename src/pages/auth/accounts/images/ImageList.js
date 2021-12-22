@@ -4,7 +4,7 @@ import { AuthContext } from "../../../../components/FirebaseAuth";
 import { BreadcrumbContext } from '../../../../components/Breadcrumb';
 import { useHistory } from "react-router-dom";
 import { ListImageApiStatic, DeleteImageApiStatic } from './ImagesApis';
-import { useStaticData, listFields } from './images.json';
+import imagesJson from './images.json';
 import { Stack, Button, Alert } from '@mui/material';
 import DataDelete from "../../../../components/DataDelete";
 import { FirebaseAuth } from '../../../../components/FirebaseAuth/firebase';
@@ -30,6 +30,8 @@ const ImageList = () => {
     const [refreshCount, setRefreshCount] = useState(0);
     const currentPage = useRef(0);
     const records = useRef([]);
+    const useStaticData = imagesJson.useStaticData;
+    const listFields = imagesJson.listFields;
 
     const handleFetch = useCallback((page, pageSize) => {
         return new Promise((resolve, reject) => {

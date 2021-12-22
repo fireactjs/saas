@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link } from 'react-router-dom';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import { FirebaseAuth } from '../FirebaseAuth/firebase';
-import firebase from "firebase/app";
+import firebase from "firebase/compat/app";
 import { userSignIn } from '../../libs/user';
 import Loader from "../Loader";
 import Logo from "../Logo";

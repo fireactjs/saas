@@ -1,4 +1,6 @@
-import { images } from "./images.json";
+import imagesJson from "./images.json";
+
+const images = imagesJson.images;
 
 const ListImageApiStatic = (page, pageSize) => {
     return new Promise((resolve, reject) => {

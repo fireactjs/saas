@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect, createRef, useRef } from "react";
 import { useHistory } from 'react-router-dom';
 import { Form, FormResult, Input } from '../../../../components/Form';
-import firebase from "firebase/app";
+import firebase from "firebase/compat/app";
 import { AuthContext } from '../../../../components/FirebaseAuth';
 import UserPageLayout from '../../../../components/user/UserPageLayout';
 import { log, UPDATE_PHONE } from '../../../../libs/log';

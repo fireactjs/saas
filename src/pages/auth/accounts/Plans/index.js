@@ -4,12 +4,14 @@ import { AuthContext } from "../../../../components/FirebaseAuth";
 import { BreadcrumbContext } from '../../../../components/Breadcrumb';
 import Loader from '../../../../components/Loader';
 import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
-import { countries } from "../../../../inc/country.json";
+import countryJSON from "../../../../inc/country.json";
 import { Paper, Box, Grid, Card, CardHeader, CardContent, CardActions, Button, Divider, Container, Autocomplete, TextField, Stack, Alert } from "@mui/material";
 
 
 const Plans = () => {
     const title = 'Select a Plan';
+
+    const countries = countryJSON.countries;
 
     const { userData, authUser } = useContext(AuthContext);
     const stripe = useStripe();

@@ -5,12 +5,13 @@ import { FirebaseAuth } from "../../../../components/FirebaseAuth/firebase";
 import { useHistory } from "react-router-dom";
 import Loader from "../../../../components/Loader";
 import DataTable from "../../../../components/DataTable";
-import { currency } from "../../../../inc/currency.json";
+import currencyJSON from "../../../../inc/currency.json";
 import { Paper, Box, Stack, Button, Alert } from "@mui/material";
 
 const PaymentList = () => {
     const title = 'Billing History';
     const history = useHistory();
+    const currency = currencyJSON.currency
 
     const { userData, authUser } = useContext(AuthContext);
     const { setBreadcrumb } = useContext(BreadcrumbContext);
