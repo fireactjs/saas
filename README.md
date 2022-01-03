@@ -8,16 +8,18 @@ Fireact is a payment-ready SaaS solution framework that is built on React, Fireb
 
 ## Why Fireact
 
-Every SaaS product needs user sign-on and subscription payment features. Fireact is a fully functional solution framework that helps you fast track your SaaS development by skipping development work of these basic funcationalities.
+Every SaaS product needs user sign-on and subscription payment features. Fireact is a fully functional solution framework that helps you fast track your SaaS development by skipping development work of those basic funcationalities.
+
+Fireact also comes with the data components to communicate with your backend via APIs, so that you can focus on developing the key features of your SaaS product.
 
 Fireact comes with:
 - Single-sign-on supporting Google, Facebook, Microsoft and a wild range of sign-in methods.
 - Stripe integration to manage subscription accounts and payments.
+- Supporting sales tax, GST and VAT in subscription payments
 - Supporting multiple subscription accounts per user
 - User permission management in subscription accounts
-- Estiablished user permission framework for development of your SaaS functionalities
-- Supporting sales tax, GST and VAT in subscription payments
 - Data UI and APIs to interact with backend data
+- Estiablished user permission framework for development of your SaaS functionalities
 
 ## Live Demo
 
