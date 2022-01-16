@@ -1,7 +1,7 @@
 ---
 layout: splash
 author_profile: false
-title: Fireact
+title: Build your SaaS project with Fireact
 permalink: /
 hidden: true
 header:

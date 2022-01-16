@@ -3,6 +3,8 @@ main:
     url: "/docs/installation/"
   - title: "Demo"
     url: "/demo/"
+  - title: "Github"
+    url: "https://github.com/chaoming/fireact"
   - title: "Discussions"
     url: "https://github.com/chaoming/fireact/discussions"
 
