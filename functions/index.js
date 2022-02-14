@@ -158,13 +158,13 @@ const getStripeCustomerId = (userId, name, email, paymentMethodId) => {
     });
 }
 
-exports.logUserDeletion = functions.auth.user().onDelete(user => {
-    return log(user.uid, 'deleted account');
-});
+//exports.logUserDeletion = functions.auth.user().onDelete(user => {
+//    return log(user.uid, 'deleted account');
+//});
 
-exports.logUserCreation = functions.auth.user().onCreate(user => {
-    return log(user.uid, 'created account');
-});
+//exports.logUserCreation = functions.auth.user().onCreate(user => {
+//    return log(user.uid, 'created account');
+//});
 
 exports.userActivityCountIncremental = functions.firestore.document('/users/{userId}/activities/{activityId}').onCreate((snap, context) => {
     return admin.firestore().collection('users').doc(context.params.userId).set({'activityCount':admin.firestore.FieldValue.increment(1)},{merge: true});
