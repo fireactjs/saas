@@ -36,11 +36,6 @@ import Invite from './pages/auth/user/Invite';
 import PaymentList from './pages/auth/accounts/PaymentList';
 import PaymentMethod from './pages/auth/accounts/PaymentMethod';
 import DeleteAccount from './pages/auth/accounts/DeleteAccount';
-import ImageList from './pages/auth/accounts/images/ImageList';
-import ImageCreate from './pages/auth/accounts/images/ImageCreate';
-import ImageEdit from './pages/auth/accounts/images/ImageEdit';
-
-import DemoHome from './features/demo';
 
 const stripePromise = loadStripe(stripeJson.stripeConfig.public_api_key);
 
@@ -60,7 +55,7 @@ function App() {
 						<AuthRouter exact path="/account/:accountId/users" component={UserList} template={AccountTemplate} title="Users" role="admin" />
 						<AuthRouter exact path="/account/:accountId/users/add" component={AddUser} template={AccountTemplate} title="Add User" role="admin" />
 						<AuthRouter exact path="/account/:accountId/billing" component={PaymentList} template={AccountTemplate} title="Billing" role="admin" />
-						<AuthRouter exact path="/account/:accountId/" component={DemoHome} template={AccountTemplate} title="Overview" role="*" />
+						<AuthRouter exact path="/account/:accountId/:path" component={Overview} template={AccountTemplate} title="Overview" role="*" />
 						<AuthRouter exact path="/new-account" component={NewAccount} template={AppTemplate} title="Create New Account" />
 						<AuthRouter exact path="/user/profile" component={UserProfile} template={AppTemplate} title="User Profile" />
 						<AuthRouter exact path="/invite/:code" component={Invite} template={AppTemplate} title="View Invite" />
