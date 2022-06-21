@@ -1,5 +1,8 @@
 {
   "name": "fireact-app",
+  "workspaces": [
+    "src/features/*"
+  ],
   "version": "0.1.0",
   "private": true,
   "dependencies": {
