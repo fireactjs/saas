@@ -1,0 +1,3 @@
+[submodule "src/features/demo"]
+	path = src/features/demo
+	url = git@github.com:chaoming/fireact-demo.git
