@@ -1,38 +1,27 @@
-import React, { useContext, useEffect, Suspense } from "react";
+import React, { useContext, useEffect, Suspense, useState } from "react";
 import { BreadcrumbContext } from '../../../../components/Breadcrumb';
 import { AuthContext } from "../../../../components/FirebaseAuth";
 import Loader from "../../../../components/Loader";
-import DemoFeatureRoutes from "../../../../features/demo/DemoFeatureRoutes";
 
-    // registry for components
-    const components = [<DemoFeatureRoutes />];
+const components = [];
+  
+// Here: catch and return another lazy (promise)
+const requireComponents = require.context(
+    '../../../../features', // components folder
+    true, // look subfolders
+    /\w+FeatureRoutes\.(js)$/ //regex for files
+);
+requireComponents.keys().forEach((filePath) => {
+    const folder = filePath.split("/")[1];
+    const name = filePath.split("/")[2];
+    const Feature = React.lazy(() =>
+    import("../../../../features/" + folder + "/" + name));
+    components.push(<Feature key={components.length+1} />);
+});
 
-    
-    // Create component
-    const makeComponent = (path) => React.lazy(() => import(`${path}`));
-
-    // Get paths (Webpack)
-    const requireComponent = require.context(
-        '../../../../features', // components folder
-        true, // look subfolders
-        /\w+FeatureRoutes\.(js)$/ //regex for files
-    );
-
-    requireComponent.keys().forEach((filePath) => {
-        // Get component config
-        // const Component = requireComponent(filePath);
-        const Component = makeComponent(filePath);
-        // Get PascalCase name of component
-        const componentName = filePath.split('/').pop().replace(/\.\w+$/, '');
-
-        components[componentName] = (Component);
-    });
-    
 
 
 const Overview = () => {
-
-
     const title = 'Overview';
 
     const { userData } = useContext(AuthContext);
