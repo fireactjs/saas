@@ -28,7 +28,7 @@ import NewAccount from './pages/auth/accounts/NewAccount';
 import stripeJson from "./inc/stripe.json";
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
-import Overview from './pages/auth/accounts/Overview';
+import { Feature } from './pages/auth/accounts/Feature';
 import UserList from './pages/auth/accounts/UserList';
 import UserRole from './pages/auth/accounts/UserRole';
 import AddUser from './pages/auth/accounts/AddUser';
@@ -55,7 +55,7 @@ function App() {
 						<AuthRouter exact path="/account/:accountId/users" component={UserList} template={AccountTemplate} title="Users" role="admin" />
 						<AuthRouter exact path="/account/:accountId/users/add" component={AddUser} template={AccountTemplate} title="Add User" role="admin" />
 						<AuthRouter exact path="/account/:accountId/billing" component={PaymentList} template={AccountTemplate} title="Billing" role="admin" />
-						<AuthRouter path="/account/:accountId/:path?" component={Overview} template={AccountTemplate} title="Overview" role="*" />
+						<AuthRouter path="/account/:accountId/:path?" component={Feature} template={AccountTemplate} title="Feature" role="*" />
 						<AuthRouter exact path="/new-account" component={NewAccount} template={AppTemplate} title="Create New Account" />
 						<AuthRouter exact path="/user/profile" component={UserProfile} template={AppTemplate} title="User Profile" />
 						<AuthRouter exact path="/invite/:code" component={Invite} template={AppTemplate} title="View Invite" />

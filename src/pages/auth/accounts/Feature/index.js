@@ -19,10 +19,10 @@ requireComponents.keys().forEach((filePath) => {
     components.push(<Feature key={components.length+1} />);
 });
 
+export const titleContext = React.createContext();
 
-
-const Overview = () => {
-    const title = 'Overview';
+export const Feature = () => {
+    const [ title, setTitle ] = useState("");
 
     const { userData } = useContext(AuthContext);
     const { setBreadcrumb } = useContext(BreadcrumbContext);
@@ -48,12 +48,10 @@ const Overview = () => {
     }, [userData, setBreadcrumb, title]);
 
     return (
-        <>
+        <titleContext.Provider value={{title, setTitle}} >
             <Suspense fallback={<Loader />}>
                 {components}
             </Suspense>
-        </>
+        </titleContext.Provider>
     )
 }
-
-export default Overview;
