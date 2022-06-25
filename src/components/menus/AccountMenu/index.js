@@ -1,11 +1,26 @@
-import React, { useContext, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import { Link } from "react-router-dom";
-import { List, ListItem, ListItemText, ListItemIcon, Divider, Typography } from "@mui/material";
+import React, { useContext, useEffect, Suspense } from "react";
+import { Link, useParams } from "react-router-dom";
+import { List, ListItem, ListItemText, ListItemIcon, Typography } from "@mui/material";
 import { AuthContext } from '../../FirebaseAuth';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import PeopleIcon from '@mui/icons-material/People';
 import PaymentIcon from '@mui/icons-material/Payment';
+
+const components = [];
+  
+// Here: catch and return another lazy (promise)
+const requireComponents = require.context(
+    '../../../features', // components folder
+    true, // look subfolders
+    /\w+FeatureMenu\.(js)$/ //regex for files
+);
+requireComponents.keys().forEach((filePath) => {
+    const folder = filePath.split("/")[1];
+    const name = filePath.split("/")[2];
+    const Feature = React.lazy(() =>
+    import("../../../features/" + folder + "/" + name));
+    components.push(<Feature key={components.length+1} />);
+});
 
 const AccountMenu = () => {
 
@@ -21,15 +36,11 @@ const AccountMenu = () => {
 
     return (
         <List>
-            <Link to={'/account/'+accountId+'/'} style={{textDecoration:'none'}}>
-                <ListItem button key="Demo App">
-                    <ListItemIcon><DashboardIcon /></ListItemIcon>
-                    <ListItemText primary={<Typography color="textPrimary">Demo App</Typography>} />
-                </ListItem>
-            </Link>
+            <Suspense fallback={<></>}>
+                {components}
+            </Suspense>
             {userData.currentAccount.role === 'admin' && 
             <>
-                <Divider />
                 <Link to={'/account/'+accountId+'/users'} style={{textDecoration:'none'}}>
                     <ListItem button key="Users">
                         <ListItemIcon><PeopleIcon /></ListItemIcon>
