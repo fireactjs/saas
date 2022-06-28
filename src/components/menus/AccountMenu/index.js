@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, Suspense } from "react";
 import { Link, useParams } from "react-router-dom";
-import { List, ListItem, ListItemText, ListItemIcon, Typography } from "@mui/material";
+import { List, ListItem, ListItemText, ListItemIcon, Typography, Divider } from "@mui/material";
 import { AuthContext } from '../../FirebaseAuth';
-import DashboardIcon from '@mui/icons-material/Dashboard';
+import HomeIcon from '@mui/icons-material/Home';
 import PeopleIcon from '@mui/icons-material/People';
 import PaymentIcon from '@mui/icons-material/Payment';
 
@@ -36,9 +36,22 @@ const AccountMenu = () => {
 
     return (
         <List>
-            <Suspense fallback={<></>}>
-                {components}
-            </Suspense>
+            {(components.length > 0)?(
+                <Suspense fallback={<></>}>
+                    {components}
+                </Suspense>
+            ):(
+                <>
+                    <Link to={'/account/'+accountId+'/'} style={{textDecoration:'none'}}>
+                        <ListItem button key="Home">
+                            <ListItemIcon><HomeIcon /></ListItemIcon>
+                            <ListItemText primary={<Typography color="textPrimary">Default Feature</Typography>} />
+                        </ListItem>
+                    </Link>
+                    <Divider />
+                </>
+            )}
+
             {userData.currentAccount.role === 'admin' && 
             <>
                 <Link to={'/account/'+accountId+'/users'} style={{textDecoration:'none'}}>
