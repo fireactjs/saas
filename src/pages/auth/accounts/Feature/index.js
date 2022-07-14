@@ -1,3 +1,4 @@
+import { Chip } from "@mui/material";
 import React, { useContext, useEffect, Suspense, useState } from "react";
 import { BreadcrumbContext } from '../../../../components/Breadcrumb';
 import { AuthContext } from "../../../../components/FirebaseAuth";
@@ -56,7 +57,10 @@ export const Feature = () => {
                     </Suspense>
                 </titleContext.Provider>
             ):(
-                <div>This is the default feature</div>
+                <>
+                    <div>This is the default feature</div>
+                    <div>Run <Chip label="git submodule add git@github.com:chaoming/fireact-demo-feature.git ./src/features/demo" /> to install the demo feature submodule.</div>
+                </>
             )}
         </>
 
