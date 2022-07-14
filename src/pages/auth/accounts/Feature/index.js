@@ -9,7 +9,7 @@ const components = [];
 const requireComponents = require.context(
     '../../../../features', // components folder
     true, // look subfolders
-    /\w+FeatureRoutes\.(js)$/ //regex for files
+    /\w+\/FeatureRoutes\.(js)$/ //regex for files
 );
 requireComponents.keys().forEach((filePath) => {
     const folder = filePath.split("/")[1];
