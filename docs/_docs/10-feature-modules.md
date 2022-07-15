@@ -11,10 +11,10 @@ In Fireact, SaaS features should be developed separated from the Fireact reposit
 
 Each feature should be in a folder named with the feature under the `/src/features` folder. For example, the demo feature module is `/src/features/demo`. Fireact will import the module into the user interface. Here are the minimum files inside the module folder.
 
-module-name/
-├── FeatureRoutes.js
-├── FeatureMenu.js
-└── package.json
+module-name/  
+├── FeatureRoutes.js  
+├── FeatureMenu.js  
+└── package.json  
 
 ## FeatureRoutes.js
 
