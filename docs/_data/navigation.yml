@@ -21,15 +21,7 @@ docs:
         url: /docs/authentication-methods/
   - title: "Development"
     children:
-      - title: "Hello World"
-        url: /docs/hello-world/
-      - title: "Demo Data Explained"
-        url: /docs/demo-data-explained/
-      - title: "&lt;DataList&gt; Component"
-        url: /docs/datalist-component/
-      - title: "&lt;DataCreate&gt; Component"
-        url: /docs/datacreate-component/
-      - title: "&lt;DataEdit&gt; Component"
-        url: /docs/dataedit-component/
-      - title: "&lt;DataDelete&gt; Component"
-        url: /docs/datadelete-component/
+      - title: "Feature Modules"
+        url: /docs/feature-modules/
+      - title: "Permission and Account Data"
+        url: /docs/permission-and-account-data/
