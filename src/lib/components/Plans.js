@@ -9,8 +9,10 @@ export const Plans = () => {
         {
             title: 'Free',
             popular: false,
+            priceId: 'price_1M5hqYDtHLeC8Nf8p5A3qZo1',
+            currency: '$',
             price: 0,
-            frequency: 'mo',
+            frequency: 'week',
             description: [
                 '10 users included',
                 '2 GB of storage',
@@ -19,10 +21,12 @@ export const Plans = () => {
             ]
         },
         {
-            title: 'Pro',
+            title: 'Weekly',
             popular: true,
-            price: 15,
-            frequency: 'mo',
+            priceId: 'price_1M5hsTDtHLeC8Nf8m90FMVNX',
+            currency: '$',
+            price: 10,
+            frequency: 'week',
             description: [
                 '20 users included',
                 '10 GB of storage',
@@ -31,8 +35,10 @@ export const Plans = () => {
             ]
         },
         {
-            title: 'Enterprise',
+            title: 'Monthly',
             popular: false,
+            priceId: 'price_1M6hVyDtHLeC8Nf8pnaZ0Cb3',
+            currency: '$',
             price: 30,
             frequency: 'mo',
             description: [
@@ -94,8 +100,11 @@ export const Plans = () => {
                                     mb: 2,
                                     }}
                                     >
+                                        <Typography variant="h4" color="text.primary">
+                                        {plan.currency}
+                                        </Typography>
                                         <Typography component="h2" variant="h3" color="text.primary">
-                                        ${plan.price}
+                                        {plan.price}
                                         </Typography>
                                         <Typography variant="h6" color="text.secondary">
                                         /{plan.frequency}
