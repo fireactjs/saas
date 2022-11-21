@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Container, Paper, Grid, Card, CardHeader, CardContent, Typography, CardActions, Button, Box } from '@mui/material';
 import StarIcon from '@mui/icons-material/Star';
 import { SetPageTitle } from "@fireactjs/core";
+import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
 
 const PriceTable = ({setPlan, plans}) => {
 
@@ -144,6 +146,11 @@ export const Plans = () => {
             <Paper>
                 {plan === null && 
                     <PriceTable setPlan={setPlan} plans={plans} />
+                }
+                {plan !== null && 
+                    <Elements stripe={null}>
+
+                    </Elements>
                 }
             </Paper>
         </Container>
