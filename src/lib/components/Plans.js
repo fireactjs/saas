@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { Container, Paper, Grid, Card, CardHeader, CardContent, Typography, CardActions, Button, Box } from '@mui/material';
 import StarIcon from '@mui/icons-material/Star';
 import { SetPageTitle } from "@fireactjs/core";
-import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
+import { CardElement, useStripe, useElements, Elements } from '@stripe/react-stripe-js';
 
 const PriceTable = ({setPlan, plans}) => {
 
@@ -139,6 +139,29 @@ export const Plans = () => {
             ]
         },
     ];
+    
+    const stripePublicKey = "pk_test_51Jua08FVa3aiFAReRfDF9A3b50rCusPLSWIBLkGQq78Im9WwoxLBlRXu6wgFUeRtT5VnJJvRo33qskbOIe6Zre3E00sbQNuLXc";
+
+    const stripePromise = loadStripe(stripePublicKey);
+
+    const CARD_ELEMENT_OPTIONS = {
+        style: {
+            base: {
+              color: '#32325d',
+              fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+              fontSmoothing: 'antialiased',
+              fontSize: '16px',
+              '::placeholder': {
+                color: '#aab7c4'
+              }
+            },
+            invalid: {
+              color: '#fa755a',
+              iconColor: '#fa755a'
+            }
+        },
+        hidePostalCode: true
+    };
 
     return (
         <Container maxWidth="lg">
@@ -148,8 +171,26 @@ export const Plans = () => {
                     <PriceTable setPlan={setPlan} plans={plans} />
                 }
                 {plan !== null && 
-                    <Elements stripe={null}>
-
+                    <Elements stripe={stripePromise}>
+                        <div style={{position: "relative", minHeight: '56px', padding: '15px'}}>
+                            <CardElement options={CARD_ELEMENT_OPTIONS}></CardElement>
+                            <fieldset style={{
+                                borderColor: 'rgba(0, 0, 0, 0.23)',
+                                borderStyle: 'solid',
+                                borderWidth: '1px',
+                                borderRadius: '4px',
+                                position: 'absolute',
+                                top: '-5px',
+                                left: '0',
+                                right: '0',
+                                bottom: '0',
+                                margin: '0',
+                                padding: '0 8px',
+                                overflow: 'hidden',
+                                pointerEvents: 'none'
+                                
+                            }}></fieldset>
+                        </div>
                     </Elements>
                 }
             </Paper>
