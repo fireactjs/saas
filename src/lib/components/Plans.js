@@ -3,7 +3,7 @@ import { Container, Paper, Grid, Card, CardHeader, CardContent, Typography, Card
 import StarIcon from '@mui/icons-material/Star';
 import { SetPageTitle } from "@fireactjs/core";
 
-const PriceTable = ({setPriceId, plans}) => {
+const PriceTable = ({setPlan, plans}) => {
 
     return (
         <Box p={5}>
@@ -76,7 +76,7 @@ const PriceTable = ({setPriceId, plans}) => {
                             </ul>
                         </CardContent>
                         <CardActions>
-                            <Button fullWidth variant={plan.popular?"contained":"outlined"} onClick={() => setPriceId(plan.priceId)}>
+                            <Button fullWidth variant={plan.popular?"contained":"outlined"} onClick={() => setPlan(plan)}>
                             Continue
                             </Button>
                         </CardActions>
@@ -91,7 +91,7 @@ const PriceTable = ({setPriceId, plans}) => {
 
 export const Plans = () => {
 
-    const [priceId, setPriceId] = useState("");
+    const [plan, setPlan] = useState(null);
 
     const plans = [
         {
@@ -142,8 +142,8 @@ export const Plans = () => {
         <Container maxWidth="lg">
             <SetPageTitle title="Choose Plan" />
             <Paper>
-                {priceId === "" && 
-                    <PriceTable setPriceId={setPriceId} plans={plans} />
+                {plan === null && 
+                    <PriceTable setPlan={setPlan} plans={plans} />
                 }
             </Paper>
         </Container>
