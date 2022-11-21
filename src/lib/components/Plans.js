@@ -116,7 +116,7 @@ export const Plans = () => {
                                 </CardContent>
                                 <CardActions>
                                     <Button fullWidth variant={plan.popular?"contained":"outlined"}>
-                                    Get Started
+                                    Continue
                                     </Button>
                                 </CardActions>
                             </Card>
