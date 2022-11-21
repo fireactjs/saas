@@ -51,15 +51,13 @@ export const Plans = () => {
                 <Box p={5}>
                     <Typography
                     component="h1"
-                    variant="h2"
+                    variant="h3"
                     align="center"
                     color="text.primary"
                     gutterBottom
+                    mb={8}
                     >
-                        Pricing
-                    </Typography>
-                    <Typography variant="h5" align="center" color="text.secondary" component="p" mb={5}>
-                        Choose a plan that suits you to get started.
+                        Choose Your Plan
                     </Typography>
                     <Grid container spacing={5} alignItems="flex-end">
                     {plans.map((plan) => (
