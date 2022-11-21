@@ -10,6 +10,7 @@ export const Plans = () => {
             title: 'Free',
             popular: false,
             price: 0,
+            frequency: 'mo',
             description: [
                 '10 users included',
                 '2 GB of storage',
@@ -21,6 +22,7 @@ export const Plans = () => {
             title: 'Pro',
             popular: true,
             price: 15,
+            frequency: 'mo',
             description: [
                 '20 users included',
                 '10 GB of storage',
@@ -32,6 +34,7 @@ export const Plans = () => {
             title: 'Enterprise',
             popular: false,
             price: 30,
+            frequency: 'mo',
             description: [
                 '50 users included',
                 '30 GB of storage',
@@ -97,7 +100,7 @@ export const Plans = () => {
                                         ${plan.price}
                                         </Typography>
                                         <Typography variant="h6" color="text.secondary">
-                                        /mo
+                                        /{plan.frequency}
                                         </Typography>
                                     </Box>
                                     <ul style={{listStyleType: 'none', paddingLeft: '0px'}}>
