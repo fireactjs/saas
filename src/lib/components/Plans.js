@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Container, Paper, Grid, Card, CardHeader, CardContent, Typography, CardActions, Button, Box } from '@mui/material';
+import { Container, Paper, Grid, Card, CardHeader, CardContent, Typography, CardActions, Button, Box, Stack } from '@mui/material';
 import StarIcon from '@mui/icons-material/Star';
 import { SetPageTitle } from "@fireactjs/core";
 import { loadStripe } from '@stripe/stripe-js';
@@ -9,14 +9,14 @@ const PriceTable = ({setPlan, plans}) => {
 
     return (
         <Box p={5}>
-        <Typography
-        component="h1"
-        variant="h3"
-        align="center"
-        color="text.primary"
-        gutterBottom
-        mb={8}
-        >
+            <Typography
+            component="h1"
+            variant="h3"
+            align="center"
+            color="text.primary"
+            gutterBottom
+            mb={8}
+            >
             Choose Your Plan
             </Typography>
             <Grid container spacing={5} alignItems="flex-end">
@@ -90,6 +90,73 @@ const PriceTable = ({setPlan, plans}) => {
     )
 }
 
+const PaymentForm = () => {
+
+    const stripe = useStripe();
+    const elements = useElements();
+
+    const CARD_ELEMENT_OPTIONS = {
+        style: {
+            base: {
+              color: '#32325d',
+              fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+              fontSmoothing: 'antialiased',
+              fontSize: '16px',
+              '::placeholder': {
+                color: '#aab7c4'
+              }
+            },
+            invalid: {
+              color: '#fa755a',
+              iconColor: '#fa755a'
+            }
+        },
+        hidePostalCode: true
+    };
+
+    return (
+        <Box p={5}>
+            <Stack spacing={3}>
+                <Typography
+                component="h1"
+                variant="h3"
+                align="center"
+                color="text.primary"
+                gutterBottom
+                mb={8}
+                >
+                Payment Method
+                </Typography>
+                <Grid container direction="row" justifyContent="center" alignItems="center">
+                    <Grid item md={8}>
+                        <div style={{position: "relative", minHeight: '56px', padding: '15px'}}>
+                            <CardElement options={CARD_ELEMENT_OPTIONS}></CardElement>
+                            <fieldset style={{
+                                borderColor: 'rgba(0, 0, 0, 0.23)',
+                                borderStyle: 'solid',
+                                borderWidth: '1px',
+                                borderRadius: '4px',
+                                position: 'absolute',
+                                top: '-5px',
+                                left: '0',
+                                right: '0',
+                                bottom: '0',
+                                margin: '0',
+                                padding: '0 8px',
+                                overflow: 'hidden',
+                                pointerEvents: 'none'
+                                
+                            }}></fieldset>
+                        </div>
+                    </Grid>
+                </Grid>
+                <Grid container direction="row" justifyContent="center" alignItems="center">
+                    <Button variant="contained">Subscribe</Button>
+                </Grid>
+            </Stack>
+        </Box>
+    )
+}
 
 export const Plans = () => {
 
@@ -144,25 +211,6 @@ export const Plans = () => {
 
     const stripePromise = loadStripe(stripePublicKey);
 
-    const CARD_ELEMENT_OPTIONS = {
-        style: {
-            base: {
-              color: '#32325d',
-              fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
-              fontSmoothing: 'antialiased',
-              fontSize: '16px',
-              '::placeholder': {
-                color: '#aab7c4'
-              }
-            },
-            invalid: {
-              color: '#fa755a',
-              iconColor: '#fa755a'
-            }
-        },
-        hidePostalCode: true
-    };
-
     return (
         <Container maxWidth="lg">
             <SetPageTitle title="Choose Plan" />
@@ -172,25 +220,7 @@ export const Plans = () => {
                 }
                 {plan !== null && 
                     <Elements stripe={stripePromise}>
-                        <div style={{position: "relative", minHeight: '56px', padding: '15px'}}>
-                            <CardElement options={CARD_ELEMENT_OPTIONS}></CardElement>
-                            <fieldset style={{
-                                borderColor: 'rgba(0, 0, 0, 0.23)',
-                                borderStyle: 'solid',
-                                borderWidth: '1px',
-                                borderRadius: '4px',
-                                position: 'absolute',
-                                top: '-5px',
-                                left: '0',
-                                right: '0',
-                                bottom: '0',
-                                margin: '0',
-                                padding: '0 8px',
-                                overflow: 'hidden',
-                                pointerEvents: 'none'
-                                
-                            }}></fieldset>
-                        </div>
+                        <PaymentForm />
                     </Elements>
                 }
             </Paper>
