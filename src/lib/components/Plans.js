@@ -90,10 +90,32 @@ const PriceTable = ({setPlan, plans}) => {
     )
 }
 
-const PaymentForm = () => {
+const PaymentForm = ({plan}) => {
 
     const stripe = useStripe();
     const elements = useElements();
+
+    const subscribe = async(event) => {
+        event.preventDefault();
+
+        if(plan.price > 0){
+            if(!stripe || !elements){
+                return;
+            }
+            const cardElement = elements.getElement(CardElement);
+            const {error, paymentMethod} = await stripe.createPaymentMethod({
+                type: 'card',
+                card: cardElement
+            });
+
+            if(error){
+
+            }else{
+                console.log(paymentMethod);
+            }
+        }
+
+    }
 
     const CARD_ELEMENT_OPTIONS = {
         style: {
@@ -151,7 +173,7 @@ const PaymentForm = () => {
                     </Grid>
                 </Grid>
                 <Grid container direction="row" justifyContent="center" alignItems="center">
-                    <Button variant="contained">Subscribe</Button>
+                    <Button variant="contained" onClick={e => subscribe(e)}>Subscribe</Button>
                 </Grid>
             </Stack>
         </Box>
@@ -220,7 +242,7 @@ export const Plans = () => {
                 }
                 {plan !== null && 
                     <Elements stripe={stripePromise}>
-                        <PaymentForm />
+                        <PaymentForm plan={plan} />
                     </Elements>
                 }
             </Paper>
