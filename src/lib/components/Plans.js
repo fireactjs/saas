@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Container, Paper, Grid, Card, CardHeader, CardContent, Typography, CardActions, Button, Box, Stack } from '@mui/material';
 import StarIcon from '@mui/icons-material/Star';
-import { SetPageTitle } from "@fireactjs/core";
+import { AuthContext, SetPageTitle } from "@fireactjs/core";
 import { loadStripe } from '@stripe/stripe-js';
 import { CardElement, useStripe, useElements, Elements } from '@stripe/react-stripe-js';
+import "firebase/compat/functions";
 
 const PriceTable = ({setPlan, plans}) => {
 
@@ -94,6 +95,9 @@ const PaymentForm = ({plan}) => {
 
     const stripe = useStripe();
     const elements = useElements();
+    const { firebaseApp } = useContext(AuthContext);
+    console.log(firebaseApp);
+    const CloudFunctions = firebaseApp.functions();
 
     const subscribe = async(event) => {
         event.preventDefault();
@@ -112,6 +116,11 @@ const PaymentForm = ({plan}) => {
 
             }else{
                 console.log(paymentMethod);
+                const createSubscription = CloudFunctions.httpsCallable('fireactjsSaas-createSubscription');
+                createSubscription({
+                    priceId: plan.priceId,
+                    paymentMethodId: paymentMethod.id
+                })
             }
         }
 
