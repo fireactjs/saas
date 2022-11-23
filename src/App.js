@@ -7,6 +7,7 @@ import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
 import { CircularProgress, Box } from '@mui/material';
 import authMethods from "./authMethods.json";
 import { Plans } from './lib/components';
+import config from './config.json';
 
 const Brand = "FIREACT";
 
@@ -51,7 +52,7 @@ function App() {
 				<Routes>
 					<Route element={<AuthRoutes signInPath={pathnames.SignIn} loader={<Loader size="large" />} />} >
 						<Route element={<AppTemplate logo={<Logo size="large" />} brand={Brand} toolBarMenu={<UserMenu pathnames={pathnames} />} drawerMenu={<MainMenu pathnames={pathnames}  />} />}>
-							<Route exact path="/" element={<Plans />} />
+							<Route exact path="/" element={<Plans plans={config.plans} stripePublicKey={config.stripe.public_api_key} />} />
 							<Route exact path={pathnames.UserProfile} element={<UserProfile pathnames={pathnames} />} />
 							<Route exact path={pathnames.UserUpdateEmail} element={<UserUpdateEmail pathnames={pathnames} />} />
 							<Route exact path={pathnames.UserUpdateName} element={<UserUpdateName pathnames={pathnames} />} />

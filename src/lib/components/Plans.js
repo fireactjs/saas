@@ -189,56 +189,9 @@ const PaymentForm = ({plan}) => {
     )
 }
 
-export const Plans = () => {
+export const Plans = ({plans, stripePublicKey}) => {
 
     const [plan, setPlan] = useState(null);
-
-    const plans = [
-        {
-            title: 'Free',
-            popular: false,
-            priceId: 'price_1M5hqYDtHLeC8Nf8p5A3qZo1',
-            currency: '$',
-            price: 0,
-            frequency: 'week',
-            description: [
-                '10 users included',
-                '2 GB of storage',
-                'Help center access',
-                'Email support',
-            ]
-        },
-        {
-            title: 'Weekly',
-            popular: true,
-            priceId: 'price_1M5hsTDtHLeC8Nf8m90FMVNX',
-            currency: '$',
-            price: 10,
-            frequency: 'week',
-            description: [
-                '20 users included',
-                '10 GB of storage',
-                'Help center access',
-                'Priority email support',
-            ]
-        },
-        {
-            title: 'Monthly',
-            popular: false,
-            priceId: 'price_1M6hVyDtHLeC8Nf8pnaZ0Cb3',
-            currency: '$',
-            price: 30,
-            frequency: 'mo',
-            description: [
-                '50 users included',
-                '30 GB of storage',
-                'Help center access',
-                'Phone & email support',
-            ]
-        },
-    ];
-    
-    const stripePublicKey = "pk_test_51Jua08FVa3aiFAReRfDF9A3b50rCusPLSWIBLkGQq78Im9WwoxLBlRXu6wgFUeRtT5VnJJvRo33qskbOIe6Zre3E00sbQNuLXc";
 
     const stripePromise = loadStripe(stripePublicKey);
 
