@@ -189,7 +189,7 @@ const PaymentForm = ({plan}) => {
     )
 }
 
-export const Plans = ({plans, stripePublicKey}) => {
+export const CreateSubscription = ({plans, stripePublicKey}) => {
 
     const [plan, setPlan] = useState(null);
 

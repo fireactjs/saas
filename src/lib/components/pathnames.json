@@ -1,5 +1,5 @@
 {
-    "Plan": "/create",
+    "CreateSubscription": "/create",
     "List": "/",
     "Settings": "/sub/:subscriptionId/settings",
     "Users": "/sub/:subscriptionId/users",

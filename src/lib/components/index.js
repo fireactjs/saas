@@ -1,5 +1,5 @@
-import { Plans } from "./Plans";
+import { CreateSubscription } from "./CreateSubscription";
 
 export {
-    Plans
+    CreateSubscription
 }
