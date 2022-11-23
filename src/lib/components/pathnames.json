@@ -1,6 +1,6 @@
 {
     "CreateSubscription": "/create",
-    "List": "/",
+    "ListSubscriptions": "/",
     "Settings": "/sub/:subscriptionId/settings",
     "Users": "/sub/:subscriptionId/users",
     "AddUser": "/sub/:subscriptionId/users/add",

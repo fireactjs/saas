@@ -197,7 +197,7 @@ export const CreateSubscription = ({plans, stripePublicKey}) => {
 
     return (
         <Container maxWidth="lg">
-            <SetPageTitle title="Choose Plan" />
+            <SetPageTitle title="Create Subscription" />
             <Paper>
                 {plan === null && 
                     <PriceTable setPlan={setPlan} plans={plans} />
