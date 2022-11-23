@@ -1,4 +1,5 @@
 const functions = require('firebase-functions');
+const admin = require('firebase-admin');
 
 module.exports = function(config){
 
@@ -27,7 +28,7 @@ module.exports = function(config){
      * @returns {string} Stripe customer ID
      */
     const getStripeCustomerId = (userId, name, email, paymentMethodId) => {
-        const stripe = require('stripe')(config.secret_api_key);
+        const stripe = require('stripe')(config.stripe.secret_api_key);
         let user = null;
         let stripeCustomerId = '';
         return getDoc('users/'+userId).then(userDoc => {
@@ -106,7 +107,7 @@ module.exports = function(config){
          * create a subscription
          */
         createSubscription: functions.https.onCall((data, context) => {
-            const stripe = require('stripe')(config.secret_api_key);
+            const stripe = require('stripe')(config.stripe.secret_api_key);
             const paymentMethodId = data.paymentMethodId || null;
             let selectedPlan = (config.plans.find(obj => obj.priceId === data.priceId) || {});
             return getStripeCustomerId(
@@ -128,7 +129,7 @@ module.exports = function(config){
                 // init permissions
                 const permissions = {}
                 for (p in config.permissions){
-                    if(permissions[p].default || permissions[p].admin){
+                    if(config.permissions[p].default || config.permissions[p].admin){
                         // grant all default and admin permissions to the current user
                         permissions[p] = [];
                         permissions[p].push(context.auth.uid);
