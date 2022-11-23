@@ -134,7 +134,7 @@ module.exports = function(config){
                         permissions[p].push(context.auth.uid);
                     }
                 }
-                const acc = {
+                const sub = {
                     plan: selectedPlan.title, // title of the plan
                     stripePriceId: selectedPlan.priceId, // price ID in stripe
                     paymentCycle: selectedPlan.frequency,
@@ -151,7 +151,7 @@ module.exports = function(config){
                     //billingCountry: data.billing.country,
                     //billingState: data.billing.state                    
                 }
-                return admin.firestore().collection('subscriptions').add(acc);
+                return admin.firestore().collection('subscriptions').add(sub);
             }).then(sub => {
                 return {
                     subacriptionId: sub.id
