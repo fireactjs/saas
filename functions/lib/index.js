@@ -135,12 +135,12 @@ module.exports = function(config){
                     }
                 }
                 const acc = {
-                    plan: selectedPlan.title,
-                    priceId: selectedPlan.priceId,
+                    plan: selectedPlan.title, // title of the plan
+                    stripePriceId: selectedPlan.priceId, // price ID in stripe
                     paymentCycle: selectedPlan.frequency,
                     price: selectedPlan.price,
                     currency: selectedPlan.currency,
-                    stripeActiveSubscriptionID: subscription.id,
+                    stripeSubscriptionId: subscription.id,
                     subscriptionStatus: subscription.status,
                     subscriptionCreated: subscription.created,
                     subscriptionCurrentPeriodStart: subscription.current_period_start,
