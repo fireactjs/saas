@@ -7,5 +7,8 @@ service cloud.firestore {
     match /users/{userId} {
       allow read, update, create: if request.auth.uid == userId;
     }
+    match /subscriptions/{accountId} {
+      allow read: if request.auth.uid != null && request.auth.uid in resource.data.permissions.access;
+    }
   }
 }
