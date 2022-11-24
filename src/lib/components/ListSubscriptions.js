@@ -1,5 +1,5 @@
 import { AuthContext, SetPageTitle } from "@fireactjs/core";
-import { Box, Button, Card, CardActions, CardHeader, Container, Grid, Paper } from "@mui/material";
+import { Alert, Box, Button, Card, CardActions, CardHeader, Container, Grid, Paper } from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "firebase/compat/firestore";
@@ -10,9 +10,11 @@ export const ListSubscriptions = ({loader}) => {
     const navigate = useNavigate();
     const [subscriptions, setSubscriptions] = useState([]);
     const [loaded, setLoaded] = useState(false);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         setLoaded(false);
+        setError(null);
         let subscriptions = [];
         const subscriptionsRef = firebaseApp.firestore().collection('subscriptions');
         const query = subscriptionsRef.where('permissions.access', 'array-contains', firebaseApp.auth().currentUser.uid);
@@ -26,7 +28,8 @@ export const ListSubscriptions = ({loader}) => {
             setSubscriptions(subscriptions);
             setLoaded(true);
         }).catch(error => {
-            console.log(error);
+            setLoaded(true);
+            setError(error.message);
         })
     },[firebaseApp]);
 
@@ -44,18 +47,22 @@ export const ListSubscriptions = ({loader}) => {
                         </Grid>
                     </Grid>
                     {loaded?(
-                        <Grid container spacing={3}>
-                            {subscriptions.map((subscription, i) => 
-                                <Grid item xs={12} md={4} key={i}>
-                                    <Card>
-                                        <CardHeader title={subscription.name?subscription.name:"Untitled"} subheader={subscription.id} />
-                                        <CardActions>
-                                            <Button variant="outlined" color="success">Access</Button>
-                                        </CardActions>
-                                    </Card>
-                                </Grid>
-                            )}
-                        </Grid>
+                        error !== null?(
+                            <Alert severity="error">{error}</Alert>
+                        ):(
+                            <Grid container spacing={3}>
+                                {subscriptions.map((subscription, i) => 
+                                    <Grid item xs={12} md={4} key={i}>
+                                        <Card>
+                                            <CardHeader title={subscription.name?subscription.name:"Untitled"} subheader={subscription.id} />
+                                            <CardActions>
+                                                <Button variant="outlined" color="success">Access</Button>
+                                            </CardActions>
+                                        </Card>
+                                    </Grid>
+                                )}
+                            </Grid>
+                        )
                     ):(
                         <Box p={5}>
                             {loader}

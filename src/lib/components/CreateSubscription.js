@@ -96,7 +96,6 @@ const PaymentForm = ({plan}) => {
     const stripe = useStripe();
     const elements = useElements();
     const { firebaseApp } = useContext(AuthContext);
-    console.log(firebaseApp);
     const CloudFunctions = firebaseApp.functions();
 
     const subscribe = async(event) => {
@@ -115,7 +114,6 @@ const PaymentForm = ({plan}) => {
             if(error){
 
             }else{
-                console.log(paymentMethod);
                 const createSubscription = CloudFunctions.httpsCallable('fireactjsSaas-createSubscription');
                 createSubscription({
                     priceId: plan.priceId,
