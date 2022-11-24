@@ -6,7 +6,7 @@ import { Route } from "react-router-dom";
 import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
 import { CircularProgress, Box } from '@mui/material';
 import authMethods from "./authMethods.json";
-import { CreateSubscription, ListSubscriptions, pathnames as subPathnames } from './lib/components';
+import { CreateSubscription, ListSubscriptions, pathnames as subPathnames, SaaSConfigProvider } from './lib/components';
 import config from './config.json';
 
 const Brand = "FIREACT";
@@ -53,42 +53,44 @@ function App() {
 
 	return (
 		<AuthProvider firebaseConfig={firebaseConfig} brand={Brand}>
-			<BrowserRouter>
-				<Routes>
-					<Route element={<AuthRoutes signInPath={pathnames.SignIn} loader={<Loader size="large" />} />} >
-						<Route element={<AppTemplate logo={<Logo size="large" />} brand={Brand} toolBarMenu={<UserMenu pathnames={pathnames} />} drawerMenu={<MainMenu pathnames={pathnames}  />} />}>
-							<Route exact path={pathnames.ListSubscriptions} element={<ListSubscriptions loader={<Loader size="large" />} />} />
-							<Route exact path={pathnames.CreateSubscription} element={<CreateSubscription plans={config.plans} stripePublicKey={config.stripe.public_api_key} />} />
-							<Route exact path={pathnames.UserProfile} element={<UserProfile pathnames={pathnames} />} />
-							<Route exact path={pathnames.UserUpdateEmail} element={<UserUpdateEmail pathnames={pathnames} />} />
-							<Route exact path={pathnames.UserUpdateName} element={<UserUpdateName pathnames={pathnames} />} />
-							<Route exact path={pathnames.UserUpdatePassword} element={<UserUpdatePassword pathnames={pathnames} />} />
-							<Route exact path={pathnames.UserDelete} element={<UserDelete pathnames={pathnames} />} />
+			<SaaSConfigProvider config={config}>
+				<BrowserRouter>
+					<Routes>
+						<Route element={<AuthRoutes signInPath={pathnames.SignIn} loader={<Loader size="large" />} />} >
+							<Route element={<AppTemplate logo={<Logo size="large" />} brand={Brand} toolBarMenu={<UserMenu pathnames={pathnames} />} drawerMenu={<MainMenu pathnames={pathnames}  />} />}>
+								<Route exact path={pathnames.ListSubscriptions} element={<ListSubscriptions loader={<Loader size="large" />} />} />
+								<Route exact path={pathnames.CreateSubscription} element={<CreateSubscription />} />
+								<Route exact path={pathnames.UserProfile} element={<UserProfile pathnames={pathnames} />} />
+								<Route exact path={pathnames.UserUpdateEmail} element={<UserUpdateEmail pathnames={pathnames} />} />
+								<Route exact path={pathnames.UserUpdateName} element={<UserUpdateName pathnames={pathnames} />} />
+								<Route exact path={pathnames.UserUpdatePassword} element={<UserUpdatePassword pathnames={pathnames} />} />
+								<Route exact path={pathnames.UserDelete} element={<UserDelete pathnames={pathnames} />} />
+							</Route>
 						</Route>
-					</Route>
-					<Route element={<PublicTemplate />}>
-						<Route path={pathnames.SignIn} element={
-							<SignIn
-								logo={<Logo size="large" />}
-								pathnames={pathnames}
-								providers={authMethods}
-							/>
-						} />
-						<Route path={pathnames.SignUp} element={
-							<SignUp
-								logo={<Logo size="large" />}
-								pathnames={pathnames}
-							/>
-						} />
-						<Route path={pathnames.ResetPassword} element={
-							<ResetPassword
-								logo={<Logo size="large" />}
-								pathnames={pathnames}
-							/>
-						} />
-					</Route>
-				</Routes>
-			</BrowserRouter>
+						<Route element={<PublicTemplate />}>
+							<Route path={pathnames.SignIn} element={
+								<SignIn
+									logo={<Logo size="large" />}
+									pathnames={pathnames}
+									providers={authMethods}
+								/>
+							} />
+							<Route path={pathnames.SignUp} element={
+								<SignUp
+									logo={<Logo size="large" />}
+									pathnames={pathnames}
+								/>
+							} />
+							<Route path={pathnames.ResetPassword} element={
+								<ResetPassword
+									logo={<Logo size="large" />}
+									pathnames={pathnames}
+								/>
+							} />
+						</Route>
+					</Routes>
+				</BrowserRouter>
+			</SaaSConfigProvider>
 		</AuthProvider>
 	)
 }

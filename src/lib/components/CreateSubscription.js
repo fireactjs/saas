@@ -5,6 +5,7 @@ import { AuthContext, SetPageTitle } from "@fireactjs/core";
 import { loadStripe } from '@stripe/stripe-js';
 import { CardElement, useStripe, useElements, Elements } from '@stripe/react-stripe-js';
 import "firebase/compat/functions";
+import { SaaSConfigContext } from "./SaaSConfig";
 
 const PriceTable = ({setPlan, plans}) => {
 
@@ -187,18 +188,21 @@ const PaymentForm = ({plan}) => {
     )
 }
 
-export const CreateSubscription = ({plans, stripePublicKey}) => {
+export const CreateSubscription = () => {
 
+    const {config} = useContext(SaaSConfigContext);
     const [plan, setPlan] = useState(null);
 
-    const stripePromise = loadStripe(stripePublicKey);
+    const stripePromise = loadStripe(config.stripe.public_api_key);
+
+    const singular = config.subscription.singular;
 
     return (
         <Container maxWidth="lg">
-            <SetPageTitle title="Create Subscription" />
+            <SetPageTitle title={`Create ${singular}`} />
             <Paper>
                 {plan === null && 
-                    <PriceTable setPlan={setPlan} plans={plans} />
+                    <PriceTable setPlan={setPlan} plans={config.plans} />
                 }
                 {plan !== null && 
                     <Elements stripe={stripePromise}>
