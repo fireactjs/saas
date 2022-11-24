@@ -46,7 +46,7 @@ export const ListSubscriptions = () => {
                                 <Card>
                                     <CardHeader title={subscription.name?subscription.name:"Untitled"} subheader={subscription.id} />
                                     <CardActions>
-                                        <Button variant="outlined" color="primary">Access</Button>
+                                        <Button variant="outlined" color="success">Access</Button>
                                     </CardActions>
                                 </Card>
                             </Grid>
