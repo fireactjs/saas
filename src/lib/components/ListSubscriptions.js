@@ -1,6 +1,6 @@
 import { AuthContext, SetPageTitle } from "@fireactjs/core";
-import { Box, Button, Container, Grid, Paper } from "@mui/material";
-import React, { useContext, useEffect } from "react";
+import { Box, Button, Card, CardActions, CardHeader, Container, Grid, Paper, Typography } from "@mui/material";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "firebase/compat/firestore";
 
@@ -8,17 +8,24 @@ export const ListSubscriptions = () => {
 
     const { firebaseApp } = useContext(AuthContext);
     const navigate = useNavigate();
+    const [subscriptions, setSubscriptions] = useState([]);
 
     useEffect(() => {
         let subscriptions = [];
         const subscriptionsRef = firebaseApp.firestore().collection('subscriptions');
         const query = subscriptionsRef.where('permissions.access', 'array-contains', firebaseApp.auth().currentUser.uid);
         query.get().then(res => {
-            console.log(res);
+            res.forEach(record => {
+                subscriptions.push({
+                    id: record.id,
+                    name: record.data().name
+                });
+            })
+            setSubscriptions(subscriptions);
         }).catch(error => {
             console.log(error);
         })
-    },[]);
+    },[firebaseApp]);
 
     return (
         <Container>
@@ -32,6 +39,18 @@ export const ListSubscriptions = () => {
                         <Grid item textAlign="right">
                             <Button variant="contained" onClick={() => navigate('/create')}>Add Subscription</Button>
                         </Grid>
+                    </Grid>
+                    <Grid container spacing={3}>
+                        {subscriptions.map((subscription, i) => 
+                            <Grid item xs={12} md={4} key={i}>
+                                <Card>
+                                    <CardHeader title={subscription.name?subscription.name:"Untitled"} subheader={subscription.id} />
+                                    <CardActions>
+                                        <Button variant="outlined" color="primary">Access</Button>
+                                    </CardActions>
+                                </Card>
+                            </Grid>
+                        )}
                     </Grid>
                 </Box>
             </Paper>
