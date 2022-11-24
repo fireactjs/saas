@@ -46,14 +46,19 @@ const Loader = ({size}) => {
 
 function App() {
 
+	// merge pathnames
+	for(var key in subPathnames){
+		pathnames[key] = subPathnames[key];
+	}
+
 	return (
 		<AuthProvider firebaseConfig={firebaseConfig} brand={Brand}>
 			<BrowserRouter>
 				<Routes>
 					<Route element={<AuthRoutes signInPath={pathnames.SignIn} loader={<Loader size="large" />} />} >
 						<Route element={<AppTemplate logo={<Logo size="large" />} brand={Brand} toolBarMenu={<UserMenu pathnames={pathnames} />} drawerMenu={<MainMenu pathnames={pathnames}  />} />}>
-							<Route exact path={subPathnames.ListSubscriptions} element={<ListSubscriptions />} />
-							<Route exact path={subPathnames.CreateSubscription} element={<CreateSubscription plans={config.plans} stripePublicKey={config.stripe.public_api_key} />} />
+							<Route exact path={pathnames.ListSubscriptions} element={<ListSubscriptions loader={<Loader size="large" />} />} />
+							<Route exact path={pathnames.CreateSubscription} element={<CreateSubscription plans={config.plans} stripePublicKey={config.stripe.public_api_key} />} />
 							<Route exact path={pathnames.UserProfile} element={<UserProfile pathnames={pathnames} />} />
 							<Route exact path={pathnames.UserUpdateEmail} element={<UserUpdateEmail pathnames={pathnames} />} />
 							<Route exact path={pathnames.UserUpdateName} element={<UserUpdateName pathnames={pathnames} />} />
