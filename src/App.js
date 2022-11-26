@@ -73,6 +73,7 @@ function App() {
 								<Route exact path={pathnames.UserUpdateName} element={<UserUpdateName />} />
 								<Route exact path={pathnames.UserUpdatePassword} element={<UserUpdatePassword />} />
 								<Route exact path={pathnames.UserDelete} element={<UserDelete />} />
+								<Route exact path="/sub/:subscriptionId/" element={<></>} />
 							</Route>
 						</Route>
 						<Route element={<PublicTemplate />}>

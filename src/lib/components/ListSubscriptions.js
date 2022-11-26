@@ -65,7 +65,9 @@ export const ListSubscriptions = ({loader}) => {
                                         <Card>
                                             <CardHeader title={subscription.name?subscription.name:"Untitled"} subheader={subscription.id} />
                                             <CardActions>
-                                                <Button variant="outlined" color="success">Access</Button>
+                                                <Button variant="outlined" color="success" onClick={() => {
+                                                    navigate("/sub/"+subscription.id+"/");
+                                                }}>Access</Button>
                                             </CardActions>
                                         </Card>
                                     </Grid>
