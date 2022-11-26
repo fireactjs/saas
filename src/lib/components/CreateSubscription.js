@@ -1,11 +1,10 @@
 import React, { useContext, useState } from "react";
 import { Container, Paper, Grid, Card, CardHeader, CardContent, Typography, CardActions, Button, Box, Stack } from '@mui/material';
 import StarIcon from '@mui/icons-material/Star';
-import { AuthContext, SetPageTitle } from "@fireactjs/core";
+import { AuthContext, FireactContext, SetPageTitle } from "@fireactjs/core";
 import { loadStripe } from '@stripe/stripe-js';
 import { CardElement, useStripe, useElements, Elements } from '@stripe/react-stripe-js';
 import "firebase/compat/functions";
-import { SaaSConfigContext } from "./SaaSConfig";
 
 const PriceTable = ({setPlan, plans}) => {
 
@@ -190,19 +189,19 @@ const PaymentForm = ({plan}) => {
 
 export const CreateSubscription = () => {
 
-    const {config} = useContext(SaaSConfigContext);
+    const {config} = useContext(FireactContext);
     const [plan, setPlan] = useState(null);
 
-    const stripePromise = loadStripe(config.stripe.public_api_key);
+    const stripePromise = loadStripe(config.saas.stripe.public_api_key);
 
-    const singular = config.subscription.singular;
+    const singular = config.saas.subscription.singular;
 
     return (
         <Container maxWidth="lg">
             <SetPageTitle title={`Create ${singular}`} />
             <Paper>
                 {plan === null && 
-                    <PriceTable setPlan={setPlan} plans={config.plans} />
+                    <PriceTable setPlan={setPlan} plans={config.saas.plans} />
                 }
                 {plan !== null && 
                     <Elements stripe={stripePromise}>

@@ -1,14 +1,13 @@
-import { AuthContext, SetPageTitle } from "@fireactjs/core";
+import { AuthContext, FireactContext, SetPageTitle } from "@fireactjs/core";
 import { Alert, Box, Button, Card, CardActions, CardHeader, Container, Grid, Paper } from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "firebase/compat/firestore";
-import { SaaSConfigContext } from "./SaaSConfig";
 
 export const ListSubscriptions = ({loader}) => {
 
     const { firebaseApp } = useContext(AuthContext);
-    const { config } = useContext(SaaSConfigContext);
+    const { config } = useContext(FireactContext);
     const navigate = useNavigate();
     const [subscriptions, setSubscriptions] = useState([]);
     const [loaded, setLoaded] = useState(false);
@@ -42,10 +41,10 @@ export const ListSubscriptions = ({loader}) => {
                 <Box p={5}>
                     <Grid container direction="row" justifyContent="space-between" alignItems="center">
                         <Grid item>
-                            <h2>My {config.subscription.plural}</h2>
+                            <h2>My {config.saas.subscription.plural}</h2>
                         </Grid>
                         <Grid item textAlign="right">
-                            <Button variant="contained" onClick={() => navigate('/create')}>Add {config.subscription.singular}</Button>
+                            <Button variant="contained" onClick={() => navigate('/create')}>Add {config.saas.subscription.singular}</Button>
                         </Grid>
                     </Grid>
                     {loaded?(
