@@ -16,9 +16,17 @@ export const ListSubscriptions = ({loader}) => {
     useEffect(() => {
         setLoaded(false);
         setError(null);
+        // get default permission level name
+        let defaultPermission = '';
+        for(var permission in config.saas.permissions){
+            const value = config.saas.permissions[permission];
+            if(value.default){
+                defaultPermission = permission;
+            }
+        }
         let subscriptions = [];
         const subscriptionsRef = firebaseApp.firestore().collection('subscriptions');
-        const query = subscriptionsRef.where('permissions.access', 'array-contains', firebaseApp.auth().currentUser.uid);
+        const query = subscriptionsRef.where('permissions.'+defaultPermission, 'array-contains', firebaseApp.auth().currentUser.uid);
         query.get().then(res => {
             res.forEach(record => {
                 subscriptions.push({
@@ -32,7 +40,7 @@ export const ListSubscriptions = ({loader}) => {
             setLoaded(true);
             setError(error.message);
         })
-    },[firebaseApp]);
+    },[firebaseApp, config.saas.permissions]);
 
     return (
         <Container>
