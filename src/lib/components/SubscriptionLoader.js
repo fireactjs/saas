@@ -32,12 +32,12 @@ export const SubscriptionLoader = ({loader}) => {
         <>
             {error !== null?(
                 <Box mt={10}>
-                <Container maxWidth="sm">
-                    <Box component="span" m={5} textAlign="center">
-                        <Alert severity="error" >{error}</Alert>
-                    </Box>
-                </Container>
-            </Box>
+                    <Container maxWidth="sm">
+                        <Box component="span" m={5} textAlign="center">
+                            <Alert severity="error" >{error}</Alert>
+                        </Box>
+                    </Container>
+                </Box>
             ):(
                 <>
                     {subscription !== null?(
