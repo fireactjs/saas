@@ -1,7 +1,7 @@
 {
     "CreateSubscription": "/create",
     "ListSubscriptions": "/",
-    "SubscriptionLoader" : "/sub/:subscriptionId",
+    "Subscription" : "/sub/:subscriptionId",
     "Settings": "/sub/:subscriptionId/settings",
     "Users": "/sub/:subscriptionId/users",
     "AddUser": "/sub/:subscriptionId/users/add",

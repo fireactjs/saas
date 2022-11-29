@@ -4,9 +4,11 @@ import { doc, getFirestore, getDoc } from 'firebase/firestore';
 import { AuthContext, FireactContext } from "@fireactjs/core";
 import { Alert, Box, Container } from "@mui/material";
 
-export const SubscriptionLoader = ({loader}) => {
+export const SubscriptionContext = React.createContext();
+
+export const SubscriptionProvider = ({loader}) => {
     const { subscriptionId } = useParams();
-    const [ subscription, setSubscriptions ] = useState(null);
+    const [ subscription, setSubscription ] = useState(null);
     const { firebaseApp } = useContext(AuthContext);
     const [ error, setError ] = useState(null);
     const { config } = useContext(FireactContext);
@@ -18,7 +20,7 @@ export const SubscriptionLoader = ({loader}) => {
 
         getDoc(docRef).then(docSnap => {
             if(docSnap.exists()){
-                setSubscriptions(docSnap.data());
+                setSubscription(docSnap.data());
             }else{
                 // no subscription
                 setError("No "+config.saas.subscription.singular+" matches the ID");
@@ -41,7 +43,9 @@ export const SubscriptionLoader = ({loader}) => {
             ):(
                 <>
                     {subscription !== null?(
-                        <Outlet />
+                        <SubscriptionContext.Provider value={{subscription, setSubscription}}>
+                            <Outlet />
+                        </SubscriptionContext.Provider>
                     ):(
                         <Box mt={10}>
                             <Container maxWidth="sm">
