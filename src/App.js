@@ -76,7 +76,9 @@ function App() {
 							</Route>
 							
 							<Route path={pathnames.SubscriptionLoader} element={<SubscriptionLoader loader={<Logo size="large" />} />} >
-								<Route exact path={pathnames.SubscriptionLoader+"/"} element={<div>Home</div>} />
+								<Route element={<AppTemplate logo={<Logo size="large" />} toolBarMenu={<UserMenu pathnames={pathnames} />} drawerMenu={<></>} />}>
+									<Route exact path={pathnames.SubscriptionLoader+"/"} element={<div>Home</div>} />
+								</Route>
 							</Route>
 						</Route>
 						<Route element={<PublicTemplate />}>
