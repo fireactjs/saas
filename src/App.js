@@ -65,7 +65,7 @@ function App() {
 				<BrowserRouter>
 					<Routes>
 						<Route element={<AuthRoutes loader={<Loader size="large" />} />} >
-							<Route element={<AppTemplate logo={<Logo size="large" />} toolBarMenu={<UserMenu pathnames={pathnames} />} drawerMenu={<MainMenu pathnames={pathnames}  />} />}>
+							<Route element={<AppTemplate logo={<Logo size="large" />} toolBarMenu={<UserMenu />} drawerMenu={<MainMenu />} />}>
 								<Route exact path={pathnames.ListSubscriptions} element={<ListSubscriptions loader={<Loader size="large" />} />} />
 								<Route exact path={pathnames.CreateSubscription} element={<CreateSubscription />} />
 								<Route exact path={pathnames.UserProfile} element={<UserProfile />} />
@@ -75,8 +75,8 @@ function App() {
 								<Route exact path={pathnames.UserDelete} element={<UserDelete />} />
 							</Route>
 							
-							<Route path={pathnames.Subscription} element={<SubscriptionProvider loader={<Logo size="large" />} />} >
-								<Route element={<AppTemplate logo={<Logo size="large" />} toolBarMenu={<UserMenu pathnames={pathnames} />} drawerMenu={<SubscriptionMenu />} />}>
+							<Route path={pathnames.Subscription} element={<SubscriptionProvider loader={<Loader size="large" />} />} >
+								<Route element={<AppTemplate logo={<Logo size="large" />} toolBarMenu={<UserMenu />} drawerMenu={<SubscriptionMenu />} />}>
 									<Route exact path={pathnames.Subscription+"/"} element={<div>Home</div>} />
 								</Route>
 							</Route>
