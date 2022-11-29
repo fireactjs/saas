@@ -6,7 +6,7 @@ import { Route } from "react-router-dom";
 import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
 import { CircularProgress, Box } from '@mui/material';
 import authMethods from "./authMethods.json";
-import { CreateSubscription, ListSubscriptions, pathnames as subPathnames, SubscriptionMenu, SubscriptionProvider } from './lib/components';
+import { CreateSubscription, ListSubscriptions, pathnames as subPathnames, PermissionRouter, SubscriptionMenu, SubscriptionProvider } from './lib/components';
 import SaaSConfig from './config.json';
 
 const Brand = "FIREACT";
@@ -77,7 +77,10 @@ function App() {
 							
 							<Route path={pathnames.Subscription} element={<SubscriptionProvider loader={<Loader size="large" />} />} >
 								<Route element={<AppTemplate logo={<Logo size="large" />} toolBarMenu={<UserMenu />} drawerMenu={<SubscriptionMenu />} />}>
-									<Route exact path={pathnames.Subscription+"/"} element={<div>Home</div>} />
+									<Route element={<PermissionRouter permissions={["admin"]} />} >
+										<Route exact path={pathnames.Subscription+"/"} element={<div>Home</div>} />
+									</Route>
+									
 								</Route>
 							</Route>
 						</Route>
