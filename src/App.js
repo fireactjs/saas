@@ -75,7 +75,7 @@ function App() {
 								<Route exact path={pathnames.UserDelete} element={<UserDelete />} />
 							</Route>
 							
-							<Route path={pathnames.SubscriptionLoader} element={<SubscriptionLoader />} >
+							<Route path={pathnames.SubscriptionLoader} element={<SubscriptionLoader loader={<Logo size="large" />} />} >
 								<Route exact path={pathnames.SubscriptionLoader+"/"} element={<div>Home</div>} />
 							</Route>
 						</Route>

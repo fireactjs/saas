@@ -46,7 +46,7 @@ export const SubscriptionLoader = ({loader}) => {
                         <Box mt={10}>
                             <Container maxWidth="sm">
                                 <Box component="span" m={5} textAlign="center">
-                                    Loading...
+                                    {loader}
                                 </Box>
                             </Container>
                         </Box>
