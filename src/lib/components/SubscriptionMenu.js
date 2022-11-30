@@ -8,6 +8,7 @@ import { FireactContext } from "@fireactjs/core";
 import { checkPermission } from "./utilities";
 import { SubscriptionContext } from "./SubscriptionContext";
 import { getAuth } from "firebase/auth";
+import SettingsApplicationsIcon from '@mui/icons-material/SettingsApplications';
 
 export const SubscriptionMenu = ({customItems}) => {
     const { config } = useContext(FireactContext);
@@ -39,6 +40,13 @@ export const SubscriptionMenu = ({customItems}) => {
             {customItems}
             {checkPermission(subscription, auth.currentUser.uid, adminPermissions) && 
                 <>
+                    <Divider key="settings-divider"/>
+                    <NavLink to={pathnames.Settings.replace(":subscriptionId", subscription.id)} style={{textDecoration:'none'}} key="settings">
+                        <ListItemButton>
+                            <ListItemIcon><SettingsApplicationsIcon /></ListItemIcon>
+                            <ListItemText primary={<Typography color="textPrimary">Settings</Typography>} />
+                        </ListItemButton>
+                    </NavLink>
                     <Divider key="user-divider"/>
                     <NavLink to={pathnames.Users.replace(":subscriptionId", subscription.id)} style={{textDecoration:'none'}} key="users">
                         <ListItemButton>
