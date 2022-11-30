@@ -29,7 +29,7 @@ export const SubscriptionMenu = ({customItems}) => {
     return (
         <List component="nav">
             {checkPermission(subscription, auth.currentUser.uid, defaultPermissions) && 
-            <NavLink to={pathnames.Subscription} style={{textDecoration:'none'}} key="dashboard">
+            <NavLink to={pathnames.Subscription.replace(":subscriptionId", subscription.id)} style={{textDecoration:'none'}} key="dashboard">
                 <ListItemButton>
                     <ListItemIcon><DashboardIcon /></ListItemIcon>
                     <ListItemText primary={<Typography color="textPrimary">Dashboard</Typography>} />
@@ -40,14 +40,14 @@ export const SubscriptionMenu = ({customItems}) => {
             {checkPermission(subscription, auth.currentUser.uid, adminPermissions) && 
                 <>
                     <Divider key="user-divider"/>
-                    <NavLink to={pathnames.Users} style={{textDecoration:'none'}} key="users">
+                    <NavLink to={pathnames.Users.replace(":subscriptionId", subscription.id)} style={{textDecoration:'none'}} key="users">
                         <ListItemButton>
                             <ListItemIcon><PeopleIcon /></ListItemIcon>
                             <ListItemText primary={<Typography color="textPrimary">Users</Typography>} />
                         </ListItemButton>
                     </NavLink>
                     <Divider key="billing-divider"/>
-                    <NavLink to={pathnames.InvoiceList} style={{textDecoration:'none'}} key="billing">
+                    <NavLink to={pathnames.InvoiceList.replace(":subscriptionId", subscription.id)} style={{textDecoration:'none'}} key="billing">
                         <ListItemButton>
                             <ListItemIcon><MonetizationOnIcon /></ListItemIcon>
                             <ListItemText primary={<Typography color="textPrimary">Billing</Typography>} />

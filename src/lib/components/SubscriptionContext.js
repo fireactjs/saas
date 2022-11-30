@@ -20,7 +20,9 @@ export const SubscriptionProvider = ({loader}) => {
 
         getDoc(docRef).then(docSnap => {
             if(docSnap.exists()){
-                setSubscription(docSnap.data());
+                const sub = docSnap.data();
+                sub.id = subscriptionId;
+                setSubscription(sub);
             }else{
                 // no subscription
                 setError("No "+config.saas.subscription.singular+" matches the ID");
