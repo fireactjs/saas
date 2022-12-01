@@ -157,7 +157,7 @@ module.exports = function(config){
                 return admin.firestore().collection('subscriptions').add(sub);
             }).then(sub => {
                 return {
-                    subacriptionId: sub.id
+                    subscriptionId: sub.id
                 }
             }).catch(error => {
                 throw new functions.https.HttpsError('internal', error.message);

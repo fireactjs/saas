@@ -1,9 +1,10 @@
 import React, { useContext, useState } from "react";
-import { Container, Paper, Grid, Card, CardHeader, CardContent, Typography, CardActions, Button, Box, Stack } from '@mui/material';
+import { Container, Paper, Grid, Card, CardHeader, CardContent, Typography, CardActions, Button, Box, Stack, Alert } from '@mui/material';
 import StarIcon from '@mui/icons-material/Star';
 import { AuthContext, FireactContext, SetPageTitle } from "@fireactjs/core";
 import { loadStripe } from '@stripe/stripe-js';
 import { CardElement, useStripe, useElements, Elements } from '@stripe/react-stripe-js';
+import { useNavigate } from "react-router-dom";
 import "firebase/compat/functions";
 
 const PriceTable = ({setPlan, plans}) => {
@@ -11,14 +12,33 @@ const PriceTable = ({setPlan, plans}) => {
     const { firebaseApp } = useContext(AuthContext);
     const CloudFunctions = firebaseApp.functions();
 
+    const [ processing, setProcessing ] = useState(false);
+    const [ error, setError ] = useState(null);
+
+    const navigate = useNavigate();
+    const {config} = useContext(FireactContext);
+    const singular = config.saas.subscription.singular;
+
     const subscribe = async(event, plan) => {
         event.preventDefault();
+        setProcessing(true);
+        setError(null);
 
         if(plan.price === 0){
             const createSubscription = CloudFunctions.httpsCallable('fireactjsSaas-createSubscription');
             createSubscription({
                 priceId: plan.priceId,
                 paymentMethodId: null
+            }).then((res) => {
+                if(res.data && res.data.subcriptionId){
+                    navigate(config.pathnames.Settings.replace(":subscriptionId", res.result.subcriptionId));
+                }else{
+                    setError("Failed to create the "+singular+".");
+                    setProcessing(false);                    
+                }
+            }).catch(error => {
+                setError(error.message);
+                setProcessing(false);
             })
         }
 
@@ -36,6 +56,11 @@ const PriceTable = ({setPlan, plans}) => {
             >
             Choose Your Plan
             </Typography>
+            {error && 
+                <Box mb={2}>
+                    <Alert severity="error">{error}</Alert>
+                </Box>
+            }
             <Grid container spacing={5} alignItems="flex-end">
             {plans.map((plan) => (
                 // Enterprise card is full width at sm breakpoint
@@ -95,7 +120,7 @@ const PriceTable = ({setPlan, plans}) => {
                             </ul>
                         </CardContent>
                         <CardActions>
-                            <Button fullWidth variant={plan.popular?"contained":"outlined"} onClick={(e) => {
+                            <Button fullWidth disabled={processing} variant={plan.popular?"contained":"outlined"} onClick={(e) => {
                                 if(plan.price === 0){
                                     subscribe(e, plan);
                                 }else{
@@ -120,8 +145,17 @@ const PaymentForm = ({plan}) => {
     const { firebaseApp } = useContext(AuthContext);
     const CloudFunctions = firebaseApp.functions();
 
+    const [ processing, setProcessing ] = useState(false);
+    const [ error, setError ] = useState(null);
+
+    const navigate = useNavigate();
+    const {config} = useContext(FireactContext);
+    const singular = config.saas.subscription.singular;
+
     const subscribe = async(event) => {
         event.preventDefault();
+        setProcessing(true);
+        setError(null);
 
         if(plan.price > 0){
             if(!stripe || !elements){
@@ -140,6 +174,16 @@ const PaymentForm = ({plan}) => {
                 createSubscription({
                     priceId: plan.priceId,
                     paymentMethodId: paymentMethod.id
+                }).then(res => {
+                    if(res.data && res.data.subcriptionId){
+                        navigate(config.pathnames.Settings.replace(":subscriptionId", res.result.subcriptionId));
+                    }else{
+                        setError("Failed to create the "+singular+".");
+                        setProcessing(false);                    
+                    }
+                }).catch(error => {
+                    setError(error.message);
+                    setProcessing(false);                    
                 })
             }
         }
@@ -178,6 +222,11 @@ const PaymentForm = ({plan}) => {
                 >
                 Payment Method
                 </Typography>
+                {error && 
+                    <Box mb={2}>
+                        <Alert severity="error">{error}</Alert>
+                    </Box>
+                }
                 <Grid container direction="row" justifyContent="center" alignItems="center">
                     <Grid item md={8}>
                         <div style={{position: "relative", minHeight: '56px', padding: '15px'}}>
@@ -202,7 +251,7 @@ const PaymentForm = ({plan}) => {
                     </Grid>
                 </Grid>
                 <Grid container direction="row" justifyContent="center" alignItems="center">
-                    <Button variant="contained" onClick={e => subscribe(e)}>Subscribe</Button>
+                    <Button variant="contained" disabled={processing} onClick={e => subscribe(e)}>Subscribe</Button>
                 </Grid>
             </Stack>
         </Box>
