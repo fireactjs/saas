@@ -30,8 +30,8 @@ const PriceTable = ({setPlan, plans}) => {
                 priceId: plan.priceId,
                 paymentMethodId: null
             }).then((res) => {
-                if(res.data && res.data.subcriptionId){
-                    navigate(config.pathnames.Settings.replace(":subscriptionId", res.result.subcriptionId));
+                if(res.data && res.data.subscriptionId){
+                    navigate(config.pathnames.Settings.replace(":subscriptionId", res.data.subscriptionId));
                 }else{
                     setError("Failed to create the "+singular+".");
                     setProcessing(false);                    
@@ -168,15 +168,16 @@ const PaymentForm = ({plan}) => {
             });
 
             if(error){
-
+                setError(error.message);
+                setProcessing(false);
             }else{
                 const createSubscription = CloudFunctions.httpsCallable('fireactjsSaas-createSubscription');
                 createSubscription({
                     priceId: plan.priceId,
                     paymentMethodId: paymentMethod.id
                 }).then(res => {
-                    if(res.data && res.data.subcriptionId){
-                        navigate(config.pathnames.Settings.replace(":subscriptionId", res.result.subcriptionId));
+                    if(res.data && res.data.subscriptionId){
+                        navigate(config.pathnames.Settings.replace(":subscriptionId", res.data.subscriptionId));
                     }else{
                         setError("Failed to create the "+singular+".");
                         setProcessing(false);                    
@@ -222,13 +223,14 @@ const PaymentForm = ({plan}) => {
                 >
                 Payment Method
                 </Typography>
-                {error && 
-                    <Box mb={2}>
-                        <Alert severity="error">{error}</Alert>
-                    </Box>
-                }
                 <Grid container direction="row" justifyContent="center" alignItems="center">
                     <Grid item md={8}>
+                        {error && 
+                            <Box mb={2}>
+                                <Alert severity="error">{error}</Alert>
+                            </Box>
+                        }
+
                         <div style={{position: "relative", minHeight: '56px', padding: '15px'}}>
                             <CardElement options={CARD_ELEMENT_OPTIONS}></CardElement>
                             <fieldset style={{
