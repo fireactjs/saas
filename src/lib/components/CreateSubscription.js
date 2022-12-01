@@ -8,6 +8,22 @@ import "firebase/compat/functions";
 
 const PriceTable = ({setPlan, plans}) => {
 
+    const { firebaseApp } = useContext(AuthContext);
+    const CloudFunctions = firebaseApp.functions();
+
+    const subscribe = async(event, plan) => {
+        event.preventDefault();
+
+        if(plan.price === 0){
+            const createSubscription = CloudFunctions.httpsCallable('fireactjsSaas-createSubscription');
+            createSubscription({
+                priceId: plan.priceId,
+                paymentMethodId: null
+            })
+        }
+
+    }
+
     return (
         <Box p={5}>
             <Typography
@@ -79,8 +95,14 @@ const PriceTable = ({setPlan, plans}) => {
                             </ul>
                         </CardContent>
                         <CardActions>
-                            <Button fullWidth variant={plan.popular?"contained":"outlined"} onClick={() => setPlan(plan)}>
-                            Continue
+                            <Button fullWidth variant={plan.popular?"contained":"outlined"} onClick={(e) => {
+                                if(plan.price === 0){
+                                    subscribe(e, plan);
+                                }else{
+                                    setPlan(plan);
+                                }
+                            }}>
+                            {plan.price === 0?"Subscribe":"Continue"}
                             </Button>
                         </CardActions>
                     </Card>

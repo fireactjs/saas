@@ -117,14 +117,16 @@ module.exports = function(config){
                 paymentMethodId
             ).then(stripeCustomerId => {
                 // create subscription
-                return stripe.subscriptions.create({
+                const data = {
                     customer: stripeCustomerId,
-                    //default_tax_rates: taxRates,
-                    default_payment_method: paymentMethodId,
                     items: [
                         {price: selectedPlan.priceId}
                     ]
-                });
+                }
+                if(selectedPlan.price > 0){
+                    data.default_payment_method = paymentMethodId;
+                }
+                return stripe.subscriptions.create(data);
             }).then(subscription => {
                 // init permissions
                 const permissions = {}
