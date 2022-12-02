@@ -21,7 +21,7 @@ export const ListUsers = ({loader}) => {
 
     const [total, setTotal] = useState(0);
     const [page, setPage] = useState(0);
-    const [pageSize, setPageSize] = useState(2);
+    const [pageSize, setPageSize] = useState(10);
     const [rows, setRows] = useState([]);
 
     const [error, setError] = useState(null);
