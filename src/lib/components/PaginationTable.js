@@ -10,7 +10,7 @@ export const PaginationTable = ({columns, rows, totalRows, pageSize, page, handl
                     <TableHead>
                         <TableRow>
                         {columns.map((c,i) => 
-                            <TableCell key={i} style={c.style}>{c.name}</TableCell>
+                            <TableCell key={i} style={c.style}><strong>{c.name}</strong></TableCell>
                         )}
                         </TableRow>
                     </TableHead>
