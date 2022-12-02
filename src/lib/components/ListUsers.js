@@ -42,7 +42,7 @@ export const ListUsers = ({loader}) => {
                 user.permissionCol = user.permissions.join(", ");
                 user.emailCol = user.email;
                 if(subscription.ownerId !== user.id){
-                    user.actionCol = <Button size="small" variant="outlined" onClick={() => navigate(pathnames.UpdateUser.replace(":subscriptionId", subscription.id).replace(":userId", user.id))}>Change Role</Button>
+                    user.actionCol = <Button size="small" variant="outlined" onClick={() => navigate(pathnames.UpdateUser.replace(":subscriptionId", subscription.id).replace(":userId", user.id))}>Update</Button>
                 }
             })
             result.data.users.sort((a,b) => a.displayName > b.displayName);
