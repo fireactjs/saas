@@ -82,7 +82,7 @@ function App() {
 									</Route>
 									<Route element={<PermissionRouter permissions={["admin"]} />} >
 										<Route exact path={pathnames.Settings} element={<Settings loader={<Loader size="large" />} />} />
-										<Route exact path={pathnames.ListUser} element={<ListUsers loader={<Loader size="large" />} />} />
+										<Route exact path={pathnames.ListUsers} element={<ListUsers loader={<Loader size="large" />} />} />
 									</Route>
 								</Route>
 							</Route>

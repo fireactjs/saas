@@ -38,7 +38,7 @@ export const ListUsers = ({loader}) => {
                     display: 'flex',
                     alignItems: 'center',
                     flexWrap: 'wrap',
-                }}><Avatar alt={user.displayName} src={user.photoUrl} /><strong style={{marginLeft: '15px'}}>{user.displayName}</strong></div>
+                }}><Avatar alt={user.displayName} src={user.photoURL} /><strong style={{marginLeft: '15px'}}>{user.displayName}</strong></div>
                 user.permissionCol = user.permissions.join(", ");
                 user.emailCol = user.email;
                 if(subscription.ownerId !== user.id){

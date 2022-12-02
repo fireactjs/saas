@@ -48,7 +48,7 @@ export const SubscriptionMenu = ({customItems}) => {
                         </ListItemButton>
                     </NavLink>
                     <Divider key="user-divider"/>
-                    <NavLink to={pathnames.ListUser.replace(":subscriptionId", subscription.id)} style={{textDecoration:'none'}} key="users">
+                    <NavLink to={pathnames.ListUsers.replace(":subscriptionId", subscription.id)} style={{textDecoration:'none'}} key="users">
                         <ListItemButton>
                             <ListItemIcon><PeopleIcon /></ListItemIcon>
                             <ListItemText primary={<Typography color="textPrimary">Users</Typography>} />
