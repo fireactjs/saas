@@ -6,7 +6,7 @@ import { Paper, Box, Container, Grid, Button, Avatar, Alert } from "@mui/materia
 import { PaginationTable } from "./PaginationTable";
 import { useNavigate } from "react-router-dom";
 
-export const ListUser = ({loader}) => {
+export const ListUsers = ({loader}) => {
     const { config } = useContext(FireactContext);
     const pathnames = config.pathnames;
 
