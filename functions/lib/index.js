@@ -230,7 +230,7 @@ module.exports = function(config){
                             displayName: user.data().displayName,
                             photoURL: user.data().photoURL,
                             email: user.data().email,
-                            role: getPermissions(permissions, user.id)
+                            permissions: getPermissions(permissions, user.id)
                         });
                     });
                 }

@@ -43,44 +43,44 @@ export const ListSubscriptions = ({loader}) => {
     },[firebaseApp, config.saas.permissions]);
 
     return (
-        <Container>
-            <SetPageTitle title="My Subscriptions" />
-            <Paper>
-                <Box p={5}>
-                    <Grid container direction="row" justifyContent="space-between" alignItems="center">
-                        <Grid item>
-                            <h2>My {config.saas.subscription.plural}</h2>
-                        </Grid>
-                        <Grid item textAlign="right">
-                            <Button variant="contained" onClick={() => navigate('/create')}>Add {config.saas.subscription.singular}</Button>
-                        </Grid>
-                    </Grid>
-                    {loaded?(
-                        error !== null?(
-                            <Alert severity="error">{error}</Alert>
-                        ):(
-                            <Grid container spacing={3}>
-                                {subscriptions.map((subscription, i) => 
-                                    <Grid item xs={12} md={4} key={i}>
-                                        <Card>
-                                            <CardHeader title={subscription.name?subscription.name:"Untitled"} subheader={subscription.id} />
-                                            <CardActions>
-                                                <Button variant="outlined" color="success" onClick={() => {
-                                                    navigate("/sub/"+subscription.id+"/");
-                                                }}>Access</Button>
-                                            </CardActions>
-                                        </Card>
-                                    </Grid>
-                                )}
+        <>
+            {loaded?(
+                <Container maxWidth="lx">
+                    <SetPageTitle title="My Subscriptions" />
+                    <Paper>
+                        <Box p={2}>
+                            <Grid container direction="row" justifyContent="space-between" alignItems="center">
+                                <Grid item>
+                                    <h2>My {config.saas.subscription.plural}</h2>
+                                </Grid>
+                                <Grid item textAlign="right">
+                                    <Button variant="contained" onClick={() => navigate(config.pathnames.CreateSubscription)}>Add {config.saas.subscription.singular}</Button>
+                                </Grid>
                             </Grid>
-                        )
-                    ):(
-                        <Box p={5}>
-                            {loader}
+                            {error !== null?(
+                                <Alert severity="error">{error}</Alert>
+                            ):(
+                                <Grid container spacing={3}>
+                                    {subscriptions.map((subscription, i) => 
+                                        <Grid item xs={12} md={4} key={i}>
+                                            <Card>
+                                                <CardHeader title={subscription.name?subscription.name:"Untitled"} subheader={subscription.id} />
+                                                <CardActions>
+                                                    <Button variant="outlined" color="success" onClick={() => {
+                                                        navigate("/sub/"+subscription.id+"/");
+                                                    }}>Access</Button>
+                                                </CardActions>
+                                            </Card>
+                                        </Grid>
+                                    )}
+                                </Grid>
+                            )}
                         </Box>
-                    )}
-                </Box>
-            </Paper>
-        </Container>
+                    </Paper>
+                </Container>
+            ):(
+                <>{loader}</>
+            )}
+        </>
     )
 }

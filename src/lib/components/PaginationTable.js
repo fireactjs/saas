@@ -26,7 +26,7 @@ export const PaginationTable = ({columns, rows, totalRows, pageSize, page, handl
                 </Table>
             </TableContainer>
             <TablePagination
-                rowsPerPageOptions={[10,20,50,100]}
+                rowsPerPageOptions={[2,10,20,50,100]}
                 component="div"
                 count={totalRows}
                 rowsPerPage={pageSize}
