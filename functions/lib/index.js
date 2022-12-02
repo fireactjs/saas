@@ -83,7 +83,7 @@ module.exports = function(config){
             if(typeof(subscription.data().permissions) !== 'undefined'){
                 subPermissions = subscription.data().permissions
             }
-            for(var i=0; i<permissions.length; i++){
+            for(let i=0; i<permissions.length; i++){
                 if(typeof(subPermissions[permissions[i]]) !== 'undefined'){
                     if(subPermissions[permissions[i]].indexOf(userId) === -1){
                         // the permission level exists and push the user ID to the permission level
@@ -100,6 +100,38 @@ module.exports = function(config){
         }).then(res => {
             return {'result': 'success', 'subscriptionId': subscriptionId}
         });
+    }
+
+    const getDefaultPermission = () => {
+        let permission = "";
+        for (let p in config.permissions){
+            if(config.permissions[p].default){
+                permission = p;
+                break;
+            }
+        }
+        return permission;
+    }
+
+    const getAdminPermission = () => {
+        let permission = "";
+        for (let p in config.permissions){
+            if(config.permissions[p].admin){
+                permission = p;
+                break;
+            }
+        }
+        return permission;
+    }
+
+    const getPermissions = (permissions, userId) => {
+        const grantedPermissions = [];
+        for (let p in permissions){
+            if(permissions[p].indexOf(userId) !== -1){
+                grantedPermissions.push(p);
+            }
+        }
+        return grantedPermissions;
     }
 
     return {
@@ -130,7 +162,7 @@ module.exports = function(config){
             }).then(subscription => {
                 // init permissions
                 const permissions = {}
-                for (p in config.permissions){
+                for (let p in config.permissions){
                     if(config.permissions[p].default || config.permissions[p].admin){
                         // grant all default and admin permissions to the current user
                         permissions[p] = [];
@@ -161,6 +193,49 @@ module.exports = function(config){
                 }
             }).catch(error => {
                 throw new functions.https.HttpsError('internal', error.message);
+            });
+        }),
+
+        getSubscriptionUsers: functions.https.onCall((data, context) => {
+            const result = {
+                total: 0,
+                users: []
+            }
+            let permissions = [];
+            return getDoc("subscriptions/"+data.subscriptionId).then(subRef => {
+                if(subRef.data().permissions[getAdminPermission()].indexOf(context.auth.uid) !== -1){
+                    const userList = subRef.data().permissions[getDefaultPermission()];
+                    permissions = subRef.data().permissions;
+                    // get total
+                    result.total = userList.length;
+                    if(result.total === 0){
+                        return {
+                            empty: true
+                        }
+                    }else{
+                        // query user data
+                        const usersRef = admin.firestore().collection("users");
+                        return usersRef.where(admin.firestore.FieldPath.documentId(), "in", userList).get();
+                    } 
+                }else{
+                    throw new Error("Permission denied.");
+                }
+            }).then(usersSnapshot => {
+                if(!usersSnapshot.empty){
+                    // return users
+                    usersSnapshot.forEach(user => {
+                        result.users.push({
+                            id: user.id,
+                            displayName: user.data().displayName,
+                            photoURL: user.data().photoURL,
+                            email: user.data().email,
+                            role: getPermissions(permissions, user.id)
+                        });
+                    });
+                }
+                return result;
+            }).catch(err => {
+                throw new functions.https.HttpsError('internal', err.message);
             });
         })
     }

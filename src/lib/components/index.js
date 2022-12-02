@@ -6,6 +6,7 @@ import { checkPermission } from "./utilities";
 import { SubscriptionMenu } from "./SubscriptionMenu";
 import { PermissionRouter } from "./PermissionRouter";
 import { Settings } from "./Settings";
+import { UserList } from "./UserList";
 
 export {
     checkPermission,
@@ -16,5 +17,6 @@ export {
     Settings,
     SubscriptionContext,
     SubscriptionMenu,
-    SubscriptionProvider
+    SubscriptionProvider,
+    UserList
 }

@@ -3,7 +3,7 @@
     "ListSubscriptions": "/",
     "Subscription" : "/sub/:subscriptionId",
     "Settings": "/sub/:subscriptionId/settings",
-    "Users": "/sub/:subscriptionId/users",
+    "UserList": "/sub/:subscriptionId/users",
     "AddUser": "/sub/:subscriptionId/users/add",
     "UpdateUser": "/sub/:subscriptionId/users/update/:userId",
     "ChangePlan": "/sub/:subscriptionId/billing/plan",
