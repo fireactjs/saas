@@ -203,6 +203,7 @@ module.exports = function(config){
             }
             let permissions = [];
             return getDoc("subscriptions/"+data.subscriptionId).then(subRef => {
+                // check if the user is an admin level user
                 if(subRef.data().permissions[getAdminPermission()].indexOf(context.auth.uid) !== -1){
                     const userList = subRef.data().permissions[getDefaultPermission()];
                     permissions = subRef.data().permissions;
