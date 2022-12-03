@@ -1,5 +1,5 @@
 import { AuthContext, FireactContext, SetPageTitle } from "@fireactjs/core";
-import { Alert, Box, Button, Card, CardActions, CardHeader, Container, Grid, Paper } from "@mui/material";
+import { Alert, Box, Button, Card, CardActions, CardHeader, Container, Grid, Paper, Typography } from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "firebase/compat/firestore";
@@ -51,12 +51,14 @@ export const ListSubscriptions = ({loader}) => {
                         <Box p={2}>
                             <Grid container direction="row" justifyContent="space-between" alignItems="center">
                                 <Grid item>
-                                    <h2>My {config.saas.subscription.plural}</h2>
+                                    <Typography component="h1" variant="h4">My {config.saas.subscription.plural}</Typography>
                                 </Grid>
                                 <Grid item textAlign="right">
                                     <Button variant="contained" onClick={() => navigate(config.pathnames.CreateSubscription)}>Add {config.saas.subscription.singular}</Button>
                                 </Grid>
                             </Grid>
+                        </Box>
+                        <Box p={2}>
                             {error !== null?(
                                 <Alert severity="error">{error}</Alert>
                             ):(

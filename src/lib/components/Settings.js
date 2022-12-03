@@ -46,7 +46,7 @@ export const Settings = () => {
             <SetPageTitle title={"Settings"+(subscriptionName!==""?(" - "+subscriptionName):"")} />
             <Paper>
                 <Box p={2}>
-                    <Typography component="h1" variant="h4" align="center">{"Settings"+(subscriptionName!==""?(" - "+subscriptionName):"")}</Typography>
+                    <Typography component="h1" variant="h4" align="center">Settings</Typography>
                 </Box>
                 {error !== null &&
                     <Box p={2}>

@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { SubscriptionContext } from "./SubscriptionContext";
 import "firebase/compat/functions";
 import { AuthContext, FireactContext, SetPageTitle } from "@fireactjs/core";
-import { Paper, Box, Container, Grid, Button, Avatar, Alert } from "@mui/material";
+import { Paper, Box, Container, Grid, Button, Avatar, Alert, Typography } from "@mui/material";
 import { PaginationTable } from "./PaginationTable";
 import { useNavigate } from "react-router-dom";
 
@@ -83,7 +83,7 @@ export const ListUsers = ({loader}) => {
                                 <Box p={2}>
                                     <Grid container direction="row" justifyContent="space-between" alignItems="center">
                                         <Grid item>
-                                            <h2>User List</h2>
+                                            <Typography component="h1" variant="h4">User List</Typography>
                                         </Grid>
                                         <Grid item textAlign="right">
                                             <Button variant="contained" onClick={() => navigate(pathnames.AddUser.replace(":subscriptionId", subscription.id))}>Add User</Button>
