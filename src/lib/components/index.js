@@ -7,8 +7,10 @@ import { SubscriptionMenu } from "./SubscriptionMenu";
 import { PermissionRouter } from "./PermissionRouter";
 import { Settings } from "./Settings";
 import { ListUsers } from "./ListUsers";
+import { AddUser } from "./AddUser";
 
 export {
+    AddUser,
     checkPermission,
     CreateSubscription,
     ListSubscriptions,
