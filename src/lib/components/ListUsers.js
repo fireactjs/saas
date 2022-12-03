@@ -4,8 +4,8 @@ import "firebase/compat/functions";
 import { AuthContext, FireactContext, SetPageTitle } from "@fireactjs/core";
 import { Paper, Box, Container, Grid, Button, Avatar, Alert, Typography } from "@mui/material";
 import { PaginationTable } from "./PaginationTable";
-import { useNavigate } from "react-router-dom";
 import { UpdateUser } from "./UpdateUser";
+import { AddUser } from "./AddUser";
 
 
 export const ListUsers = ({loader}) => {
@@ -29,8 +29,7 @@ export const ListUsers = ({loader}) => {
     const [error, setError] = useState(null);
 
     const [selectedUser, setSelectedUser] = useState(null);
-
-    const navigate = useNavigate();
+    const [addUserActive, setAddUserActive] = useState(false);
 
     useEffect(() => {
         setError(null);
@@ -61,7 +60,7 @@ export const ListUsers = ({loader}) => {
             setError(error.message);
             setLoaded(true);
         });
-    }, [subscription.id, CloudFunctions, navigate, pathnames.UpdateUser, subscription.ownerId]);
+    }, [subscription.id, CloudFunctions, pathnames.UpdateUser, subscription.ownerId]);
 
     useEffect(() => {
         const startIndex = page * pageSize;
@@ -86,47 +85,53 @@ export const ListUsers = ({loader}) => {
                 {selectedUser !== null?(
                     <UpdateUser user={selectedUser} setSelectedUser={setSelectedUser} setUsers={setUsers} />
                 ):(
-                    <Container maxWidth="lx">
-                        {error !== null?(
-                            <Alert severity="error">{error}</Alert>
-                        ):(
-                            <>
-                                <SetPageTitle title={"User List"+(subscriptionName!==""?(" - "+subscriptionName):"")} />
-                                <Paper>
-                                    <Box p={2}>
-                                        <Grid container direction="row" justifyContent="space-between" alignItems="center">
-                                            <Grid item>
-                                                <Typography component="h1" variant="h4">User List</Typography>
+                    <>
+                    {addUserActive?(
+                        <AddUser setAddUserActive={setAddUserActive} />
+                    ):(
+                        <Container maxWidth="lx">
+                            {error !== null?(
+                                <Alert severity="error">{error}</Alert>
+                            ):(
+                                <>
+                                    <SetPageTitle title={"User List"+(subscriptionName!==""?(" - "+subscriptionName):"")} />
+                                    <Paper>
+                                        <Box p={2}>
+                                            <Grid container direction="row" justifyContent="space-between" alignItems="center">
+                                                <Grid item>
+                                                    <Typography component="h1" variant="h4">User List</Typography>
+                                                </Grid>
+                                                <Grid item textAlign="right">
+                                                    <Button variant="contained" onClick={() => setAddUserActive(true)}>Add User</Button>
+                                                </Grid>
                                             </Grid>
-                                            <Grid item textAlign="right">
-                                                <Button variant="contained" onClick={() => navigate(pathnames.AddUser.replace(":subscriptionId", subscription.id))}>Add User</Button>
-                                            </Grid>
-                                        </Grid>
-                                    </Box>
-                                    <Box p={2}>
-                                        <PaginationTable columns={[
-                                            {name: "Name", field: "nameCol", style: {width: '30%'}},
-                                            {name: "Email", field: "emailCol", style: {width: '40%'}},
-                                            {name: "Permissions", field: "permissionCol", style: {width: '20%'}},
-                                            {name: "Action", field: "actionCol", style: {width: '10%'}}
-                                        ]}
-                                        rows={rows}
-                                        totalRows={total}
-                                        pageSize={pageSize}
-                                        page={page}
-                                        handlePageChane={(e, p) => {
-                                            setPage(p);
-                                        }}
-                                        handlePageSizeChange={(e) => {
-                                            setPage(0);
-                                            setPageSize(e.target.value);
-                                        }}
-                                        />
-                                    </Box>
-                                </Paper>
-                            </>
-                        )}
-                    </Container>
+                                        </Box>
+                                        <Box p={2}>
+                                            <PaginationTable columns={[
+                                                {name: "Name", field: "nameCol", style: {width: '30%'}},
+                                                {name: "Email", field: "emailCol", style: {width: '40%'}},
+                                                {name: "Permissions", field: "permissionCol", style: {width: '20%'}},
+                                                {name: "Action", field: "actionCol", style: {width: '10%'}}
+                                            ]}
+                                            rows={rows}
+                                            totalRows={total}
+                                            pageSize={pageSize}
+                                            page={page}
+                                            handlePageChane={(e, p) => {
+                                                setPage(p);
+                                            }}
+                                            handlePageSizeChange={(e) => {
+                                                setPage(0);
+                                                setPageSize(e.target.value);
+                                            }}
+                                            />
+                                        </Box>
+                                    </Paper>
+                                </>
+                            )}
+                        </Container>
+                    )}
+                    </>
                 )}
                 </>
             ):(

@@ -1,10 +1,9 @@
 import { FireactContext, SetPageTitle } from "@fireactjs/core";
-import { Box, Button, Checkbox, Container, FormControl, FormControlLabel, FormGroup, FormLabel, Grid, Paper, TextField, Typography } from "@mui/material";
+import { Box, Button, Checkbox, Container, FormControl, FormControlLabel, FormLabel, Grid, Paper, TextField, Typography } from "@mui/material";
 import React, { useContext, useState } from "react";
 import { SubscriptionContext } from "./SubscriptionContext";
-import { useNavigate } from "react-router-dom";
 
-export const AddUser = () => {
+export const AddUser = ({setAddUserActive}) => {
 
     const { subscription } = useContext(SubscriptionContext);
     const subscriptionName = subscription.name?subscription.name:"";
@@ -13,8 +12,6 @@ export const AddUser = () => {
     const permissions = config.saas.permissions || {};
 
     const [ processing, setProcessing ] = useState(false);
-
-    const navigate = useNavigate();
 
     return (
         <Container maxWidth="md">
@@ -44,7 +41,7 @@ export const AddUser = () => {
                 <Box p={2}>
                     <Grid container>
                         <Grid item xs>
-                            <Button type="button" color="secondary" variant="outlined" disabled={processing} onClick={() => navigate(config.pathnames.ListUsers.replace(":subscriptionId", subscription.id))} >Back</Button>
+                            <Button type="button" color="secondary" variant="outlined" disabled={processing} onClick={() => setAddUserActive(false)} >Back</Button>
                         </Grid>
                         <Grid item>
                             <Button type="button" color="primary" variant="contained" disabled={processing} onClick={() => {}} >Save</Button>
