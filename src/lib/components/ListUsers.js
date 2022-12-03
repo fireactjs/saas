@@ -49,7 +49,7 @@ export const ListUsers = ({loader}) => {
                     user.actionCol = <Button size="small" variant="outlined" onClick={() => setSelectedUser({
                         id: user.id,
                         email: user.email,
-                        name: user.displayName,
+                        displayName: user.displayName,
                         permissions: user.permissions
                     })}>Update</Button>
                 }
@@ -176,7 +176,7 @@ const UpdateUser = ({user, setSelectedUser, setUsers}) => {
                             <Box p={2}>
                                 <FormControl fullWidth>
                                     <FormLabel>Name</FormLabel>
-                                    {user.name}
+                                    {user.displayName}
                                 </FormControl>
                             </Box>
                         </Grid>
@@ -255,7 +255,7 @@ const UpdateUser = ({user, setSelectedUser, setUsers}) => {
                                                 actionCol: <Button size="small" variant="outlined" onClick={() => setSelectedUser({
                                                         id: user.id,
                                                         email: user.email,
-                                                        name: user.displayName,
+                                                        displayName: user.displayName,
                                                         permissions: userPermissions
                                                 })}>Update</Button>
                                             }
