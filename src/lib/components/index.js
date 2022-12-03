@@ -8,6 +8,7 @@ import { PermissionRouter } from "./PermissionRouter";
 import { Settings } from "./Settings";
 import { ListUsers } from "./ListUsers";
 import { AddUser } from "./AddUser";
+import { UpdateUser } from "./UpdateUser";
 
 export {
     AddUser,
@@ -20,5 +21,6 @@ export {
     SubscriptionContext,
     SubscriptionMenu,
     SubscriptionProvider,
-    ListUsers
+    ListUsers,
+    UpdateUser,
 }
