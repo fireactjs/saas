@@ -110,10 +110,12 @@ export const AddUser = ({setAddUserActive, setUsers, reovkeInvite}) => {
                                                 }}><Avatar alt={displayName} src={null} /><strong style={{marginLeft: '15px'}}>{displayName}</strong></div>,
                                                 permissionCol: userPermissions.join(", "),
                                                 emailCol: email,
-                                                actionCol: <Button size="small" variant="outlined" onClick={() => reovkeInvite({
-                                                    inviteId: res.data.inviteId,
-                                                    subscriptionId: subscription.id
-                                                })}>Revoke Invite</Button>,
+                                                actionCol: <Button size="small" variant="outlined" onClick={(e) => {
+                                                    reovkeInvite({
+                                                        inviteId: res.data.inviteId,
+                                                        subscriptionId: subscription.id
+                                                    });
+                                                }}>Revoke Invite</Button>,
                                                 type: "invite"
                                             }
                                         )

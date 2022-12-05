@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { SubscriptionContext } from "./SubscriptionContext";
 import "firebase/compat/functions";
 import { AuthContext, FireactContext, SetPageTitle } from "@fireactjs/core";
@@ -31,17 +31,17 @@ export const ListUsers = ({loader}) => {
     const [selectedUser, setSelectedUser] = useState(null);
     const [addUserActive, setAddUserActive] = useState(false);
 
-    const reovkeInvite = ({inviteId, subscriptionId}) => {
+    const reovkeInvite = useCallback(({inviteId, subscriptionId}) => {
         const revokeInvite = CloudFunctions.httpsCallable('fireactjsSaas-revokeInvite');
         revokeInvite({
             subscriptionId: subscriptionId,
             inviteId: inviteId,
         }).then(res => {
             setUsers(prevState => prevState.filter(row => {
-                return ((row.id !== inviteId && row.type == 'invite') || row.type == 'user')
+                return ((row.id !== inviteId && row.type === 'invite') || row.type === 'user')
             }));
         });
-    }
+    }, [CloudFunctions]);
 
     useEffect(() => {
         setError(null);
@@ -77,10 +77,12 @@ export const ListUsers = ({loader}) => {
                     }}><Avatar alt={user.displayName} src={user.photoURL} /><strong style={{marginLeft: '15px'}}>{user.displayName}</strong></div>
                     user.permissionCol = user.permissions.join(", ");
                     user.emailCol = user.email;
-                    user.actionCol = <Button size="small" variant="outlined" onClick={() => reovkeInvite({
-                        inviteId: user.id,
-                        subscriptionId: subscription.id
-                })}>Revoke Invite</Button>
+                    user.actionCol = <Button size="small" variant="outlined" onClick={(e) => {
+                        reovkeInvite({
+                            inviteId: user.id,
+                            subscriptionId: subscription.id
+                        });
+                    }}>Revoke Invite</Button>
                 }
                 
             })
@@ -91,7 +93,7 @@ export const ListUsers = ({loader}) => {
             setError(error.message);
             setLoaded(true);
         });
-    }, [subscription.id, CloudFunctions, pathnames.UpdateUser, subscription.ownerId]);
+    }, [subscription.id, CloudFunctions, pathnames.UpdateUser, subscription.ownerId, reovkeInvite]);
 
     useEffect(() => {
         const startIndex = page * pageSize;
@@ -142,9 +144,9 @@ export const ListUsers = ({loader}) => {
                                         <Box p={2}>
                                             <PaginationTable columns={[
                                                 {name: "Name", field: "nameCol", style: {width: '30%'}},
-                                                {name: "Email", field: "emailCol", style: {width: '40%'}},
+                                                {name: "Email", field: "emailCol", style: {width: '35%'}},
                                                 {name: "Permissions", field: "permissionCol", style: {width: '20%'}},
-                                                {name: "Action", field: "actionCol", style: {width: '10%'}}
+                                                {name: "Action", field: "actionCol", style: {width: '15%'}}
                                             ]}
                                             rows={rows}
                                             totalRows={total}
