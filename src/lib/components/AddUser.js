@@ -1,17 +1,31 @@
-import { FireactContext, SetPageTitle } from "@fireactjs/core";
+import { AuthContext, FireactContext, SetPageTitle } from "@fireactjs/core";
 import { Box, Button, Checkbox, Container, FormControl, FormControlLabel, FormLabel, Grid, Paper, TextField, Typography } from "@mui/material";
 import React, { useContext, useState } from "react";
 import { SubscriptionContext } from "./SubscriptionContext";
+import "firebase/compat/functions";
 
 export const AddUser = ({setAddUserActive}) => {
 
     const { subscription } = useContext(SubscriptionContext);
     const subscriptionName = subscription.name?subscription.name:"";
 
+    const { firebaseApp } = useContext(AuthContext);
+    const CloudFunctions = firebaseApp.functions();
+
     const { config } = useContext(FireactContext);
     const permissions = config.saas.permissions || {};
+    const defaultPermissions = [];
+    for(let p in permissions){
+        if(permissions[p].default){
+            defaultPermissions.push(p);
+        }
+    }
 
     const [ processing, setProcessing ] = useState(false);
+
+    const [ email, setEmail ] = useState('');
+    const [ displayName, setDisplayName ] = useState('');
+    const [ userPermissions, setUserPermissions ] = useState(defaultPermissions);
 
     return (
         <Container maxWidth="md">
@@ -21,8 +35,8 @@ export const AddUser = ({setAddUserActive}) => {
                     <Typography component="h1" variant="h4" align="center">Add User</Typography>
                 </Box>
                 <Box p={2}>
-                    <TextField required fullWidth name="name" label="Name" type="text" margin="normal" onChange={(e) => {}} />
-                    <TextField required fullWidth name="email" label="Email" type="email" margin="normal" onChange={(e) => {}} />
+                    <TextField required fullWidth name="name" label="Name" type="text" margin="normal" onChange={(e) => {setDisplayName(e.target.value)}} />
+                    <TextField required fullWidth name="email" label="Email" type="email" margin="normal" onChange={(e) => {setEmail(e.target.value)}} />
                     <Box p={1}>
                         <FormControl fullWidth>
                             <FormLabel>Permissions</FormLabel>
@@ -30,7 +44,20 @@ export const AddUser = ({setAddUserActive}) => {
                                 {Object.keys(permissions).map((key, index) => {
                                     return (
                                         <Grid item xs={12} md={3} key={index}>
-                                            <FormControlLabel control={<Checkbox defaultChecked={permissions[key].default?true:false} disabled={permissions[key].default?true:false} />} label={key} />
+                                            <FormControlLabel control={<Checkbox onChange={e => {
+                                                    if(e.target.checked){
+                                                        setUserPermissions(prevState => [
+                                                            ...prevState,
+                                                            key
+                                                        ]);
+                                                    }else{
+                                                        setUserPermissions(current => 
+                                                            current.filter(p => p !== key)
+                                                        );
+                                                    }
+                                                }}
+                                                defaultChecked={permissions[key].default?true:false}
+                                                disabled={permissions[key].default?true:false} />} label={key} />
                                         </Grid>
                                     )
                                 })}
@@ -44,7 +71,21 @@ export const AddUser = ({setAddUserActive}) => {
                             <Button type="button" color="secondary" variant="outlined" disabled={processing} onClick={() => setAddUserActive(false)} >Back</Button>
                         </Grid>
                         <Grid item>
-                            <Button type="button" color="primary" variant="contained" disabled={processing} onClick={() => {}} >Save</Button>
+                            <Button type="button" color="primary" variant="contained" disabled={processing} onClick={() => {    
+                                setProcessing(true);
+                                const inviteUser = CloudFunctions.httpsCallable('fireactjsSaas-inviteUser');
+                                inviteUser({
+                                    email: email,
+                                    displayName: displayName,
+                                    permissions: userPermissions,
+                                    subscriptionId: subscription.id
+                                }).then(res => {
+                                    console.log(res);
+                                    setProcessing(false);
+                                }).catch(error => {
+                                    setProcessing(false);
+                                })
+                            }} >Save</Button>
                         </Grid>
                     </Grid>
                 </Box>

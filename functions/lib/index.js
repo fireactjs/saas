@@ -134,6 +134,17 @@ module.exports = function(config){
         return grantedPermissions;
     }
 
+
+    const getUserByEmail = (email) => {
+        return admin.auth().getUserByEmail(email).then(user => {
+            return user;
+        }).catch(error => {
+            return null;
+        })
+
+    }
+
+
     return {
         /**
          * create a subscription
@@ -180,7 +191,8 @@ module.exports = function(config){
                     subscriptionCurrentPeriodEnd: subscription.current_period_end,
                     subscriptionEnded: subscription.ended || 0,
                     ownerId: context.auth.uid,
-                    permissions: permissions
+                    permissions: permissions,
+                    creationTime: (new Date())
                     //billingCountry: data.billing.country,
                     //billingState: data.billing.state                    
                 }
@@ -189,7 +201,7 @@ module.exports = function(config){
                 return {
                     subscriptionId: sub.id
                 }
-            }).catch(error => {
+            }).catch(error => { 
                 throw new functions.https.HttpsError('internal', error.message);
             });
         }),
@@ -233,6 +245,44 @@ module.exports = function(config){
                     });
                 }
                 return result;
+            }).catch(err => {
+                throw new functions.https.HttpsError('internal', err.message);
+            });
+        }),
+
+        inviteUser: functions.https.onCall((data, context) => {
+            let subDoc = null;
+            return getDoc("subscriptions/"+data.subscriptionId).then(subRef => {
+                // check if the user is an admin level user
+                subDoc = subRef;
+                if(subRef.data().permissions[getAdminPermission()].indexOf(context.auth.uid) !== -1){
+                    return getUserByEmail(data.email);
+                }else{
+                    throw new Error("Permission denied.");
+                }
+            }).then(user => {
+                if(user !== null){
+                    if(subDoc.data().permissions[getDefaultPermission()].indexOf(user.uid) !== -1){
+                        throw new Error("The user already have access.");
+                    }
+                }
+                return admin.firestore().collection('invites').where('email', '==', data.email).where('subscriptionId', '==', data.subscriptionId).get();
+            }).then(subSnapshot => {
+                if(subSnapshot.empty){
+                    return admin.firestore().collection('invites').add({
+                        email: data.email,
+                        subscriptionId: data.subscriptionId,
+                        displayName: data.displayName,
+                        permissions: data.permissions,
+                        creationTime: (new Date())
+                    });
+                }else{
+                    throw new Error("Duplicate invite.");
+                }
+            }).then(invite => {
+                return {
+                    result: 'success'
+                }
             }).catch(err => {
                 throw new functions.https.HttpsError('internal', err.message);
             });
