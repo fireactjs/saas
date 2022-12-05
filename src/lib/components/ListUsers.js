@@ -43,6 +43,9 @@ export const ListUsers = ({loader}) => {
                     flexWrap: 'wrap',
                 }}><Avatar alt={user.displayName} src={user.photoURL} /><strong style={{marginLeft: '15px'}}>{user.displayName}</strong></div>
                 user.permissionCol = user.permissions.join(", ");
+                if(subscription.ownerId === user.id){
+                    user.permissionCol = 'owner';
+                }
                 user.emailCol = user.email;
                 if(subscription.ownerId !== user.id){
                     user.actionCol = <Button size="small" variant="outlined" onClick={() => setSelectedUser({

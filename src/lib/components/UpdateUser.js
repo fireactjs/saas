@@ -156,9 +156,7 @@ export const UpdateUser = ({user, setSelectedUser, setUsers}) => {
                                         permissions: subPermissions
                                     }));
                                     setUsers(prevState => prevState.filter(row => {
-                                        if(row.id !== user.id){
-                                            return row;
-                                        }
+                                        return row.id !== user.id
                                     }));
                                     setSelectedUser(null);
                                 }).catch(error => {
