@@ -77,8 +77,10 @@ export const ListUsers = ({loader}) => {
         if(records.length > 0){
             setRows(records);
         }
-        window.scrollTo(0, 0);
-    },[page, pageSize, users]);
+        if(addUserActive === false && selectedUser === null){
+            window.scrollTo(0, 0);
+        }
+    },[page, pageSize, users, addUserActive, selectedUser]);
 
 
     return (
@@ -90,7 +92,7 @@ export const ListUsers = ({loader}) => {
                 ):(
                     <>
                     {addUserActive?(
-                        <AddUser setAddUserActive={setAddUserActive} />
+                        <AddUser setAddUserActive={setAddUserActive} setUsers={setUsers} />
                     ):(
                         <Container maxWidth="lx">
                             {error !== null?(
@@ -105,7 +107,7 @@ export const ListUsers = ({loader}) => {
                                                     <Typography component="h1" variant="h4">User List</Typography>
                                                 </Grid>
                                                 <Grid item textAlign="right">
-                                                    <Button variant="contained" onClick={() => setAddUserActive(true)}>Add User</Button>
+                                                    <Button variant="contained" onClick={() => setAddUserActive(true)}>Invite User</Button>
                                                 </Grid>
                                             </Grid>
                                         </Box>

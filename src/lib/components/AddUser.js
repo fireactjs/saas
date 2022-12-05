@@ -1,10 +1,10 @@
 import { AuthContext, FireactContext, SetPageTitle } from "@fireactjs/core";
-import { Box, Button, Checkbox, Container, FormControl, FormControlLabel, FormLabel, Grid, Paper, TextField, Typography } from "@mui/material";
+import { Alert, Box, Button, Checkbox, Container, FormControl, Avatar, FormControlLabel, FormLabel, Grid, Paper, TextField, Typography } from "@mui/material";
 import React, { useContext, useState } from "react";
 import { SubscriptionContext } from "./SubscriptionContext";
 import "firebase/compat/functions";
 
-export const AddUser = ({setAddUserActive}) => {
+export const AddUser = ({setAddUserActive, setUsers}) => {
 
     const { subscription } = useContext(SubscriptionContext);
     const subscriptionName = subscription.name?subscription.name:"";
@@ -27,13 +27,26 @@ export const AddUser = ({setAddUserActive}) => {
     const [ displayName, setDisplayName ] = useState('');
     const [ userPermissions, setUserPermissions ] = useState(defaultPermissions);
 
+    const [ error, setError ] = useState(null);
+    const [ success, setSuccess ] = useState(false);
+
     return (
         <Container maxWidth="md">
-            <SetPageTitle title={"Add User"+(subscriptionName!==""?(" - "+subscriptionName):"")} />
+            <SetPageTitle title={"Invite User"+(subscriptionName!==""?(" - "+subscriptionName):"")} />
             <Paper>
                 <Box p={2}>
-                    <Typography component="h1" variant="h4" align="center">Add User</Typography>
+                    <Typography component="h1" variant="h4" align="center">Invite User</Typography>
                 </Box>
+                {error !== null &&
+                    <Box p={2}>
+                        <Alert severity="error">{error}</Alert>
+                    </Box>
+                }
+                {success &&
+                    <Box p={2}>
+                        <Alert severity="success">The invite has been successfully sent</Alert>
+                    </Box>
+                }
                 <Box p={2}>
                     <TextField required fullWidth name="name" label="Name" type="text" margin="normal" onChange={(e) => {setDisplayName(e.target.value)}} />
                     <TextField required fullWidth name="email" label="Email" type="email" margin="normal" onChange={(e) => {setEmail(e.target.value)}} />
@@ -73,6 +86,8 @@ export const AddUser = ({setAddUserActive}) => {
                         <Grid item>
                             <Button type="button" color="primary" variant="contained" disabled={processing} onClick={() => {    
                                 setProcessing(true);
+                                setError(null);
+                                setSuccess(false);
                                 const inviteUser = CloudFunctions.httpsCallable('fireactjsSaas-inviteUser');
                                 inviteUser({
                                     email: email,
@@ -80,9 +95,30 @@ export const AddUser = ({setAddUserActive}) => {
                                     permissions: userPermissions,
                                     subscriptionId: subscription.id
                                 }).then(res => {
-                                    console.log(res);
+                                    setUsers(prevState => {
+                                        prevState.push(
+                                            {
+                                                displayName: displayName,
+                                                email: email,
+                                                id: null,
+                                                permissions: userPermissions,
+                                                photoURL: null,
+                                                nameCol: <div style={{
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    flexWrap: 'wrap',
+                                                }}><Avatar alt={displayName} src={null} /><strong style={{marginLeft: '15px'}}>{displayName}</strong></div>,
+                                                permissionCol: userPermissions.join(", "),
+                                                emailCol: email,
+                                                actionCol: "invite sent"
+                                            }
+                                        )
+                                        return prevState;
+                                    });
                                     setProcessing(false);
+                                    setSuccess(true);
                                 }).catch(error => {
+                                    setError(error.message);
                                     setProcessing(false);
                                 })
                             }} >Save</Button>
