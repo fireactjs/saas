@@ -163,11 +163,9 @@ module.exports = function(config){
                 // init permissions
                 const permissions = {}
                 for (let p in config.permissions){
-                    if(config.permissions[p].default || config.permissions[p].admin){
-                        // grant all default and admin permissions to the current user
-                        permissions[p] = [];
-                        permissions[p].push(context.auth.uid);
-                    }
+                    // grant all permissions to the current user
+                    permissions[p] = [];
+                    permissions[p].push(context.auth.uid);
                 }
                 const sub = {
                     plan: selectedPlan.title, // title of the plan
