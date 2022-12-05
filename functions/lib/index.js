@@ -295,6 +295,23 @@ module.exports = function(config){
                 }
             }).then(invite => {
                 return {
+                    inviteId: invite.id
+                }
+            }).catch(err => {
+                throw new functions.https.HttpsError('internal', err.message);
+            });
+        }),
+
+        revokeInvite: functions.https.onCall((data, context) => {
+            return Promise.all([getDoc("subscriptions/"+data.subscriptionId), getDoc("invites/"+data.inviteId)]).then(([subRef, inviteRef]) => {
+                // check if the user is an admin level user
+                if(subRef.data().permissions[getAdminPermission()].indexOf(context.auth.uid) !== -1 && inviteRef.data().subscriptionId === subRef.id){
+                    return admin.firestore().doc("invites/"+data.inviteId).delete();
+                }else{
+                    throw new Error("Permission denied.");
+                }
+            }).then(res => {
+                return {
                     result: 'success'
                 }
             }).catch(err => {

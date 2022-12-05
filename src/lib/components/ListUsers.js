@@ -31,6 +31,18 @@ export const ListUsers = ({loader}) => {
     const [selectedUser, setSelectedUser] = useState(null);
     const [addUserActive, setAddUserActive] = useState(false);
 
+    const reovkeInvite = ({inviteId, subscriptionId}) => {
+        const revokeInvite = CloudFunctions.httpsCallable('fireactjsSaas-revokeInvite');
+        revokeInvite({
+            subscriptionId: subscriptionId,
+            inviteId: inviteId,
+        }).then(res => {
+            setUsers(prevState => prevState.filter(row => {
+                return ((row.id !== inviteId && row.type == 'invite') || row.type == 'user')
+            }));
+        });
+    }
+
     useEffect(() => {
         setError(null);
         const getSubscriptionUsers = CloudFunctions.httpsCallable('fireactjsSaas-getSubscriptionUsers');
@@ -65,7 +77,10 @@ export const ListUsers = ({loader}) => {
                     }}><Avatar alt={user.displayName} src={user.photoURL} /><strong style={{marginLeft: '15px'}}>{user.displayName}</strong></div>
                     user.permissionCol = user.permissions.join(", ");
                     user.emailCol = user.email;
-                    user.actionCol = 'invite sent'
+                    user.actionCol = <Button size="small" variant="outlined" onClick={() => reovkeInvite({
+                        inviteId: user.id,
+                        subscriptionId: subscription.id
+                })}>Revoke Invite</Button>
                 }
                 
             })
@@ -105,7 +120,7 @@ export const ListUsers = ({loader}) => {
                 ):(
                     <>
                     {addUserActive?(
-                        <AddUser setAddUserActive={setAddUserActive} setUsers={setUsers} />
+                        <AddUser setAddUserActive={setAddUserActive} setUsers={setUsers} reovkeInvite={reovkeInvite} />
                     ):(
                         <Container maxWidth="lx">
                             {error !== null?(

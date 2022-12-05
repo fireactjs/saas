@@ -4,7 +4,7 @@ import React, { useContext, useState } from "react";
 import { SubscriptionContext } from "./SubscriptionContext";
 import "firebase/compat/functions";
 
-export const AddUser = ({setAddUserActive, setUsers}) => {
+export const AddUser = ({setAddUserActive, setUsers, reovkeInvite}) => {
 
     const { subscription } = useContext(SubscriptionContext);
     const subscriptionName = subscription.name?subscription.name:"";
@@ -100,7 +100,7 @@ export const AddUser = ({setAddUserActive, setUsers}) => {
                                             {
                                                 displayName: displayName,
                                                 email: email,
-                                                id: null,
+                                                id: res.data.inviteId,
                                                 permissions: userPermissions,
                                                 photoURL: null,
                                                 nameCol: <div style={{
@@ -110,7 +110,11 @@ export const AddUser = ({setAddUserActive, setUsers}) => {
                                                 }}><Avatar alt={displayName} src={null} /><strong style={{marginLeft: '15px'}}>{displayName}</strong></div>,
                                                 permissionCol: userPermissions.join(", "),
                                                 emailCol: email,
-                                                actionCol: "invite sent"
+                                                actionCol: <Button size="small" variant="outlined" onClick={() => reovkeInvite({
+                                                    inviteId: res.data.inviteId,
+                                                    subscriptionId: subscription.id
+                                                })}>Revoke Invite</Button>,
+                                                type: "invite"
                                             }
                                         )
                                         return prevState;
