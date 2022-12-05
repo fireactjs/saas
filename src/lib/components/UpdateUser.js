@@ -94,7 +94,7 @@ export const UpdateUser = ({user, setSelectedUser, setUsers}) => {
                             <Button type="button" color="secondary" variant="outlined" disabled={processing} onClick={() => setSelectedUser(null)} >Back</Button>
                         </Grid>
                         <Grid item>
-                            <Button type="button" color="primary" variant="contained" disabled={processing} onClick={() => {
+                            <Button type="button" style={{marginRight: '10px'}} color="primary" variant="contained" disabled={processing} onClick={() => {
                                 setProcessing(true);
                                 setError(null);
                                 setSuccess(false);
@@ -138,6 +138,34 @@ export const UpdateUser = ({user, setSelectedUser, setUsers}) => {
                                     setProcessing(false)
                                 });
                             }} >Save</Button>
+
+                            <Button type="button" color="error" variant="contained" disabled={processing} onClick={() => {
+                                setProcessing(true);
+                                setError(null);
+                                setSuccess(false);
+                                const db = getFirestore(firebaseApp);
+                                const docRef = doc(db, "subscriptions", subscription.id);
+                                // remove the user from all permissions
+                                const subPermissions = subscription.permissions;
+                                for(let p in subPermissions){
+                                    subPermissions[p] = subPermissions[p].filter(uid => uid !== user.id);
+                                }
+                                setDoc(docRef, {permissions: subPermissions}, {merge: true}).then(() => {
+                                    setSubscription(prevState => ({
+                                        ...prevState,
+                                        permissions: subPermissions
+                                    }));
+                                    setUsers(prevState => prevState.filter(row => {
+                                        if(row.id !== user.id){
+                                            return row;
+                                        }
+                                    }));
+                                    setSelectedUser(null);
+                                }).catch(error => {
+                                    setError(error.message);
+                                    setProcessing(false)
+                                });
+                            }} >Revoke Access</Button>
                         </Grid>
                     </Grid>
                 </Box>
