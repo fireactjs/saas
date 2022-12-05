@@ -37,24 +37,37 @@ export const ListUsers = ({loader}) => {
         getSubscriptionUsers({subscriptionId: subscription.id}).then(result => {
             setTotal(result.data.total);
             result.data.users.forEach(user => {
-                user.nameCol = <div style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    flexWrap: 'wrap',
-                }}><Avatar alt={user.displayName} src={user.photoURL} /><strong style={{marginLeft: '15px'}}>{user.displayName}</strong></div>
-                user.permissionCol = user.permissions.join(", ");
-                if(subscription.ownerId === user.id){
-                    user.permissionCol = 'owner';
+                if(user.type === 'user'){
+                    user.nameCol = <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        flexWrap: 'wrap',
+                    }}><Avatar alt={user.displayName} src={user.photoURL} /><strong style={{marginLeft: '15px'}}>{user.displayName}</strong></div>
+                    user.permissionCol = user.permissions.join(", ");
+                    if(subscription.ownerId === user.id){
+                        user.permissionCol = 'owner';
+                    }
+                    user.emailCol = user.email;
+                    if(subscription.ownerId !== user.id){
+                        user.actionCol = <Button size="small" variant="outlined" onClick={() => setSelectedUser({
+                            id: user.id,
+                            email: user.email,
+                            displayName: user.displayName,
+                            permissions: user.permissions
+                        })}>Update</Button>
+                    }
                 }
-                user.emailCol = user.email;
-                if(subscription.ownerId !== user.id){
-                    user.actionCol = <Button size="small" variant="outlined" onClick={() => setSelectedUser({
-                        id: user.id,
-                        email: user.email,
-                        displayName: user.displayName,
-                        permissions: user.permissions
-                    })}>Update</Button>
+                if(user.type === 'invite'){
+                    user.nameCol = <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        flexWrap: 'wrap',
+                    }}><Avatar alt={user.displayName} src={user.photoURL} /><strong style={{marginLeft: '15px'}}>{user.displayName}</strong></div>
+                    user.permissionCol = user.permissions.join(", ");
+                    user.emailCol = user.email;
+                    user.actionCol = 'invite sent'
                 }
+                
             })
             result.data.users.sort((a,b) => a.displayName > b.displayName);
             setUsers(result.data.users);

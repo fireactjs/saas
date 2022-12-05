@@ -226,12 +226,13 @@ module.exports = function(config){
                     }else{
                         // query user data
                         const usersRef = admin.firestore().collection("users");
-                        return usersRef.where(admin.firestore.FieldPath.documentId(), "in", userList).get();
+                        const invitesRef = admin.firestore().collection("invites").where("subscriptionId", "==", data.subscriptionId);
+                        return Promise.all([usersRef.where(admin.firestore.FieldPath.documentId(), "in", userList).get(), invitesRef.get()]);
                     } 
                 }else{
                     throw new Error("Permission denied.");
                 }
-            }).then(usersSnapshot => {
+            }).then(([usersSnapshot, invitesSnapshot]) => {
                 if(!usersSnapshot.empty){
                     // return users
                     usersSnapshot.forEach(user => {
@@ -240,9 +241,22 @@ module.exports = function(config){
                             displayName: user.data().displayName,
                             photoURL: user.data().photoURL,
                             email: user.data().email,
-                            permissions: getPermissions(permissions, user.id)
+                            permissions: getPermissions(permissions, user.id),
+                            type: 'user'
                         });
                     });
+                }
+                if(!invitesSnapshot.empty){
+                    invitesSnapshot.forEach(invite => {
+                        result.users.push({
+                            id: invite.id,
+                            displayName: invite.data().displayName,
+                            photoURL: null,
+                            email: invite.data().email,
+                            permissions: invite.data().permissions,
+                            type: 'invite'
+                        })
+                    })
                 }
                 return result;
             }).catch(err => {
