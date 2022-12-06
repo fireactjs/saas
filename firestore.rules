@@ -7,10 +7,13 @@ service cloud.firestore {
     match /users/{userId} {
       allow read, update, create: if request.auth.uid == userId;
     }
-    match /subscriptions/{accountId} {
+    match /subscriptions/{subscriptionId} {
       allow read: if request.auth.uid != null && request.auth.uid in resource.data.permissions.access;
       allow update: if request.auth.uid != null && request.auth.uid in resource.data.permissions.admin && (!request.resource.data.diff(resource.data).affectedKeys()
         .hasAny(['currency', 'ownerId', 'paymentCycle', 'plan', 'price', 'stripePriceId', 'stripeSubscriptionId', 'subscriptionCreated', 'subscriptionCurrentPeriodEnd', 'subscriptionCurrentPeriodStart', 'subscriptionEnded', 'subscriptionStatus']));
     }
+    match /invites/{inviteId} {
+      allow read, delete: if request.auth.uid != null && request.auth.token.email == resource.data.email;
+		}
   }
 }
