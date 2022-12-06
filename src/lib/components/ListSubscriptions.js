@@ -3,6 +3,7 @@ import { Alert, Box, Button, Card, CardActions, CardHeader, Container, Grid, Pap
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "firebase/compat/firestore";
+import { Stack } from "@mui/system";
 
 export const ListSubscriptions = ({loader}) => {
 
@@ -12,6 +13,8 @@ export const ListSubscriptions = ({loader}) => {
     const [subscriptions, setSubscriptions] = useState([]);
     const [loaded, setLoaded] = useState(false);
     const [error, setError] = useState(null);
+    const [invites, setInvites] = useState([]);
+    const [processing, setProcessing] = useState(false);
 
     useEffect(() => {
         setLoaded(false);
@@ -25,16 +28,27 @@ export const ListSubscriptions = ({loader}) => {
             }
         }
         let subscriptions = [];
+        let invites = [];
         const subscriptionsRef = firebaseApp.firestore().collection('subscriptions');
-        const query = subscriptionsRef.where('permissions.'+defaultPermission, 'array-contains', firebaseApp.auth().currentUser.uid);
-        query.get().then(res => {
-            res.forEach(record => {
+        const subQuery = subscriptionsRef.where('permissions.'+defaultPermission, 'array-contains', firebaseApp.auth().currentUser.uid);
+        const invitesRef = firebaseApp.firestore().collection('invites');
+        const inviteQuery = invitesRef.where('email', '==', firebaseApp.auth().currentUser.email);
+        Promise.all([subQuery.get(), inviteQuery.get()]).then(([subSnapshot, inSnapshot]) => {
+            subSnapshot.forEach(record => {
                 subscriptions.push({
                     id: record.id,
                     name: record.data().name
                 });
             })
+            inSnapshot.forEach(record => {
+                invites.push({
+                    id: record.id,
+                    sender: record.data().sender,
+                    subscriptionName: record.data().subscriptionName || "Untitled"
+                })
+            })
             setSubscriptions(subscriptions);
+            setInvites(invites);
             setLoaded(true);
         }).catch(error => {
             setLoaded(true);
@@ -62,20 +76,48 @@ export const ListSubscriptions = ({loader}) => {
                             {error !== null?(
                                 <Alert severity="error">{error}</Alert>
                             ):(
-                                <Grid container spacing={3}>
-                                    {subscriptions.map((subscription, i) => 
-                                        <Grid item xs={12} md={4} key={i}>
-                                            <Card>
-                                                <CardHeader title={subscription.name?subscription.name:"Untitled"} subheader={subscription.id} />
-                                                <CardActions>
-                                                    <Button variant="outlined" color="success" onClick={() => {
-                                                        navigate("/sub/"+subscription.id+"/");
-                                                    }}>Access</Button>
-                                                </CardActions>
-                                            </Card>
-                                        </Grid>
-                                    )}
-                                </Grid>
+                                <>
+                                    {invites.length > 0 && 
+                                        <Stack spacing={2} mb={2}>
+                                            {invites.map((invite, i) => 
+                                                <Alert key={i} severity="info" action={
+                                                    <>
+                                                        <Button color="success" disabled={processing} size="small">Accept</Button>
+                                                        <Button color="warning" disabled={processing} size="small" onClick={() => {
+                                                            setProcessing(true);
+                                                            const inviteRef = firebaseApp.firestore().doc('invites/'+invite.id);
+                                                            inviteRef.delete().then(() => {
+                                                                setInvites(prevState =>  prevState.filter(row => {
+                                                                    return (row.id !== invite.id)
+                                                                }));
+                                                                setProcessing(false);
+                                                            }).catch(error => {
+                                                                // something went wrong
+                                                                setProcessing(false);
+                                                            })
+                                                        }}>Reject</Button>
+                                                    </>
+                                                }>
+                                                    You are invited to join <strong>{invite.subscriptionName}</strong> by <strong>{invite.sender}</strong>
+                                                </Alert>
+                                            )}
+                                        </Stack>
+                                    }
+                                    <Grid container spacing={3}>
+                                        {subscriptions.map((subscription, i) => 
+                                            <Grid item xs={12} md={4} key={i}>
+                                                <Card>
+                                                    <CardHeader title={subscription.name?subscription.name:"Untitled"} subheader={subscription.id} />
+                                                    <CardActions>
+                                                        <Button variant="outlined" color="success" onClick={() => {
+                                                            navigate("/sub/"+subscription.id+"/");
+                                                        }}>Access</Button>
+                                                    </CardActions>
+                                                </Card>
+                                            </Grid>
+                                        )}
+                                    </Grid>
+                                </>
                             )}
                         </Box>
                     </Paper>

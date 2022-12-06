@@ -288,6 +288,8 @@ module.exports = function(config){
                         subscriptionId: data.subscriptionId,
                         displayName: data.displayName,
                         permissions: data.permissions,
+                        subscriptionName: subDoc.data().name || "",
+                        sender: context.auth.token.name,
                         creationTime: (new Date())
                     });
                 }else{
