@@ -77,7 +77,7 @@ export const ListSubscriptions = ({loader}) => {
                                 <Alert severity="error">{error}</Alert>
                             ):(
                                 <>
-                                    {invites.length > 0 && 
+                                    {invites.length > 0 && firebaseApp.auth().currentUser.emailVerified && 
                                         <Stack spacing={2} mb={2}>
                                             {invites.map((invite, i) => 
                                                 <Alert key={i} severity="info" action={
@@ -103,17 +103,28 @@ export const ListSubscriptions = ({loader}) => {
                                             )}
                                         </Stack>
                                     }
+                                    {invites.length > 0 && !firebaseApp.auth().currentUser.emailVerified && 
+                                        <Stack spacing={2} mb={2}>
+                                            <Alert severity="warning" action={<Button size="small" onClick={() => navigate(config.pathnames.UserProfile)} >My Profile</Button>}>
+                                                You have invites but your email is not verified. Please go to your profile and verify your email to accept the invites.
+                                            </Alert>
+                                        </Stack>
+                                    }
                                     <Grid container spacing={3}>
-                                        {subscriptions.map((subscription, i) => 
+                                        {subscriptions.length>0?(subscriptions.map((subscription, i) => 
                                             <Grid item xs={12} md={4} key={i}>
                                                 <Card>
                                                     <CardHeader title={subscription.name?subscription.name:"Untitled"} subheader={subscription.id} />
                                                     <CardActions>
                                                         <Button variant="outlined" color="success" onClick={() => {
-                                                            navigate("/sub/"+subscription.id+"/");
+                                                            navigate(config.pathnames.Subscription.replace(":subscriptionId", subscription.id));
                                                         }}>Access</Button>
                                                     </CardActions>
                                                 </Card>
+                                            </Grid>
+                                        )):(
+                                            <Grid item >
+                                                You don't have access to any {config.saas.subscription.singular}. Please create one or ask your admin to invite you to one.
                                             </Grid>
                                         )}
                                     </Grid>
