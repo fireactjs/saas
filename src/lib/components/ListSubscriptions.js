@@ -3,6 +3,7 @@ import { Alert, Box, Button, Card, CardActions, CardHeader, Container, Grid, Pap
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "firebase/compat/firestore";
+import "firebase/compat/functions";
 import { Stack } from "@mui/system";
 
 export const ListSubscriptions = ({loader}) => {
@@ -15,6 +16,8 @@ export const ListSubscriptions = ({loader}) => {
     const [error, setError] = useState(null);
     const [invites, setInvites] = useState([]);
     const [processing, setProcessing] = useState(false);
+    const CloudFunctions = firebaseApp.functions();
+    const [acceptedInviteCount, setAcceptedInviteCount] = useState(0);
 
     useEffect(() => {
         setLoaded(false);
@@ -54,7 +57,7 @@ export const ListSubscriptions = ({loader}) => {
             setLoaded(true);
             setError(error.message);
         })
-    },[firebaseApp, config.saas.permissions]);
+    },[firebaseApp, config.saas.permissions, acceptedInviteCount]);
 
     return (
         <>
@@ -82,7 +85,17 @@ export const ListSubscriptions = ({loader}) => {
                                             {invites.map((invite, i) => 
                                                 <Alert key={i} severity="info" action={
                                                     <>
-                                                        <Button color="success" disabled={processing} size="small">Accept</Button>
+                                                        <Button color="success" disabled={processing} size="small" onClick={() => {
+                                                            setProcessing(true);
+                                                            const acceptInvite = CloudFunctions.httpsCallable('fireactjsSaas-acceptInvite');
+                                                            acceptInvite({inviteId: invite.id}).then(() => {
+                                                                setProcessing(false);
+                                                                setAcceptedInviteCount(prevState => (prevState+1));
+                                                            }).catch(error => {
+                                                                // something went wrong
+                                                                setProcessing(false);                                                                
+                                                            })
+                                                        }}>Accept</Button>
                                                         <Button color="warning" disabled={processing} size="small" onClick={() => {
                                                             setProcessing(true);
                                                             const inviteRef = firebaseApp.firestore().doc('invites/'+invite.id);

@@ -319,6 +319,32 @@ module.exports = function(config){
             }).catch(err => {
                 throw new functions.https.HttpsError('internal', err.message);
             });
+        }),
+
+        acceptInvite: functions.https.onCall((data, context) => {
+            let subscriptionId = null;
+            let permissions = [];
+            return getDoc("invites/"+data.inviteId).then(inviteRef => {
+                if(inviteRef.data().email === context.auth.token.email){
+                    if(context.auth.token.email_verified){
+                        subscriptionId = inviteRef.data().subscriptionId;
+                        permissions = inviteRef.data().permissions;
+                        return admin.firestore().doc("invites/"+data.inviteId).delete(); 
+                    }else{
+                        throw new Error("Email is not verified.");
+                    }
+                }else{
+                    throw new Error("Permission denied.");
+                }
+            }).then(() => {
+                return addUserToSubscription(subscriptionId, context.auth.uid, permissions);
+            }).then(() => {
+                return {
+                    result: 'success'
+                }
+            }).catch(err => {
+                throw new functions.https.HttpsError('internal', err.message);
+            });
         })
     }
 }
