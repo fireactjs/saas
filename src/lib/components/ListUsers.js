@@ -31,7 +31,10 @@ export const ListUsers = ({loader}) => {
     const [selectedUser, setSelectedUser] = useState(null);
     const [addUserActive, setAddUserActive] = useState(false);
 
+    const [ processing, setProcessing ] = useState(false);
+
     const reovkeInvite = useCallback(({inviteId, subscriptionId}) => {
+        setProcessing(true);
         const revokeInvite = CloudFunctions.httpsCallable('fireactjsSaas-revokeInvite');
         revokeInvite({
             subscriptionId: subscriptionId,
@@ -40,6 +43,7 @@ export const ListUsers = ({loader}) => {
             setUsers(prevState => prevState.filter(row => {
                 return ((row.id !== inviteId && row.type === 'invite') || row.type === 'user')
             }));
+            setProcessing(false);
         });
     }, [CloudFunctions]);
 
@@ -48,44 +52,6 @@ export const ListUsers = ({loader}) => {
         const getSubscriptionUsers = CloudFunctions.httpsCallable('fireactjsSaas-getSubscriptionUsers');
         getSubscriptionUsers({subscriptionId: subscription.id}).then(result => {
             setTotal(result.data.total);
-            result.data.users.forEach(user => {
-                if(user.type === 'user'){
-                    user.nameCol = <div style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        flexWrap: 'wrap',
-                    }}><Avatar alt={user.displayName} src={user.photoURL} /><strong style={{marginLeft: '15px'}}>{user.displayName}</strong></div>
-                    user.permissionCol = user.permissions.join(", ");
-                    if(subscription.ownerId === user.id){
-                        user.permissionCol = 'owner';
-                    }
-                    user.emailCol = user.email;
-                    if(subscription.ownerId !== user.id){
-                        user.actionCol = <Button size="small" variant="outlined" onClick={() => setSelectedUser({
-                            id: user.id,
-                            email: user.email,
-                            displayName: user.displayName,
-                            permissions: user.permissions
-                        })}>Update</Button>
-                    }
-                }
-                if(user.type === 'invite'){
-                    user.nameCol = <div style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        flexWrap: 'wrap',
-                    }}><Avatar alt={user.displayName} src={user.photoURL} /><strong style={{marginLeft: '15px'}}>{user.displayName}</strong></div>
-                    user.permissionCol = user.permissions.join(", ");
-                    user.emailCol = user.email;
-                    user.actionCol = <Button size="small" variant="outlined" onClick={(e) => {
-                        reovkeInvite({
-                            inviteId: user.id,
-                            subscriptionId: subscription.id
-                        });
-                    }}>Revoke Invite</Button>
-                }
-                
-            })
             result.data.users.sort((a,b) => a.displayName > b.displayName);
             setUsers(result.data.users);
             setLoaded(true);
@@ -93,16 +59,52 @@ export const ListUsers = ({loader}) => {
             setError(error.message);
             setLoaded(true);
         });
-    }, [subscription.id, CloudFunctions, pathnames.UpdateUser, subscription.ownerId, reovkeInvite]);
+    }, [subscription.id, CloudFunctions, pathnames.UpdateUser]);
 
     useEffect(() => {
         const startIndex = page * pageSize;
         let records = [];
         for(let i=startIndex; i<users.length; i++){
+            const user = users[i];
             if(i>=startIndex+pageSize){
                 break;
             }
-            records.push(users[i]);
+            if(user.type === 'user'){
+                user.nameCol = <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    flexWrap: 'wrap',
+                }}><Avatar alt={user.displayName} src={user.photoURL} /><strong style={{marginLeft: '15px'}}>{user.displayName}</strong></div>
+                user.permissionCol = user.permissions.join(", ");
+                if(subscription.ownerId === user.id){
+                    user.permissionCol = 'owner';
+                }
+                user.emailCol = user.email;
+                if(subscription.ownerId !== user.id){
+                    user.actionCol = <Button size="small" variant="outlined" disabled={processing} onClick={() => setSelectedUser({
+                        id: user.id,
+                        email: user.email,
+                        displayName: user.displayName,
+                        permissions: user.permissions
+                    })}>Update</Button>
+                }
+            }
+            if(user.type === 'invite'){
+                user.nameCol = <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    flexWrap: 'wrap',
+                }}><Avatar alt={user.displayName} src={user.photoURL} /><strong style={{marginLeft: '15px'}}>{user.displayName}</strong></div>
+                user.permissionCol = user.permissions.join(", ");
+                user.emailCol = user.email;
+                user.actionCol = <Button size="small" variant="outlined" disabled={processing} onClick={(e) => {
+                    reovkeInvite({
+                        inviteId: user.id,
+                        subscriptionId: subscription.id
+                    });
+                }}>Revoke Invite</Button>
+            }
+            records.push(user);
         }
         if(records.length > 0){
             setRows(records);
@@ -110,7 +112,7 @@ export const ListUsers = ({loader}) => {
         if(addUserActive === false && selectedUser === null){
             window.scrollTo(0, 0);
         }
-    },[page, pageSize, users, addUserActive, selectedUser]);
+    },[page, pageSize, users, addUserActive, selectedUser, reovkeInvite, subscription.ownerId, subscription.id, processing]);
 
 
     return (
@@ -122,7 +124,7 @@ export const ListUsers = ({loader}) => {
                 ):(
                     <>
                     {addUserActive?(
-                        <AddUser setAddUserActive={setAddUserActive} setUsers={setUsers} reovkeInvite={reovkeInvite} />
+                        <AddUser setAddUserActive={setAddUserActive} setUsers={setUsers} />
                     ):(
                         <Container maxWidth="lx">
                             {error !== null?(

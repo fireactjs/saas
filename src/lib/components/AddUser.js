@@ -1,5 +1,5 @@
 import { AuthContext, FireactContext, SetPageTitle } from "@fireactjs/core";
-import { Alert, Box, Button, Checkbox, Container, FormControl, Avatar, FormControlLabel, FormLabel, Grid, Paper, TextField, Typography } from "@mui/material";
+import { Alert, Box, Button, Checkbox, Container, FormControl, FormControlLabel, FormLabel, Grid, Paper, TextField, Typography } from "@mui/material";
 import React, { useContext, useState } from "react";
 import { SubscriptionContext } from "./SubscriptionContext";
 import "firebase/compat/functions";
@@ -103,19 +103,6 @@ export const AddUser = ({setAddUserActive, setUsers, reovkeInvite}) => {
                                                 id: res.data.inviteId,
                                                 permissions: userPermissions,
                                                 photoURL: null,
-                                                nameCol: <div style={{
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    flexWrap: 'wrap',
-                                                }}><Avatar alt={displayName} src={null} /><strong style={{marginLeft: '15px'}}>{displayName}</strong></div>,
-                                                permissionCol: userPermissions.join(", "),
-                                                emailCol: email,
-                                                actionCol: <Button size="small" variant="outlined" onClick={(e) => {
-                                                    reovkeInvite({
-                                                        inviteId: res.data.inviteId,
-                                                        subscriptionId: subscription.id
-                                                    });
-                                                }}>Revoke Invite</Button>,
                                                 type: "invite"
                                             }
                                         )

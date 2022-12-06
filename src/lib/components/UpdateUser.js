@@ -119,14 +119,7 @@ export const UpdateUser = ({user, setSelectedUser, setUsers}) => {
                                         if(row.id === user.id){
                                             return {
                                                 ...row, 
-                                                permissions: userPermissions, 
-                                                permissionCol: userPermissions.join(", "),
-                                                actionCol: <Button size="small" variant="outlined" onClick={() => setSelectedUser({
-                                                        id: user.id,
-                                                        email: user.email,
-                                                        displayName: user.displayName,
-                                                        permissions: userPermissions
-                                                })}>Update</Button>
+                                                permissions: userPermissions
                                             }
                                         };
                                         return row;
