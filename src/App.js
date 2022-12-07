@@ -1,12 +1,12 @@
 import './App.css';
 import firebaseConfig from "./firebaseConfig.json";
-import { pathnames, AppTemplate, AuthProvider, AuthRoutes, MainMenu, PublicTemplate, ResetPassword, SignIn, SignUp, UserMenu, UserProfile, UserUpdateEmail, UserUpdateName, UserUpdatePassword, UserDelete, FireactProvider } from '@fireactjs/core';
+import { pathnames, AppTemplate, AuthProvider, AuthRoutes, MainMenu, PublicTemplate, ResetPassword, SignIn, SignUp, UserMenu, UserProfile, UserUpdateEmail, UserUpdateName, UserUpdatePassword, UserDelete, FireactProvider, ActionPages } from '@fireactjs/core';
 import { BrowserRouter, Routes } from "react-router-dom";
 import { Route } from "react-router-dom";
 import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
 import { CircularProgress, Box } from '@mui/material';
 import authMethods from "./authMethods.json";
-import { CreateSubscription, ListSubscriptions, pathnames as subPathnames, PermissionRouter, Settings, SubscriptionMenu, ListUsers, SubscriptionProvider, AddUser } from './lib/components';
+import { CreateSubscription, ListSubscriptions, pathnames as subPathnames, PermissionRouter, Settings, SubscriptionMenu, ListUsers, SubscriptionProvider } from './lib/components';
 import SaaSConfig from './config.json';
 
 const Brand = "FIREACT";
@@ -100,6 +100,11 @@ function App() {
 							} />
 							<Route path={pathnames.ResetPassword} element={
 								<ResetPassword
+									logo={<Logo size="large" />}
+								/>
+							} />
+							<Route path={pathnames.ActionPages} element={
+								<ActionPages
 									logo={<Logo size="large" />}
 								/>
 							} />

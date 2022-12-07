@@ -5,7 +5,7 @@
   "dependencies": {
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
-    "@fireactjs/core": "^0.1.5",
+    "@fireactjs/core": "^1.0.1",
     "@mui/material": "^5.10.14",
     "@stripe/react-stripe-js": "^1.15.0",
     "@stripe/stripe-js": "^1.44.1",
