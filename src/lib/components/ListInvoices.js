@@ -2,9 +2,10 @@ import React, {useContext, useEffect, useState} from "react";
 import "firebase/compat/firestore";
 import { AuthContext } from "@fireactjs/core";
 import { SubscriptionContext } from "./SubscriptionContext";
-import { Alert, Button, Grid, Paper, Box, Container, Typography } from "@mui/material";
+import { Alert, Button, Grid, Paper, Box, Container, Typography, Stack } from "@mui/material";
 import currencies from "./currencies.json";
 import { PaginationTable } from "./PaginationTable";
+import { getAuth } from "firebase/auth";
 
 export const ListInvoices = ({loader}) => {
 
@@ -18,6 +19,8 @@ export const ListInvoices = ({loader}) => {
     const [page, setPage] = useState(0);
     const [pageSize, setPageSize] = useState(10);
     const [rows, setRows] = useState([]);
+
+    const auth = getAuth();
 
     useEffect(() => {
         setError(null);
@@ -82,7 +85,11 @@ export const ListInvoices = ({loader}) => {
                                         <Typography component="h1" variant="h4">Invoice List</Typography>
                                     </Grid>
                                     <Grid item textAlign="right">
-                                        
+                                        {subscription.ownerId === auth.currentUser.uid && <Stack direction="row-reverse" spacing={1} mt={2}>
+                                            <Button color="error" variant="outlined" size="small">Cancel Subscription</Button>
+                                            <Button color="info" variant="outlined" size="small">Chane Plan</Button>
+                                            <Button color="info" variant="outlined" size="small">Update Payment Method</Button>
+                                        </Stack>}
                                     </Grid>
                                 </Grid>
                             </Box>
