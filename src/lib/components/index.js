@@ -1,4 +1,5 @@
 import { CreateSubscription } from "./CreateSubscription";
+import { ListInvoices } from "./ListInvoices";
 import { ListSubscriptions } from "./ListSubscriptions";
 import pathnames from './pathnames.json';
 import { SubscriptionContext, SubscriptionProvider } from "./SubscriptionContext";
@@ -14,6 +15,7 @@ export {
     AddUser,
     checkPermission,
     CreateSubscription,
+    ListInvoices,
     ListSubscriptions,
     pathnames,
     PermissionRouter,

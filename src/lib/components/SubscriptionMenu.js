@@ -55,7 +55,7 @@ export const SubscriptionMenu = ({customItems}) => {
                         </ListItemButton>
                     </NavLink>
                     <Divider key="billing-divider"/>
-                    <NavLink to={pathnames.InvoiceList.replace(":subscriptionId", subscription.id)} style={{textDecoration:'none'}} key="billing">
+                    <NavLink to={pathnames.ListInvoices.replace(":subscriptionId", subscription.id)} style={{textDecoration:'none'}} key="billing">
                         <ListItemButton>
                             <ListItemIcon><MonetizationOnIcon /></ListItemIcon>
                             <ListItemText primary={<Typography color="textPrimary">Billing</Typography>} />

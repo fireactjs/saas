@@ -5,6 +5,6 @@
     "Settings": "/sub/:subscriptionId/settings",
     "ListUsers": "/sub/:subscriptionId/users",
     "ChangePlan": "/sub/:subscriptionId/billing/plan",
-    "InvoiceList": "/sub/:subscriptionId/billing",
+    "ListInvoices": "/sub/:subscriptionId/billing",
     "ChangePaymentMethod": "/sub/:subscriptionId/billing/payment-method"
 }
