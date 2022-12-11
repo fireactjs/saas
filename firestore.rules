@@ -12,6 +12,9 @@ service cloud.firestore {
       allow update: if request.auth.uid != null && request.auth.uid in resource.data.permissions.admin && (!request.resource.data.diff(resource.data).affectedKeys()
         .hasAny(['currency', 'ownerId', 'paymentCycle', 'plan', 'price', 'stripePriceId', 'stripeSubscriptionId', 'subscriptionCreated', 'subscriptionCurrentPeriodEnd', 'subscriptionCurrentPeriodStart', 'subscriptionEnded', 'subscriptionStatus']));
     }
+    match /subscriptions/{subscriptionId}/invoices/{invoiceId} {
+      allow read: if request.auth.uid != null && request.auth.uid in get(/databases/$(database)/documents/subscriptions/$(subscriptionId)).data.permissions.admin;
+    }
     match /invites/{inviteId} {
       allow read, delete: if request.auth.uid != null && request.auth.token.email == resource.data.email;
 		}

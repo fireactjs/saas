@@ -117,6 +117,7 @@ export const ListUsers = ({loader}) => {
 
     return (
         <>
+            <SetPageTitle title={"User List"+(subscriptionName!==""?(" - "+subscriptionName):"")} />
             {loaded?(
                 <>
                 {selectedUser !== null?(
@@ -130,41 +131,38 @@ export const ListUsers = ({loader}) => {
                             {error !== null?(
                                 <Alert severity="error">{error}</Alert>
                             ):(
-                                <>
-                                    <SetPageTitle title={"User List"+(subscriptionName!==""?(" - "+subscriptionName):"")} />
-                                    <Paper>
-                                        <Box p={2}>
-                                            <Grid container direction="row" justifyContent="space-between" alignItems="center">
-                                                <Grid item>
-                                                    <Typography component="h1" variant="h4">User List</Typography>
-                                                </Grid>
-                                                <Grid item textAlign="right">
-                                                    <Button variant="contained" onClick={() => setAddUserActive(true)}>Invite User</Button>
-                                                </Grid>
+                                <Paper>
+                                    <Box p={2}>
+                                        <Grid container direction="row" justifyContent="space-between" alignItems="center">
+                                            <Grid item>
+                                                <Typography component="h1" variant="h4">User List</Typography>
                                             </Grid>
-                                        </Box>
-                                        <Box p={2}>
-                                            <PaginationTable columns={[
-                                                {name: "Name", field: "nameCol", style: {width: '30%'}},
-                                                {name: "Email", field: "emailCol", style: {width: '35%'}},
-                                                {name: "Permissions", field: "permissionCol", style: {width: '20%'}},
-                                                {name: "Action", field: "actionCol", style: {width: '15%'}}
-                                            ]}
-                                            rows={rows}
-                                            totalRows={total}
-                                            pageSize={pageSize}
-                                            page={page}
-                                            handlePageChane={(e, p) => {
-                                                setPage(p);
-                                            }}
-                                            handlePageSizeChange={(e) => {
-                                                setPage(0);
-                                                setPageSize(e.target.value);
-                                            }}
-                                            />
-                                        </Box>
-                                    </Paper>
-                                </>
+                                            <Grid item textAlign="right">
+                                                <Button variant="contained" onClick={() => setAddUserActive(true)}>Invite User</Button>
+                                            </Grid>
+                                        </Grid>
+                                    </Box>
+                                    <Box p={2}>
+                                        <PaginationTable columns={[
+                                            {name: "Name", field: "nameCol", style: {width: '30%'}},
+                                            {name: "Email", field: "emailCol", style: {width: '35%'}},
+                                            {name: "Permissions", field: "permissionCol", style: {width: '20%'}},
+                                            {name: "Action", field: "actionCol", style: {width: '15%'}}
+                                        ]}
+                                        rows={rows}
+                                        totalRows={total}
+                                        pageSize={pageSize}
+                                        page={page}
+                                        handlePageChane={(e, p) => {
+                                            setPage(p);
+                                        }}
+                                        handlePageSizeChange={(e) => {
+                                            setPage(0);
+                                            setPageSize(e.target.value);
+                                        }}
+                                        />
+                                    </Box>
+                                </Paper>
                             )}
                         </Container>
                     )}

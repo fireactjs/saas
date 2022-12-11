@@ -2,8 +2,9 @@ import React, {useContext, useEffect, useState} from "react";
 import "firebase/compat/firestore";
 import { AuthContext } from "@fireactjs/core";
 import { SubscriptionContext } from "./SubscriptionContext";
-import { Button } from "@mui/material";
+import { Alert, Button, Grid, Paper, Box, Container, Typography } from "@mui/material";
 import currencies from "./currencies.json";
+import { PaginationTable } from "./PaginationTable";
 
 export const ListInvoices = ({loader}) => {
 
@@ -11,8 +12,15 @@ export const ListInvoices = ({loader}) => {
     const { subscription } = useContext(SubscriptionContext)
     const { firebaseApp } = useContext(AuthContext);
     const [ invoices, setInvoices ] = useState([]);
+    const [ error, setError ] = useState(null);
+
+    const [total, setTotal] = useState(0);
+    const [page, setPage] = useState(0);
+    const [pageSize, setPageSize] = useState(10);
+    const [rows, setRows] = useState([]);
 
     useEffect(() => {
+        setError(null);
         setLoaded(false);
         const invoicesRef = firebaseApp.firestore().collection('subscriptions/'+subscription.id+"/invoices");
         invoicesRef.orderBy('created', 'desc').get().then(invoicesSnapshot => {
@@ -35,18 +43,73 @@ export const ListInvoices = ({loader}) => {
                     ):(<></>)
                 })
             })
+            setTotal(records.length);
             setInvoices(records);
             setLoaded(true);
         }).catch(err => {
+            setError(err.message);
             setLoaded(true);
         });
     }, [firebaseApp, subscription.id]);
 
+    useEffect(() => {
+        const startIndex = page * pageSize;
+        const rows = [];
+        for(let i=startIndex; i<invoices.length; i++){
+            const invoice = invoices[i];
+            if(i>=startIndex+pageSize){
+                break;
+            }
+            rows.push(invoice);
+        }
+        if(rows.length > 0){
+            setRows(rows);
+        }
+        window.scrollTo(0, 0);
+    }, [page, pageSize, invoices]);
+
     return (
         <>
             {loaded?(
-                <>
-                </>
+                <Container maxWidth="lx">
+                    {error !== null?(
+                        <Alert severity="error">{error}</Alert>
+                    ):(
+                        <Paper>
+                            <Box p={2}>
+                                <Grid container direction="row" justifyContent="space-between" alignItems="center">
+                                    <Grid item>
+                                        <Typography component="h1" variant="h4">Invoice List</Typography>
+                                    </Grid>
+                                    <Grid item textAlign="right">
+                                        
+                                    </Grid>
+                                </Grid>
+                            </Box>
+                            <Box p={2}>
+                                <PaginationTable columns={[
+                                    {name: "Invoice ID", field: "id", style: {width: '30%'}},
+                                    {name: "Amount", field: "amountCol", style: {width: '15%'}},
+                                    {name: "Status", field: "statusCol", style: {width: '10%'}},
+                                    {name: "Invoice Date", field: "created", style: {width: '30%'}},
+                                    {name: "Invoice URL", field: "urlCol", style: {width: '15%'}}
+                                ]}
+                                rows={rows}
+                                totalRows={total}
+                                pageSize={pageSize}
+                                page={page}
+                                handlePageChane={(e, p) => {
+                                    setPage(p);
+                                }}
+                                handlePageSizeChange={(e) => {
+                                    setPage(0);
+                                    setPageSize(e.target.value);
+                                }}
+                                />
+                            </Box>
+                        </Paper>
+                    )}
+                </Container>
             ):(
                 <>{loader}</>
             )}
