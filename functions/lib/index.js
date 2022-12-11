@@ -141,7 +141,63 @@ module.exports = function(config){
         }).catch(error => {
             return null;
         })
+    }
 
+    const updateInvoice = (invoiceObject) => {
+        return admin.firestore().collection('subscriptions').where('stripeSubscriptionId', '==', invoiceObject.subscription).get().then(snapshot => {
+            if(snapshot.empty){
+                throw Error("No subscription is associated with the Stripe subscription ID: "+invoiceObject.subscription);
+            }else{
+                let actions = [];
+                snapshot.forEach(subscription => {
+                    actions.push(
+                        subscription.ref.collection('invoices').doc(invoiceObject.id).set({
+                            'id': invoiceObject.id,
+                            'total': invoiceObject.total,
+                            'subTotal': invoiceObject.subtotal,
+                            'amountDue': invoiceObject.amount_due,
+                            'amountPaid': invoiceObject.amount_paid,
+                            'tax': invoiceObject.tax,
+                            'currency': invoiceObject.currency,
+                            'created': invoiceObject.created,
+                            'status': invoiceObject.status,
+                            'hostedInvoiceUrl': invoiceObject.hosted_invoice_url
+                        }, {merge: true})
+                    );
+                });
+                return Promise.all(actions);
+            }
+        }).then(writeResult => {
+            return true;
+        }).catch(err => {
+            throw err;
+        })
+    }
+
+    const updateSubscription = (subscriptionObject) => {
+        return admin.firestore().collection('subscriptions').where('stripeSubscriptionId', '==', subscriptionObject.id).get().then(snapshot => {
+            if(snapshot.empty){
+                throw Error("No subscription is associated with the Stripe subscription ID: "+subscriptionObject.id);
+            }else{
+                let actions = [];
+                snapshot.forEach(subscription => {
+                    actions.push(
+                        subscription.ref.set({
+                            subscriptionStatus: subscriptionObject.status,
+                            subscriptionCreated: subscriptionObject.created,
+                            subscriptionCurrentPeriodStart: subscriptionObject.current_period_start,
+                            subscriptionCurrentPeriodEnd: subscriptionObject.current_period_end,
+                            subscriptionEnded: subscriptionObject.ended || 0
+                        }, {merge: true})
+                    );
+                });
+                return Promise.all(actions);
+            }
+        }).then(writeResult => {
+            return true;
+        }).catch(err => {
+            throw err;
+        })
     }
 
 
@@ -345,6 +401,30 @@ module.exports = function(config){
             }).catch(err => {
                 throw new functions.https.HttpsError('internal', err.message);
             });
+        }),
+
+        stripeWebHook: functions.https.onRequest((req, res) => {
+            const stripe = require('stripe')(config.stripe.secret_api_key);
+            const endpointSecret = config.stripe.end_point_secret;
+            const sig = req.headers['stripe-signature'];
+            let event;
+            try{
+                let result = false;
+                event = stripe.webhooks.constructEvent(req.rawBody, sig, endpointSecret);
+                if(event.type.indexOf('invoice.') === 0){
+                    updateInvoice(event.data.object).then(() => res.json({received: true})
+                    ).catch(err => res.status(400).send(`Webhook Error: ${err.message}`));
+                }
+                if(event.type.indexOf('customer.subscription.') === 0){
+                    updateSubscription(event.data.object).then(() => res.json({received: true})
+                    ).catch(err => res.status(400).send(`Webhook Error: ${err.message}`));
+                }
+                if(event.type.indexOf('invoice.') !== 0 && event.type.indexOf('customer.subscription.') !== 0){
+                    res.status(400).send(`Webhook Error: "No handler for the event type: ${event.type}"`);
+                }
+            }catch (err) {
+                res.status(400).send(`Webhook Error: ${err.message}`);
+            }
         })
     }
 }
