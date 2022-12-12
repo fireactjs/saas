@@ -1,11 +1,12 @@
 import React, {useContext, useEffect, useState} from "react";
 import "firebase/compat/firestore";
-import { AuthContext } from "@fireactjs/core";
+import { AuthContext, FireactContext } from "@fireactjs/core";
 import { SubscriptionContext } from "./SubscriptionContext";
 import { Alert, Button, Grid, Paper, Box, Container, Typography, Stack } from "@mui/material";
 import currencies from "./currencies.json";
 import { PaginationTable } from "./PaginationTable";
 import { getAuth } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 
 export const ListInvoices = ({loader}) => {
 
@@ -20,7 +21,10 @@ export const ListInvoices = ({loader}) => {
     const [pageSize, setPageSize] = useState(10);
     const [rows, setRows] = useState([]);
 
+    const { config } = useContext(FireactContext);
+
     const auth = getAuth();
+    const navigate = useNavigate();
 
     useEffect(() => {
         setError(null);
@@ -88,7 +92,7 @@ export const ListInvoices = ({loader}) => {
                                         {subscription.ownerId === auth.currentUser.uid && <Stack direction="row-reverse" spacing={1} mt={2}>
                                             <Button color="error" variant="outlined" size="small">Cancel Subscription</Button>
                                             <Button color="info" variant="outlined" size="small">Chane Plan</Button>
-                                            <Button color="info" variant="outlined" size="small">Update Payment Method</Button>
+                                            <Button color="info" variant="outlined" size="small" onClick={() => navigate(config.pathnames.ManagePaymentMethods.replace(":subscriptionId", subscription.id))}>Update Payment Method</Button>
                                         </Stack>}
                                     </Grid>
                                 </Grid>

@@ -6,5 +6,5 @@
     "ListUsers": "/sub/:subscriptionId/users",
     "ChangePlan": "/sub/:subscriptionId/billing/plan",
     "ListInvoices": "/sub/:subscriptionId/billing",
-    "ChangePaymentMethod": "/sub/:subscriptionId/billing/payment-method"
+    "ManagePaymentMethods": "/sub/:subscriptionId/billing/payment-method"
 }

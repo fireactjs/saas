@@ -6,7 +6,7 @@ import { Route } from "react-router-dom";
 import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
 import { CircularProgress, Box } from '@mui/material';
 import authMethods from "./authMethods.json";
-import { CreateSubscription, ListSubscriptions, pathnames as subPathnames, PermissionRouter, Settings, SubscriptionMenu, ListUsers, SubscriptionProvider, ListInvoices } from './lib/components';
+import { CreateSubscription, ListSubscriptions, pathnames as subPathnames, PermissionRouter, Settings, SubscriptionMenu, ListUsers, SubscriptionProvider, ListInvoices, ManagePaymentMethods } from './lib/components';
 import SaaSConfig from './config.json';
 
 const Brand = "FIREACT";
@@ -84,6 +84,7 @@ function App() {
 										<Route exact path={pathnames.Settings} element={<Settings loader={<Loader size="large" />} />} />
 										<Route exact path={pathnames.ListUsers} element={<ListUsers loader={<Loader size="large" />} />} />
 										<Route exact path={pathnames.ListInvoices} element={<ListInvoices loader={<Loader size="large" />} />} />
+										<Route exact path={pathnames.ManagePaymentMethods} element={<ManagePaymentMethods loader={<Loader size="large" />} />} />
 									</Route>
 								</Route>
 							</Route>
