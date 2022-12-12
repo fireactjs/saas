@@ -184,6 +184,7 @@ module.exports = function(config){
                     actions.push(
                         subscription.ref.set({
                             subscriptionStatus: subscriptionObject.status,
+                            paymentMethod: subscriptionObject.default_payment_method,
                             subscriptionCreated: subscriptionObject.created,
                             subscriptionCurrentPeriodStart: subscriptionObject.current_period_start,
                             subscriptionCurrentPeriodEnd: subscriptionObject.current_period_end,
@@ -248,6 +249,7 @@ module.exports = function(config){
                     subscriptionEnded: subscription.ended || 0,
                     ownerId: context.auth.uid,
                     permissions: permissions,
+                    paymentMethod: subscription.default_payment_method,
                     creationTime: (new Date())
                     //billingCountry: data.billing.country,
                     //billingState: data.billing.state                    
