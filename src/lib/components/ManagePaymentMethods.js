@@ -15,6 +15,7 @@ export const ManagePaymentMethods = ({loader}) => {
     const [ paymentMethods, setPaymentMethods ] = useState([]);
     const [ error, setError ] = useState(null);
     const [ paymentFormDisabled, setPaymentFormDisabled ] = useState(false);
+    const [ paymentMethodFormShowed, setPaymentMethodFormShowed ] = useState(false);
 
 
     useEffect(() => {
@@ -36,6 +37,9 @@ export const ManagePaymentMethods = ({loader}) => {
                     }
                 });
             });
+            if(paymentMethods.length === 0){
+                setPaymentMethodFormShowed(true);
+            }
             setPaymentMethods(paymentMethods);
             setLoeaded(true);
         }).catch(err => {
@@ -56,7 +60,12 @@ export const ManagePaymentMethods = ({loader}) => {
                                 <Typography component="h1" variant="h4">Payment Methods</Typography>
                             </Grid>
                             <Grid item textAlign="right">
-                                <Button variant="contained" onClick={() => {}}>Add Payment Method</Button>
+                                {!setPaymentMethodFormShowed && 
+                                    <Button variant="contained" onClick={() => setPaymentMethodFormShowed(true)}>Add Payment Method</Button>
+                                }
+                                {setPaymentMethodFormShowed && paymentMethods.length > 0 &&
+                                    <Button variant="contained" onClick={() => setPaymentMethodFormShowed(false)}>Back to Payment Methods</Button>
+                                }
                             </Grid>
                         </Grid>
                     </Box>
@@ -65,7 +74,7 @@ export const ManagePaymentMethods = ({loader}) => {
                             <Alert severity="error">{error}</Alert>
                         ):(
                             <>
-                                {paymentMethods.length>0?(<></>):(
+                                {setPaymentMethodFormShowed?(
                                     <Grid item >
                                         <Box p={5}>
                                             <Stack spacing={3}>
@@ -82,10 +91,13 @@ export const ManagePaymentMethods = ({loader}) => {
                                             </Stack>
                                             <PaymentMethodForm setPaymentMethod={(pm) => {
                                                 setPaymentFormDisabled(true);
+                                                // attach the payment method to a subscription via cloud function
                                                 console.log(pm);
                                             }} buttonText="Add Payment Method" disabled={paymentFormDisabled} />
                                         </Box>
                                     </Grid>
+                                ):(
+                                    <></>
                                 )}
                             </>
                         )}
