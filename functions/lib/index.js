@@ -405,6 +405,40 @@ module.exports = function(config){
             });
         }),
 
+        updateSubscriptionPaymentMethod: functions.https.onCall((data, context) => {
+            const stripe = require('stripe')(config.stripe.secret_api_key);
+            const paymentMethodId = data.paymentMethodId || null;
+            let stripeSubscriptionId = "";
+            return Promise.all([getDoc("subscriptions/"+data.subscriptionId), getDoc("users/"+context.auth.uid)]).then(([subRef, userRef]) => {
+                // check if the user is an admin level user
+                subDoc = subRef;
+                if(subRef.data().permissions[getAdminPermission()].indexOf(context.auth.uid) !== -1){
+                    stripeSubscriptionId = subDoc.data().stripeSubscriptionId;
+                    return getStripeCustomerId(
+                        context.auth.uid,
+                        context.auth.token.name,
+                        context.auth.token.email,
+                        paymentMethodId
+                    );
+                }else{
+                    throw new Error("Permission denied.");
+                }
+            }).then(() => {
+                return stripe.subscriptions.update(
+                    subDoc.data().stripeSubscriptionId,
+                    {
+                        default_payment_method: data.paymentMethodId
+                    }
+                )
+            }).then(() => {
+                return {
+                    result: 'success'
+                }
+            }).catch(err => {
+                throw new functions.https.HttpsError('internal', err.message);
+            });
+        }),
+
         stripeWebHook: functions.https.onRequest((req, res) => {
             const stripe = require('stripe')(config.stripe.secret_api_key);
             const endpointSecret = config.stripe.end_point_secret;

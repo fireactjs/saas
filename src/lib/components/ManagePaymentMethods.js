@@ -2,12 +2,13 @@ import { AuthContext, SetPageTitle } from "@fireactjs/core";
 import React, { useContext, useEffect, useState } from "react";
 import { SubscriptionContext } from "./SubscriptionContext";
 import { getAuth } from "firebase/auth";
-import { Alert, Box, Container, Grid, Paper, Typography, Button, Stack, Card, CardHeader, CardActions } from "@mui/material";
+import { Alert, Box, Container, Grid, Paper, Typography, Button, Stack, Card, CardHeader, CardActions, Badge, Chip } from "@mui/material";
 import { PaymentMethodForm } from "./PaymentMethodForm";
+import "firebase/compat/functions";
 
 
 export const ManagePaymentMethods = ({loader}) => {
-    const { subscription } = useContext(SubscriptionContext);
+    const { subscription, setSubscription } = useContext(SubscriptionContext);
     const subscriptionName = subscription.name;
     const [loaded, setLoeaded] = useState(false);
     const { firebaseApp } = useContext(AuthContext);
@@ -16,6 +17,8 @@ export const ManagePaymentMethods = ({loader}) => {
     const [ error, setError ] = useState(null);
     const [ paymentFormDisabled, setPaymentFormDisabled ] = useState(false);
     const [ paymentMethodFormShowed, setPaymentMethodFormShowed ] = useState(false);
+    const CloudFunctions = firebaseApp.functions();
+    const [ processing, setProcessing ] = useState(false);
 
 
     useEffect(() => {
@@ -36,7 +39,6 @@ export const ManagePaymentMethods = ({loader}) => {
                     cardLast4: paymentMethod.data().cardLast4
                 });
             });
-            console.log(paymentMethods);
             if(paymentMethods.length === 0){
                 setPaymentMethodFormShowed(true);
             }
@@ -90,6 +92,7 @@ export const ManagePaymentMethods = ({loader}) => {
                                                 </Typography>
                                             </Stack>
                                             <PaymentMethodForm setPaymentMethod={(pm) => {
+                                                setError(null);
                                                 setPaymentFormDisabled(true);
                                                 // write payment method to user
                                                 const pmRef = firebaseApp.firestore().doc('users/'+auth.currentUser.uid+'/paymentMethods/'+pm.id);
@@ -101,7 +104,31 @@ export const ManagePaymentMethods = ({loader}) => {
                                                     cardLast4: pm.card.last4
                                                 },{merge:true}).then(() => {
                                                     // attach the payment method to a subscription via cloud function
-
+                                                    const updateSubscriptionPaymentMethod = CloudFunctions.httpsCallable('fireactjsSaas-updateSubscriptionPaymentMethod');
+                                                    return updateSubscriptionPaymentMethod({
+                                                        subscriptionId: subscription.id,
+                                                        paymentMethodId: pm.id
+                                                    })
+                                                }).then(() => {
+                                                    // update subscription default payment
+                                                    setSubscription(prevState => ({
+                                                        ...prevState,
+                                                        paymentMethod: pm.id
+                                                    }));
+                                                    // add payment method to state
+                                                    setPaymentMethods(prevState => {prevState.push({
+                                                        id: pm.id,
+                                                        type: pm.type,
+                                                        cardBrand: pm.card.brand,
+                                                        cardExpMonth: pm.card.exp_month,
+                                                        cardExpYear: pm.card.exp_year,
+                                                        cardLast4: pm.card.last4
+                                                        });
+                                                        return prevState;
+                                                    });
+                                                    setPaymentMethodFormShowed(false);
+                                                }).catch(err =>{
+                                                    setError(err.message);
                                                 })
                                             }} buttonText="Add Payment Method" disabled={paymentFormDisabled} />
                                         </Box>
@@ -111,15 +138,43 @@ export const ManagePaymentMethods = ({loader}) => {
                                         {paymentMethods.map((paymentMethod, i) => 
                                             <Grid item xs={12} md={4} key={i}>
                                             <Card>
-                                                <CardHeader title={paymentMethod.cardBrand} subheader={
+                                                <CardHeader title={
+                                                    <Stack direction="row" spacing={2} alignItems="center">
+                                                        <Typography component="h3" variant="h4">
+                                                            {paymentMethod.cardBrand}
+                                                        </Typography>
+                                                        {subscription.paymentMethod === paymentMethod.id &&
+                                                            <Chip label="active" color="success" size="small" />
+                                                        }
+
+                                                    </Stack>
+                                                } subheader={
                                                     <Grid container>
                                                         <Grid item xs>**** **** **** {paymentMethod.cardLast4}</Grid>
                                                         <Grid item>{paymentMethod.cardExpMonth} / {paymentMethod.cardExpYear}</Grid>
                                                     </Grid>
                                                 } />
                                                 <CardActions>
-                                                    <Button variant="outlined" color="success" disabled={subscription.paymentMethod === paymentMethod.id} onClick={() => {}}>Set Default</Button>
-                                                    <Button variant="outlined" color="error" disabled={subscription.paymentMethod === paymentMethod.id} onClick={() => {}}>Remove</Button>
+                                                    <Button variant="outlined" color="success" disabled={subscription.paymentMethod === paymentMethod.id || processing} onClick={() => {
+                                                        setProcessing(true);
+                                                        setError(null);
+                                                        const updateSubscriptionPaymentMethod = CloudFunctions.httpsCallable('fireactjsSaas-updateSubscriptionPaymentMethod');
+                                                        return updateSubscriptionPaymentMethod({
+                                                            subscriptionId: subscription.id,
+                                                            paymentMethodId: paymentMethod.id
+                                                        }).then(() => {
+                                                            // update subscription default payment
+                                                            setSubscription(prevState => ({
+                                                                ...prevState,
+                                                                paymentMethod: paymentMethod.id
+                                                            }));
+                                                            setProcessing(false);
+                                                        }).catch(err =>{
+                                                            setError(err.message);
+                                                            setProcessing(false);
+                                                        });
+                                                    }}>Set Default</Button>
+                                                    <Button variant="outlined" color="error" disabled={subscription.paymentMethod === paymentMethod.id || processing} onClick={() => {}}>Remove</Button>
                                                 </CardActions>
                                             </Card>
                                         </Grid>
