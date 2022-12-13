@@ -113,7 +113,7 @@ export const ManagePaymentMethods = ({loader}) => {
                                             <Card>
                                                 <CardHeader title={paymentMethod.cardBrand} subheader={
                                                     <Grid container>
-                                                        <Grid item xs>---- ---- ---- {paymentMethod.cardLast4}</Grid>
+                                                        <Grid item xs>**** **** **** {paymentMethod.cardLast4}</Grid>
                                                         <Grid item>{paymentMethod.cardExpMonth} / {paymentMethod.cardExpYear}</Grid>
                                                     </Grid>
                                                 } />
