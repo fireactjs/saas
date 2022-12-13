@@ -2,7 +2,7 @@ import { AuthContext, SetPageTitle } from "@fireactjs/core";
 import React, { useContext, useEffect, useState } from "react";
 import { SubscriptionContext } from "./SubscriptionContext";
 import { getAuth } from "firebase/auth";
-import { Alert, Box, Container, Grid, Paper, Typography, Button, Stack } from "@mui/material";
+import { Alert, Box, Container, Grid, Paper, Typography, Button, Stack, Card, CardHeader, CardActions } from "@mui/material";
 import { PaymentMethodForm } from "./PaymentMethodForm";
 
 
@@ -21,6 +21,7 @@ export const ManagePaymentMethods = ({loader}) => {
     useEffect(() => {
         setLoeaded(false);
         setError(null);
+        setPaymentMethodFormShowed(false);
         // load payment methods of the user
         const paymentMethodsRef = firebaseApp.firestore().collection('users/'+auth.currentUser.uid+'/paymentMethods');
         paymentMethodsRef.get().then(paymentMethodsSnapshot => {
@@ -28,15 +29,14 @@ export const ManagePaymentMethods = ({loader}) => {
             paymentMethodsSnapshot.forEach(paymentMethod => {
                 paymentMethods.push({
                     id: paymentMethod.id,
-                    type: paymentMethod.type,
-                    card: {
-                        brand: paymentMethod.cardBrand,
-                        expMonth: paymentMethod.cardExpMonth,
-                        expYear: paymentMethod.cardExpYear,
-                        last4: paymentMethod.cardLast4
-                    }
+                    type: paymentMethod.data().type,
+                    cardBrand: paymentMethod.data().cardBrand,
+                    cardExpMonth: paymentMethod.data().cardExpMonth,
+                    cardExpYear: paymentMethod.data().cardExpYear,
+                    cardLast4: paymentMethod.data().cardLast4
                 });
             });
+            console.log(paymentMethods);
             if(paymentMethods.length === 0){
                 setPaymentMethodFormShowed(true);
             }
@@ -60,10 +60,10 @@ export const ManagePaymentMethods = ({loader}) => {
                                 <Typography component="h1" variant="h4">Payment Methods</Typography>
                             </Grid>
                             <Grid item textAlign="right">
-                                {!setPaymentMethodFormShowed && 
+                                {!paymentMethodFormShowed && 
                                     <Button variant="contained" onClick={() => setPaymentMethodFormShowed(true)}>Add Payment Method</Button>
                                 }
-                                {setPaymentMethodFormShowed && paymentMethods.length > 0 &&
+                                {paymentMethodFormShowed && paymentMethods.length > 0 &&
                                     <Button variant="contained" onClick={() => setPaymentMethodFormShowed(false)}>Back to Payment Methods</Button>
                                 }
                             </Grid>
@@ -74,7 +74,7 @@ export const ManagePaymentMethods = ({loader}) => {
                             <Alert severity="error">{error}</Alert>
                         ):(
                             <>
-                                {setPaymentMethodFormShowed?(
+                                {paymentMethodFormShowed?(
                                     <Grid item >
                                         <Box p={5}>
                                             <Stack spacing={3}>
@@ -91,13 +91,40 @@ export const ManagePaymentMethods = ({loader}) => {
                                             </Stack>
                                             <PaymentMethodForm setPaymentMethod={(pm) => {
                                                 setPaymentFormDisabled(true);
-                                                // attach the payment method to a subscription via cloud function
-                                                console.log(pm);
+                                                // write payment method to user
+                                                const pmRef = firebaseApp.firestore().doc('users/'+auth.currentUser.uid+'/paymentMethods/'+pm.id);
+                                                pmRef.set({
+                                                    type: pm.type,
+                                                    cardBrand: pm.card.brand,
+                                                    cardExpMonth: pm.card.exp_month,
+                                                    cardExpYear: pm.card.exp_year,
+                                                    cardLast4: pm.card.last4
+                                                },{merge:true}).then(() => {
+                                                    // attach the payment method to a subscription via cloud function
+
+                                                })
                                             }} buttonText="Add Payment Method" disabled={paymentFormDisabled} />
                                         </Box>
                                     </Grid>
                                 ):(
-                                    <></>
+                                    <Grid container spacing={3}>
+                                        {paymentMethods.map((paymentMethod, i) => 
+                                            <Grid item xs={12} md={4} key={i}>
+                                            <Card>
+                                                <CardHeader title={paymentMethod.cardBrand} subheader={
+                                                    <Grid container>
+                                                        <Grid item xs>---- ---- ---- {paymentMethod.cardLast4}</Grid>
+                                                        <Grid item>{paymentMethod.cardExpMonth} / {paymentMethod.cardExpYear}</Grid>
+                                                    </Grid>
+                                                } />
+                                                <CardActions>
+                                                    <Button variant="outlined" color="success" disabled={subscription.paymentMethod === paymentMethod.id} onClick={() => {}}>Set Default</Button>
+                                                    <Button variant="outlined" color="error" disabled={subscription.paymentMethod === paymentMethod.id} onClick={() => {}}>Remove</Button>
+                                                </CardActions>
+                                            </Card>
+                                        </Grid>
+                                        )}
+                                    </Grid>
                                 )}
                             </>
                         )}
