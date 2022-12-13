@@ -2,7 +2,7 @@ import { AuthContext, SetPageTitle } from "@fireactjs/core";
 import React, { useContext, useEffect, useState } from "react";
 import { SubscriptionContext } from "./SubscriptionContext";
 import { getAuth } from "firebase/auth";
-import { Alert, Box, Container, Grid, Paper, Typography, Button, Stack, Card, CardHeader, CardActions, Badge, Chip } from "@mui/material";
+import { Alert, Box, Container, Grid, Paper, Typography, Button, Stack, Card, CardHeader, CardActions, Chip } from "@mui/material";
 import { PaymentMethodForm } from "./PaymentMethodForm";
 import "firebase/compat/functions";
 
@@ -126,8 +126,10 @@ export const ManagePaymentMethods = ({loader}) => {
                                                         });
                                                         return prevState;
                                                     });
+                                                    setPaymentFormDisabled(false);
                                                     setPaymentMethodFormShowed(false);
                                                 }).catch(err =>{
+                                                    setPaymentFormDisabled(false);
                                                     setError(err.message);
                                                 })
                                             }} buttonText="Add Payment Method" disabled={paymentFormDisabled} />
@@ -174,7 +176,22 @@ export const ManagePaymentMethods = ({loader}) => {
                                                             setProcessing(false);
                                                         });
                                                     }}>Set Default</Button>
-                                                    <Button variant="outlined" color="error" disabled={subscription.paymentMethod === paymentMethod.id || processing} onClick={() => {}}>Remove</Button>
+                                                    <Button variant="outlined" color="error" disabled={subscription.paymentMethod === paymentMethod.id || processing} onClick={() => {
+                                                        setProcessing(true);
+                                                        setError(null);
+                                                        const removePaymentMethod = CloudFunctions.httpsCallable('fireactjsSaas-removePaymentMethod');
+                                                        return removePaymentMethod({
+                                                            paymentMethodId: paymentMethod.id
+                                                        }).then(() => {
+                                                            setPaymentMethods(prevState => prevState.filter(row => {
+                                                                return row.id !== paymentMethod.id
+                                                            }));
+                                                            setProcessing(false);
+                                                        }).catch(err =>{
+                                                            setError(err.message);
+                                                            setProcessing(false);
+                                                        });
+                                                    }}>Remove</Button>
                                                 </CardActions>
                                             </Card>
                                         </Grid>

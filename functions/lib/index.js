@@ -409,7 +409,7 @@ module.exports = function(config){
             const stripe = require('stripe')(config.stripe.secret_api_key);
             const paymentMethodId = data.paymentMethodId || null;
             let stripeSubscriptionId = "";
-            return Promise.all([getDoc("subscriptions/"+data.subscriptionId), getDoc("users/"+context.auth.uid)]).then(([subRef, userRef]) => {
+            return getDoc("subscriptions/"+data.subscriptionId).then(subRef => {
                 // check if the user is an admin level user
                 subDoc = subRef;
                 if(subRef.data().permissions[getAdminPermission()].indexOf(context.auth.uid) !== -1){
@@ -434,6 +434,18 @@ module.exports = function(config){
                 return {
                     result: 'success'
                 }
+            }).catch(err => {
+                throw new functions.https.HttpsError('internal', err.message);
+            });
+        }),
+
+        removePaymentMethod: functions.https.onCall((data, context) => {
+            const stripe = require('stripe')(config.stripe.secret_api_key);
+            const paymentMethodId = data.paymentMethodId || null;
+            return getDoc("users/"+context.auth.uid+"/paymentMethods/"+paymentMethodId).then(() => {
+                return stripe.paymentMethods.detach(paymentMethodId);
+            }).then(() => {
+                return admin.firestore().doc("users/"+context.auth.uid+"/paymentMethods/"+paymentMethodId).delete();
             }).catch(err => {
                 throw new functions.https.HttpsError('internal', err.message);
             });
