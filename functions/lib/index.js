@@ -411,9 +411,8 @@ module.exports = function(config){
             let stripeSubscriptionId = "";
             return getDoc("subscriptions/"+data.subscriptionId).then(subRef => {
                 // check if the user is an admin level user
-                subDoc = subRef;
-                if(subRef.data().permissions[getAdminPermission()].indexOf(context.auth.uid) !== -1){
-                    stripeSubscriptionId = subDoc.data().stripeSubscriptionId;
+                if(subRef.data().ownerId === context.auth.uid){
+                    stripeSubscriptionId = subRef.data().stripeSubscriptionId;
                     return getStripeCustomerId(
                         context.auth.uid,
                         context.auth.token.name,
@@ -425,7 +424,7 @@ module.exports = function(config){
                 }
             }).then(() => {
                 return stripe.subscriptions.update(
-                    subDoc.data().stripeSubscriptionId,
+                    stripeSubscriptionId,
                     {
                         default_payment_method: data.paymentMethodId
                     }
@@ -446,6 +445,59 @@ module.exports = function(config){
                 return stripe.paymentMethods.detach(paymentMethodId);
             }).then(() => {
                 return admin.firestore().doc("users/"+context.auth.uid+"/paymentMethods/"+paymentMethodId).delete();
+            }).catch(err => {
+                throw new functions.https.HttpsError('internal', err.message);
+            });
+        }),
+
+        changeSubscriptionPlan: functions.https.onCall((data, context) => {
+            const stripe = require('stripe')(config.stripe.secret_api_key);
+            const paymentMethodId = data.paymentMethodId || null;
+            let selectedPlan = (config.plans.find(obj => obj.priceId === data.priceId) || {});
+            let stripeSubscriptionId = '';
+            return getDoc("subscriptions/"+data.subscriptionId).then(subRef => {
+                // check if the user is an admin level user
+                if(subRef.data().ownerId === context.auth.uid){
+                    stripeSubscriptionId = subRef.data().stripeSubscriptionId;
+                    return getStripeCustomerId(
+                        context.auth.uid,
+                        context.auth.token.name,
+                        context.auth.token.email,
+                        paymentMethodId
+                    );
+                }else{
+                    throw new Error("Permission denied.");
+                }
+            }).then(() => {
+                return stripe.subscriptions.retrieve(stripeSubscriptionId);
+            }).then((sub) => {
+                const data = {
+                    cancel_at_period_end: false,
+                    proration_behavior: 'create_prorations',
+                    items: [{
+                        id: sub.items.data[0].id,
+                        price: selectedPlan.priceId
+                    }]
+                }
+                if(selectedPlan.price > 0){
+                    data.default_payment_method = paymentMethodId;
+                }
+                return stripe.subscriptions.update(
+                    stripeSubscriptionId,
+                    data
+                )
+            }).then(() => {
+                return admin.firestore().doc("subscriptions/"+data.subscriptionId).set({
+                    plan: selectedPlan.title, // title of the plan
+                    stripePriceId: selectedPlan.priceId, // price ID in stripe
+                    paymentCycle: selectedPlan.frequency,
+                    price: selectedPlan.price,
+                    currency: selectedPlan.currency,
+                }, {merge: true});
+            }).then(() => {
+                return {
+                    result: 'success'
+                }
             }).catch(err => {
                 throw new functions.https.HttpsError('internal', err.message);
             });
