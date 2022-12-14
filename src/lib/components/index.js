@@ -11,10 +11,12 @@ import { Settings } from "./Settings";
 import { ListUsers } from "./ListUsers";
 import { AddUser } from "./AddUser";
 import { UpdateUser } from "./UpdateUser";
+import { ChangePlan } from "./ChangePlan";
 
 export {
     AddUser,
     checkPermission,
+    ChangePlan,
     CreateSubscription,
     ManagePaymentMethods,
     ListInvoices,

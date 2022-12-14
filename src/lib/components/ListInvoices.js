@@ -91,7 +91,7 @@ export const ListInvoices = ({loader}) => {
                                     <Grid item textAlign="right">
                                         {subscription.ownerId === auth.currentUser.uid && <Stack direction="row-reverse" spacing={1} mt={2}>
                                             <Button color="error" variant="outlined" size="small">Cancel Subscription</Button>
-                                            <Button color="info" variant="outlined" size="small">Chane Plan</Button>
+                                            <Button color="info" variant="outlined" size="small" onClick={() => navigate(config.pathnames.ChangePlan.replace(":subscriptionId", subscription.id))}>Chane Plan</Button>
                                             <Button color="info" variant="outlined" size="small" onClick={() => navigate(config.pathnames.ManagePaymentMethods.replace(":subscriptionId", subscription.id))}>Update Payment Method</Button>
                                         </Stack>}
                                     </Grid>
