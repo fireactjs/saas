@@ -139,62 +139,62 @@ export const ManagePaymentMethods = ({loader}) => {
                                     <Grid container spacing={3}>
                                         {paymentMethods.map((paymentMethod, i) => 
                                             <Grid item xs={12} md={4} key={i}>
-                                            <Card>
-                                                <CardHeader title={
-                                                    <Stack direction="row" spacing={2} alignItems="center">
-                                                        <Typography component="h3" variant="h4">
-                                                            {paymentMethod.cardBrand}
-                                                        </Typography>
-                                                        {subscription.paymentMethod === paymentMethod.id &&
-                                                            <Chip label="active" color="success" size="small" />
-                                                        }
+                                                <Card>
+                                                    <CardHeader title={
+                                                        <Stack direction="row" spacing={2} alignItems="center">
+                                                            <Typography component="h3" variant="h4">
+                                                                {paymentMethod.cardBrand}
+                                                            </Typography>
+                                                            {subscription.paymentMethod === paymentMethod.id &&
+                                                                <Chip label="active" color="success" size="small" />
+                                                            }
 
-                                                    </Stack>
-                                                } subheader={
-                                                    <Grid container>
-                                                        <Grid item xs>**** **** **** {paymentMethod.cardLast4}</Grid>
-                                                        <Grid item>{paymentMethod.cardExpMonth} / {paymentMethod.cardExpYear}</Grid>
-                                                    </Grid>
-                                                } />
-                                                <CardActions>
-                                                    <Button variant="outlined" color="success" disabled={subscription.paymentMethod === paymentMethod.id || processing} onClick={() => {
-                                                        setProcessing(true);
-                                                        setError(null);
-                                                        const updateSubscriptionPaymentMethod = CloudFunctions.httpsCallable('fireactjsSaas-updateSubscriptionPaymentMethod');
-                                                        return updateSubscriptionPaymentMethod({
-                                                            subscriptionId: subscription.id,
-                                                            paymentMethodId: paymentMethod.id
-                                                        }).then(() => {
-                                                            // update subscription default payment
-                                                            setSubscription(prevState => ({
-                                                                ...prevState,
-                                                                paymentMethod: paymentMethod.id
-                                                            }));
-                                                            setProcessing(false);
-                                                        }).catch(err =>{
-                                                            setError(err.message);
-                                                            setProcessing(false);
-                                                        });
-                                                    }}>Set Default</Button>
-                                                    <Button variant="outlined" color="error" disabled={subscription.paymentMethod === paymentMethod.id || processing} onClick={() => {
-                                                        setProcessing(true);
-                                                        setError(null);
-                                                        const removePaymentMethod = CloudFunctions.httpsCallable('fireactjsSaas-removePaymentMethod');
-                                                        return removePaymentMethod({
-                                                            paymentMethodId: paymentMethod.id
-                                                        }).then(() => {
-                                                            setPaymentMethods(prevState => prevState.filter(row => {
-                                                                return row.id !== paymentMethod.id
-                                                            }));
-                                                            setProcessing(false);
-                                                        }).catch(err =>{
-                                                            setError(err.message);
-                                                            setProcessing(false);
-                                                        });
-                                                    }}>Remove</Button>
-                                                </CardActions>
-                                            </Card>
-                                        </Grid>
+                                                        </Stack>
+                                                    } subheader={
+                                                        <Grid container>
+                                                            <Grid item xs>**** **** **** {paymentMethod.cardLast4}</Grid>
+                                                            <Grid item>{paymentMethod.cardExpMonth} / {paymentMethod.cardExpYear}</Grid>
+                                                        </Grid>
+                                                    } />
+                                                    <CardActions>
+                                                        <Button variant="outlined" color="success" disabled={subscription.paymentMethod === paymentMethod.id || processing} onClick={() => {
+                                                            setProcessing(true);
+                                                            setError(null);
+                                                            const updateSubscriptionPaymentMethod = CloudFunctions.httpsCallable('fireactjsSaas-updateSubscriptionPaymentMethod');
+                                                            return updateSubscriptionPaymentMethod({
+                                                                subscriptionId: subscription.id,
+                                                                paymentMethodId: paymentMethod.id
+                                                            }).then(() => {
+                                                                // update subscription default payment
+                                                                setSubscription(prevState => ({
+                                                                    ...prevState,
+                                                                    paymentMethod: paymentMethod.id
+                                                                }));
+                                                                setProcessing(false);
+                                                            }).catch(err =>{
+                                                                setError(err.message);
+                                                                setProcessing(false);
+                                                            });
+                                                        }}>Set Default</Button>
+                                                        <Button variant="outlined" color="error" disabled={subscription.paymentMethod === paymentMethod.id || processing} onClick={() => {
+                                                            setProcessing(true);
+                                                            setError(null);
+                                                            const removePaymentMethod = CloudFunctions.httpsCallable('fireactjsSaas-removePaymentMethod');
+                                                            return removePaymentMethod({
+                                                                paymentMethodId: paymentMethod.id
+                                                            }).then(() => {
+                                                                setPaymentMethods(prevState => prevState.filter(row => {
+                                                                    return row.id !== paymentMethod.id
+                                                                }));
+                                                                setProcessing(false);
+                                                            }).catch(err =>{
+                                                                setError(err.message);
+                                                                setProcessing(false);
+                                                            });
+                                                        }}>Remove</Button>
+                                                    </CardActions>
+                                                </Card>
+                                            </Grid>
                                         )}
                                     </Grid>
                                 )}
