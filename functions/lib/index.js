@@ -441,7 +441,13 @@ module.exports = function(config){
         removePaymentMethod: functions.https.onCall((data, context) => {
             const stripe = require('stripe')(config.stripe.secret_api_key);
             const paymentMethodId = data.paymentMethodId || null;
-            return getDoc("users/"+context.auth.uid+"/paymentMethods/"+paymentMethodId).then(() => {
+            return admin.firestore().collection("subscriptions").where("paymentMethod", "==", paymentMethodId).get().then((snapshot) => {
+                if(snapshot.empty){
+                    return getDoc("users/"+context.auth.uid+"/paymentMethods/"+paymentMethodId);
+                }else{
+                    throw new Error("The payment method is active for at least one subscription");
+                }
+            }).then(() => {
                 return stripe.paymentMethods.detach(paymentMethodId);
             }).then(() => {
                 return admin.firestore().doc("users/"+context.auth.uid+"/paymentMethods/"+paymentMethodId).delete();
