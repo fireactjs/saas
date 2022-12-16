@@ -12,11 +12,13 @@ import { ListUsers } from "./ListUsers";
 import { AddUser } from "./AddUser";
 import { UpdateUser } from "./UpdateUser";
 import { ChangePlan } from "./ChangePlan";
+import { CancelSubscription } from "./CancelSubscription";
 
 export {
     AddUser,
     checkPermission,
     ChangePlan,
+    CancelSubscription,
     CreateSubscription,
     ManagePaymentMethods,
     ListInvoices,

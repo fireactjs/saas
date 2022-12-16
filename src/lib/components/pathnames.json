@@ -1,4 +1,5 @@
 {
+    "CancelSubscription": "/sub/:subscriptionId/billing/cancel",
     "CreateSubscription": "/create",
     "ListSubscriptions": "/",
     "Subscription" : "/sub/:subscriptionId",

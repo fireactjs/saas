@@ -456,6 +456,28 @@ module.exports = function(config){
             });
         }),
 
+        cancelSubscription: functions.https.onCall((data, context) => {
+            const stripe = require('stripe')(config.stripe.secret_api_key);
+            return getDoc("subscriptions/"+data.subscriptionId).then(subRef => {
+                // check if the user is an admin level user
+                if(subRef.data().ownerId === context.auth.uid){
+                    return stripe.subscriptions.del(subRef.data().stripeSubscriptionId);
+                }else{
+                    throw new Error("Permission denied.");
+                }
+            }).then(() => {
+                return admin.firestore().doc("subscriptions/"+data.subscriptionId).set({
+                    permissions: {}
+                },{merge: true});
+            }).then(() => {
+                return {
+                    result: 'success'
+                }
+            }).catch(err => {
+                throw new functions.https.HttpsError('internal', err.message);
+            });
+        }),
+
         changeSubscriptionPlan: functions.https.onCall((data, context) => {
             const stripe = require('stripe')(config.stripe.secret_api_key);
             const paymentMethodId = data.paymentMethodId || null;
