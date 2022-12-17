@@ -324,6 +324,7 @@ module.exports = function(config){
 
         inviteUser: functions.https.onCall((data, context) => {
             let subDoc = null;
+            let inviteId = null;
             return getDoc("subscriptions/"+data.subscriptionId).then(subRef => {
                 // check if the user is an admin level user
                 subDoc = subRef;
@@ -353,9 +354,30 @@ module.exports = function(config){
                 }else{
                     throw new Error("Duplicate invite.");
                 }
+            }).then((invite) => {
+                inviteId = invite.id;
+                if(config.mailgun){
+                    const mailgun = require("mailgun-js");
+                    const mg = mailgun({apiKey: config.mailgun.api_key, domain: config.mailgun.domain});
+                    const mailData = {
+                        from: config.mailgun.from,
+                        to: data.email,
+                        subject: data.displayName+", you are invited to "+config.site_name,
+                        template: config.mailgun.templates.invite_email,
+                        'v:sender': context.auth.token.name,
+                        'v:site_name': config.site_name,
+                        'v:name': data.displayName,
+                        'v:sign_in_url': config.sign_in_url,
+                        'v:sign_up_url': config.sign_up_url
+                    }
+                    return mg.messages().send(mailData);
+                }else{
+                    // skip invite email
+                    return {}
+                }
             }).then(invite => {
                 return {
-                    inviteId: invite.id
+                    inviteId: inviteId
                 }
             }).catch(err => {
                 throw new functions.https.HttpsError('internal', err.message);
