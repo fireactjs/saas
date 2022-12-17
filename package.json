@@ -1,8 +1,30 @@
 {
-  "name": "saas-dev",
+  "name": "@fireactjs/saas",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
+  "author": "Chaoming Li",
+  "keywords": [
+    "react",
+    "components",
+    "ui",
+    "firebase",
+    "saas",
+    "stripe"
+  ],
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fireactjs/saas.git"
+  },
   "dependencies": {
+    "@babel/polyfill": "^7.12.1",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
     "@fireactjs/core": "^1.0.1",
@@ -18,8 +40,8 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "PUBLIC_URL=/ react-scripts start",
+    "build": "rm -rf dist && NODE_ENV=production babel src/lib --out-dir dist --copy-files",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -40,5 +62,10 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.19.3",
+    "@babel/core": "^7.20.5",
+    "@babel/preset-env": "^7.20.2"
   }
 }
