@@ -1,7 +1,7 @@
 import { FireactContext } from "@fireactjs/core";
 import { Button, Card, CardActions, CardContent, CardHeader, Grid, Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import StarIcon from '@mui/icons-material/Star';
 import { SubscriptionContext } from "./SubscriptionContext";
 
