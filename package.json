@@ -67,5 +67,10 @@
     "@babel/cli": "^7.19.3",
     "@babel/core": "^7.20.5",
     "@babel/preset-env": "^7.20.2"
-  }
+  },
+  "description": "fireactjs-saas is a package for building SaaS with React and Firebase",
+  "bugs": {
+    "url": "https://github.com/fireactjs/saas/issues"
+  },
+  "homepage": "https://github.com/fireactjs/saas#readme"
 }
