@@ -34,6 +34,14 @@ export const ChangePlan = () => {
                 priceId: plan.priceId,
                 subscriptionId: subscription.id
             }).then(() => {
+                setSubscription(prevState => ({
+                    ...prevState,
+                    plan: plan.title, // title of the plan
+                    stripePriceId: plan.priceId, // price ID in stripe
+                    paymentCycle: plan.frequency,
+                    price: plan.price,
+                    currency: plan.currency
+                }));
                 setSuccess(true);
                 setProcessing(false);
             }).catch(err => {
