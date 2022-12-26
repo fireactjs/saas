@@ -3,12 +3,10 @@ import { Button, Card, CardActions, CardContent, CardHeader, Grid, Typography } 
 import { Box } from "@mui/system";
 import React, { useContext } from "react";
 import StarIcon from '@mui/icons-material/Star';
-import { SubscriptionContext } from "./SubscriptionContext";
 
-export const PricingPlans = ({selectedPriceId, disabled, selectPlan}) => {
+export const PricingPlans = ({selectedPriceId, disabled, selectPlan, paymentMethod}) => {
 
     const { config } = useContext(FireactContext);
-    const { subscription } = useContext(SubscriptionContext);
     const plans = config.saas.plans;
 
     return (
@@ -72,7 +70,7 @@ export const PricingPlans = ({selectedPriceId, disabled, selectPlan}) => {
                             <Button fullWidth disabled={disabled || selectedPriceId===plan.priceId?true:false} variant={plan.popular?"contained":"outlined"} onClick={(e) => {
                                 selectPlan(plan);
                             }}>
-                                {plan.price === 0 || subscription.paymentMethod ?"Subscribe":"Continue"}
+                                {plan.price === 0 || paymentMethod ?"Subscribe":"Continue"}
                             </Button>
                         </CardActions>
                     </Card>

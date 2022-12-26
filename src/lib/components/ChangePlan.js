@@ -92,7 +92,7 @@ export const ChangePlan = () => {
     }
 
     return (
-        <Container maxWidth="lx">
+        <Container maxWidth="lg">
             <SetPageTitle title={"Change Plan"+(subscription.name!==""?(" - "+subscription.name):"")} />
             {success?(
                 <Alert severity="success">Your subscription plan has been changed. Please go back to <NavLink to={config.pathnames.ListInvoices.replace(":subscriptionId", subscription.id)}>Billing</NavLink>.</Alert>
@@ -130,7 +130,7 @@ export const ChangePlan = () => {
                                     <Alert severity="error">{error}</Alert>
                                 }
                                 <div>
-                                    <PricingPlans selectedPriceId={subscription.stripePriceId} selectPlan={selectPlan} disabled={processing} />
+                                    <PricingPlans selectedPriceId={subscription.stripePriceId} selectPlan={selectPlan} disabled={processing} paymentMethod={subscription.paymentMethod} />
                                 </div>
                             </Stack>
                         )}
