@@ -5,6 +5,7 @@ import { PricingPlans } from "./PricingPlans";
 import "firebase/compat/functions";
 import { PaymentMethodForm } from "./PaymentMethodForm";
 import { useNavigate } from "react-router-dom";
+import { getAuth } from "firebase/auth";
 
 export const CreateSubscription = () => {
 
@@ -18,7 +19,7 @@ export const CreateSubscription = () => {
     const [ showPaymentMethod, setShowPaymentMethod ] = useState(false);
     const [ selectedPlan, setSelectedPlan ] = useState(null);
     const singular = config.saas.subscription.singular;
-
+    const auth = getAuth();
     const navigate = useNavigate();
 
     const selectPlan = (plan) => {
@@ -52,12 +53,25 @@ export const CreateSubscription = () => {
         setProcessing(true);
         setError(null);
         const createSubscription = CloudFunctions.httpsCallable('fireactjsSaas-createSubscription');
+        let subscriptionId = null;
         createSubscription({
             paymentMethodId: paymentMethod.id,
             priceId: selectedPlan.priceId
         }).then((res) => {
             if(res.data && res.data.subscriptionId){
-                navigate(config.pathnames.Settings.replace(":subscriptionId", res.data.subscriptionId));
+                subscriptionId = res.data.subscriptionId;
+            }
+            const pmRef = firebaseApp.firestore().doc('users/'+auth.currentUser.uid+'/paymentMethods/'+paymentMethod.id);
+            return pmRef.set({
+                type: paymentMethod.type,
+                cardBrand: paymentMethod.card.brand,
+                cardExpMonth: paymentMethod.card.exp_month,
+                cardExpYear: paymentMethod.card.exp_year,
+                cardLast4: paymentMethod.card.last4
+            },{merge:true});
+        }).then(() => {
+            if(subscriptionId !== null){
+                navigate(config.pathnames.Settings.replace(":subscriptionId", subscriptionId));
             }else{
                 setError("Failed to create the "+singular+".");
                 setProcessing(false);                    
