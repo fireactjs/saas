@@ -7,23 +7,19 @@ service cloud.firestore {
     match /users/{userId} {
       allow read, update, create: if request.auth.uid == userId;
     }
-    match /users/{userId}/activities/{documents=**} {
-      allow read, create: if request.auth.uid == userId
+    match /users/{userId}/paymentMethods/{paymentMethodId} {
+      allow read, update, create, delete: if request.auth.uid == userId;
     }
-    match /plans/{planId} {
-      allow read: if true;
+    match /subscriptions/{subscriptionId} {
+      allow read: if request.auth.uid != null && request.auth.uid in resource.data.permissions.access;
+      allow update: if request.auth.uid != null && request.auth.uid in resource.data.permissions.admin && (!request.resource.data.diff(resource.data).affectedKeys()
+        .hasAny(['currency', 'ownerId', 'paymentCycle', 'paymentMethod', 'plan', 'price', 'stripePriceId', 'stripeSubscriptionId', 'subscriptionCreated', 'subscriptionCurrentPeriodEnd', 'subscriptionCurrentPeriodStart', 'subscriptionEnded', 'subscriptionStatus']));
     }
-    match /accounts/{accountId} {
-      allow read: if request.auth.uid != null && request.auth.uid in resource.data.access;
+    match /subscriptions/{subscriptionId}/invoices/{invoiceId} {
+      allow read: if request.auth.uid != null && request.auth.uid in get(/databases/$(database)/documents/subscriptions/$(subscriptionId)).data.permissions.admin;
     }
-    match /accounts/{accountId}/invoices/{invoiceId} {
-      allow read: if request.auth.uid != null && request.auth.uid in get(/databases/$(database)/documents/accounts/$(accountId)).data.admins;
-    }
-    match /taxes/{taxRateId} {
-      allow read: if true;
-    }
-    match /accounts/{accountId}/images/{imageId} {
-      allow read, create, update, delete: if request.auth.uid != null && request.auth.uid in get(/databases/$(database)/documents/accounts/$(accountId)).data.access;
-    }
+    match /invites/{inviteId} {
+      allow read, delete: if request.auth.uid != null && request.auth.token.email == resource.data.email;
+		}
   }
 }

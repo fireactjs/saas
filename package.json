@@ -1,36 +1,55 @@
 {
-  "name": "fireact-app",
-  "workspaces": [
-    "src/features/*"
+  "name": "@fireactjs/saas",
+  "version": "0.1.3",
+  "private": false,
+  "author": "Chaoming Li",
+  "keywords": [
+    "react",
+    "components",
+    "ui",
+    "firebase",
+    "saas",
+    "stripe"
   ],
-  "version": "0.1.0",
-  "private": true,
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fireactjs/saas.git"
+  },
   "dependencies": {
-    "@emotion/react": "^11.4.1",
-    "@emotion/styled": "^11.3.0",
-    "@mui/icons-material": "^5.0.0",
-    "@mui/material": "^5.0.0-rc.0",
-    "@mui/styles": "^5.0.0",
-    "@stripe/react-stripe-js": "^1.4.0",
-    "@stripe/stripe-js": "^1.13.2",
-    "@testing-library/jest-dom": "^5.11.10",
-    "@testing-library/react": "^11.2.6",
-    "@testing-library/user-event": "^13.1.2",
-    "firebase": "^9.6.1",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-firebaseui": "^6.0.0",
-    "react-router-dom": "^5.2.0",
-    "react-scripts": "^5.0.1"
+    "@babel/polyfill": "^7.12.1",
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
+    "@fireactjs/core": "^1.0.1",
+    "@mui/material": "^5.10.14",
+    "@stripe/react-stripe-js": "^1.15.0",
+    "@stripe/stripe-js": "^1.44.1",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-scripts": "5.0.1",
+    "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "PUBLIC_URL=/ react-scripts start",
+    "build": "rm -rf dist && NODE_ENV=production babel src/lib --out-dir dist --copy-files",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
   },
   "browserslist": {
     "production": [
@@ -43,5 +62,15 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.19.3",
+    "@babel/core": "^7.20.5",
+    "@babel/preset-env": "^7.20.2"
+  },
+  "description": "fireactjs-saas is a package for building SaaS with React and Firebase",
+  "bugs": {
+    "url": "https://github.com/fireactjs/saas/issues"
+  },
+  "homepage": "https://github.com/fireactjs/saas#readme"
 }

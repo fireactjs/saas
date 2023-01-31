@@ -1,78 +1,123 @@
-import React from 'react';
-import { BrowserRouter as Router, Switch } from "react-router-dom";
-import { AuthProvider } from './components/FirebaseAuth';
+import './App.css';
+import firebaseConfig from "./firebaseConfig.json";
+import { pathnames, AppTemplate, AuthProvider, AuthRoutes, MainMenu, PublicTemplate, ResetPassword, SignIn, SignUp, UserMenu, UserProfile, UserUpdateEmail, UserUpdateName, UserUpdatePassword, UserDelete, FireactProvider, ActionPages } from '@fireactjs/core';
+import { BrowserRouter, Routes } from "react-router-dom";
+import { Route } from "react-router-dom";
+import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
+import { CircularProgress, Box } from '@mui/material';
+import authMethods from "./authMethods.json";
+import { CreateSubscription, ListSubscriptions, pathnames as subPathnames, PermissionRouter, Settings, SubscriptionMenu, ListUsers, SubscriptionProvider, ListInvoices, ManagePaymentMethods, ChangePlan, CancelSubscription } from './lib';
+import SaaSConfig from './config.json';
 
-import PublicRouter from './components/routers/PublicRouter';
-import PublicTemplate from './components/templates/PublicTemplate';
-import AccountTemplate from './components/templates/AccountTemplate';
+const Brand = "FIREACT";
 
-import AuthRouter from './components/routers/AuthRouter';
+const Logo = ({size, color}) => {
+	const logoColor = color || 'warning';
+	return (
+		<LocalFireDepartmentIcon color={logoColor} fontSize={size} />
+	);
+}
 
-import SignIn from './pages/public/SignIn';
-import Home from './pages/auth/Home';
-import PageNotFound from './pages/public/PageNotFound';
-import AppTemplate from './components/templates/AppTemplate';
-import UserProfile from './pages/auth/user/UserProfile';
-import UpdateEmail from './pages/auth/user/UpdateEmail';
-import UpdateName from './pages/auth/user/UpdateName';
-import VerifyEmail from './pages/auth/user/VerifyEmail';
-import UpdatePassword from './pages/auth/user/UpdatePassword';
-import UpdatePhone from './pages/auth/user/UpdatePhone';
-import DeleteUser from './pages/auth/user/DeleteUser';
-import ViewLogs from './pages/auth/user/ViewLogs';
-import Plans from './pages/auth/accounts/Plans';
-import NewAccount from './pages/auth/accounts/NewAccount';
-
-
-// load stripe
-import stripeJson from "./inc/stripe.json";
-import { Elements } from '@stripe/react-stripe-js';
-import { loadStripe } from '@stripe/stripe-js';
-import { Feature } from './pages/auth/accounts/Feature';
-import UserList from './pages/auth/accounts/UserList';
-import UserRole from './pages/auth/accounts/UserRole';
-import AddUser from './pages/auth/accounts/AddUser';
-import Invite from './pages/auth/user/Invite';
-import PaymentList from './pages/auth/accounts/PaymentList';
-import PaymentMethod from './pages/auth/accounts/PaymentMethod';
-import DeleteAccount from './pages/auth/accounts/DeleteAccount';
-
-const stripePromise = loadStripe(stripeJson.stripeConfig.public_api_key);
-
-
+const Loader = ({size}) => {
+	let cpSize = "35px";
+	switch(size){
+		case "small":
+			cpSize = "30px";
+			break;
+		case "medium":
+			cpSize = "35px";
+			break;
+		case "large":
+			cpSize = "45px";
+			break;
+		default:
+			cpSize = "35px";
+			break;
+	}
+	return (
+		<Box sx={{ display: 'flex', justifyContent: "center", alignItems: "center"}}>
+			<CircularProgress color="warning" size={cpSize} />
+			<div style={{position: "absolute" }}>
+				<Logo size={size} />
+			</div>
+		</Box>
+	);
+}
 
 function App() {
+
+	// merge pathnames
+	for(var key in subPathnames){
+		pathnames[key] = subPathnames[key];
+	}
+
+	const config = {
+		firebaseConfig: firebaseConfig,
+		brand: "FIREACTJS",
+		pathnames: pathnames,
+		authProviders: authMethods,
+		saas: SaaSConfig
+	}
+
 	return (
-		<Elements stripe={stripePromise}>
-			<AuthProvider>
-				<Router>
-					<Switch>
-						<AuthRouter exact path="/" component={Home} template={AppTemplate} title="My Accounts" />
-						<AuthRouter exact path="/account/:accountId/billing/plan" component={Plans} template={AccountTemplate} title="Select Plan" role="admin" allowInactive={true} />
-						<AuthRouter exact path="/account/:accountId/billing/payment-method" component={PaymentMethod} template={AccountTemplate} title="Update Payment Method" role="admin" />
-						<AuthRouter exact path="/account/:accountId/billing/delete" component={DeleteAccount} template={AccountTemplate} title="Delete Account" role="admin" />
-						<AuthRouter exact path="/account/:accountId/users/change/:userId" component={UserRole} template={AccountTemplate} title="Change Role" role="admin" />
-						<AuthRouter exact path="/account/:accountId/users" component={UserList} template={AccountTemplate} title="Users" role="admin" />
-						<AuthRouter exact path="/account/:accountId/users/add" component={AddUser} template={AccountTemplate} title="Add User" role="admin" />
-						<AuthRouter exact path="/account/:accountId/billing" component={PaymentList} template={AccountTemplate} title="Billing" role="admin" />
-						<AuthRouter path="/account/:accountId/:path?" component={Feature} template={AccountTemplate} title="Feature" role="*" />
-						<AuthRouter exact path="/new-account" component={NewAccount} template={AppTemplate} title="Create New Account" />
-						<AuthRouter exact path="/user/profile" component={UserProfile} template={AppTemplate} title="User Profile" />
-						<AuthRouter exact path="/invite/:code" component={Invite} template={AppTemplate} title="View Invite" />
-						<AuthRouter exact path="/user/profile/update-email" component={UpdateEmail} template={AppTemplate} title="Change Your Email" />
-						<AuthRouter exact path="/user/profile/update-name" component={UpdateName} template={AppTemplate} title="Change Your Name" />
-						<AuthRouter exact path="/user/profile/verify-email" component={VerifyEmail} template={AppTemplate} title="Verify Your Name" />
-						<AuthRouter exact path="/user/profile/update-password" component={UpdatePassword} template={AppTemplate} title="Change Your Password" />
-						<AuthRouter exact path="/user/profile/update-phone" component={UpdatePhone} template={AppTemplate} title="Change Your Phone Number" />
-						<AuthRouter exact path="/user/profile/delete" component={DeleteUser} template={AppTemplate} title="Delete Your Account" />
-						<AuthRouter exact path="/user/log" component={ViewLogs} template={AppTemplate} title="View Activity Logs" />
-						<PublicRouter exact path="/signin" component={SignIn} template={PublicTemplate} title="Sign In" />
-						<PublicRouter component={PageNotFound} template={PublicTemplate} title="Page Not Found" />
-					</Switch>
-				</Router>
+		<FireactProvider config={config}>
+			<AuthProvider firebaseConfig={firebaseConfig} brand={Brand}>
+				<BrowserRouter>
+					<Routes>
+						<Route element={<AuthRoutes loader={<Loader size="large" />} />} >
+							<Route element={<AppTemplate logo={<Logo size="large" />} toolBarMenu={<UserMenu />} drawerMenu={<MainMenu />} />}>
+								<Route exact path={pathnames.ListSubscriptions} element={<ListSubscriptions loader={<Loader size="large" />} />} />
+								<Route exact path={pathnames.CreateSubscription} element={<CreateSubscription />} />
+								<Route exact path={pathnames.UserProfile} element={<UserProfile />} />
+								<Route exact path={pathnames.UserUpdateEmail} element={<UserUpdateEmail />} />
+								<Route exact path={pathnames.UserUpdateName} element={<UserUpdateName />} />
+								<Route exact path={pathnames.UserUpdatePassword} element={<UserUpdatePassword />} />
+								<Route exact path={pathnames.UserDelete} element={<UserDelete />} />
+							</Route>
+							
+							<Route path={pathnames.Subscription} element={<SubscriptionProvider loader={<Loader size="large" />} />} >
+								<Route element={<AppTemplate logo={<Logo size="large" />} toolBarMenu={<UserMenu />} drawerMenu={<SubscriptionMenu />} />}>
+									<Route element={<PermissionRouter permissions={["access"]} />} >
+										<Route exact path={pathnames.Subscription+"/"} element={<div>Home</div>} />
+									</Route>
+									<Route element={<PermissionRouter permissions={["admin"]} />} >
+										<Route exact path={pathnames.Settings} element={<Settings loader={<Loader size="large" />} />} />
+										<Route exact path={pathnames.ListUsers} element={<ListUsers loader={<Loader size="large" />} />} />
+										<Route exact path={pathnames.ListInvoices} element={<ListInvoices loader={<Loader size="large" />} />} />
+										<Route exact path={pathnames.ManagePaymentMethods} element={<ManagePaymentMethods loader={<Loader size="large" />} />} />
+										<Route exact path={pathnames.ChangePlan} element={<ChangePlan />} />
+										<Route exact path={pathnames.CancelSubscription} element={<CancelSubscription />} />
+									</Route>
+								</Route>
+							</Route>
+						</Route>
+						<Route element={<PublicTemplate />}>
+							<Route path={pathnames.SignIn} element={
+								<SignIn
+									logo={<Logo size="large" />}
+								/>
+							} />
+							<Route path={pathnames.SignUp} element={
+								<SignUp
+									logo={<Logo size="large" />}
+								/>
+							} />
+							<Route path={pathnames.ResetPassword} element={
+								<ResetPassword
+									logo={<Logo size="large" />}
+								/>
+							} />
+							<Route path={pathnames.ActionPages} element={
+								<ActionPages
+									logo={<Logo size="large" />}
+								/>
+							} />
+						</Route>
+					</Routes>
+				</BrowserRouter>
 			</AuthProvider>
-		</Elements>
-	);
+		</FireactProvider>
+	)
 }
 
 export default App;
