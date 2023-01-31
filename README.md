@@ -1,6 +1,6 @@
 # What is @fireactjs/saas
 
-fireactjs-saas is the extension package for building SaaS web applications with Firebase, Reactjs and Stripe in a simple and fast approach. It is based on the `@fireactjs/core` package for the user authentication features. Its key features on top of the the `@fireactjs/core` package are:
+fireactjs-saas is the extension package for building SaaS web applications with Firebase, Reactjs and Stripe in a simple and fast approach. It is based on the `@fireactjs/core` package for the user authentication features. Its key features on top of the `@fireactjs/core` package are:
 
 - Built-in Stripe subscription integration
 - User permission control on subscription account level
