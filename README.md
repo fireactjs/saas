@@ -16,7 +16,7 @@ To experience the package, go to [https://saas-demo.fireactjs.com](https://saas-
 
 For documentation of the package, go to [https://fireactjs.com/docs/saas-package/](https://fireactjs.com/docs/saas-package/)
 
-# Installation
+## Installation
 
 Instructions for installing Fireactjs SaaS packages and creating your Reactjs SaaS application with the Fireactjs packages.
 
