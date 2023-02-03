@@ -8,6 +8,10 @@ fireactjs-saas is the extension package for building SaaS web applications with 
 - Component base architecture that supports full customization
 - Easy to extend additional features
 
+## Live demo
+
+To experience the package, go to [https://saas-demo.fireactjs.com](https://saas-demo.fireactjs.com)
+
 # Installation
 
 Instructions for installing Fireactjs SaaS packages and creating your Reactjs SaaS application with the Fireactjs packages.
