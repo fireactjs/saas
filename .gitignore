@@ -36,3 +36,5 @@ functions/config.json
 functions/mailgun.json
 .firebase/hosting.cHVibGlj.cache
 .c9/
+src/config.json
+src/firebaseConfig.json
