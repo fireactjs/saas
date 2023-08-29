@@ -2,7 +2,7 @@ import { AuthContext, FireactContext, SetPageTitle } from "@fireactjs/core";
 import { Alert, Box, Container, Paper, Stack, Typography } from "@mui/material";
 import React, { useContext, useState } from "react";
 import { PricingPlans } from "./PricingPlans";
-import "firebase/compat/functions";
+import { httpsCallable } from "firebase/functions";
 import { PaymentMethodForm } from "./PaymentMethodForm";
 import { useNavigate } from "react-router-dom";
 import { getAuth } from "firebase/auth";
@@ -11,8 +11,7 @@ export const CreateSubscription = () => {
 
     const { config } = useContext(FireactContext);
 
-    const { firebaseApp } = useContext(AuthContext);
-    const CloudFunctions = firebaseApp.functions();
+    const { firebaseApp, cloudFunctions } = useContext(AuthContext);
 
     const [ processing, setProcessing ] = useState(false);
     const [ error, setError ] = useState(null);
@@ -26,7 +25,7 @@ export const CreateSubscription = () => {
         setProcessing(true);
         setError(null);
         if(plan.price === 0){
-            const createSubscription = CloudFunctions.httpsCallable('fireactjsSaas-createSubscription');
+            const createSubscription = httpsCallable(cloudFunctions, 'fireactjsSaas-createSubscription');
             createSubscription({
                 priceId: plan.priceId,
                 paymentMethodId: null
@@ -52,7 +51,7 @@ export const CreateSubscription = () => {
     const submitPlan = (paymentMethod) => {
         setProcessing(true);
         setError(null);
-        const createSubscription = CloudFunctions.httpsCallable('fireactjsSaas-createSubscription');
+        const createSubscription = httpsCallable(cloudFunctions, 'fireactjsSaas-createSubscription');
         let subscriptionId = null;
         createSubscription({
             paymentMethodId: paymentMethod.id,

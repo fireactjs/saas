@@ -4,20 +4,19 @@ import { SubscriptionContext } from "./SubscriptionContext";
 import { getAuth } from "firebase/auth";
 import { Alert, Box, Container, Grid, Paper, Typography, Button, Stack, Card, CardHeader, CardActions, Chip } from "@mui/material";
 import { PaymentMethodForm } from "./PaymentMethodForm";
-import "firebase/compat/functions";
+import { httpsCallable } from "firebase/functions";
 
 
 export const ManagePaymentMethods = ({loader}) => {
     const { subscription, setSubscription } = useContext(SubscriptionContext);
     const subscriptionName = subscription.name;
     const [loaded, setLoeaded] = useState(false);
-    const { firebaseApp } = useContext(AuthContext);
+    const { firebaseApp, cloudFunctions } = useContext(AuthContext);
     const auth = getAuth();
     const [ paymentMethods, setPaymentMethods ] = useState([]);
     const [ error, setError ] = useState(null);
     const [ paymentFormDisabled, setPaymentFormDisabled ] = useState(false);
     const [ paymentMethodFormShowed, setPaymentMethodFormShowed ] = useState(false);
-    const CloudFunctions = firebaseApp.functions();
     const [ processing, setProcessing ] = useState(false);
 
 
@@ -104,7 +103,7 @@ export const ManagePaymentMethods = ({loader}) => {
                                                     cardLast4: pm.card.last4
                                                 },{merge:true}).then(() => {
                                                     // attach the payment method to a subscription via cloud function
-                                                    const updateSubscriptionPaymentMethod = CloudFunctions.httpsCallable('fireactjsSaas-updateSubscriptionPaymentMethod');
+                                                    const updateSubscriptionPaymentMethod = httpsCallable(cloudFunctions, 'fireactjsSaas-updateSubscriptionPaymentMethod');
                                                     return updateSubscriptionPaymentMethod({
                                                         subscriptionId: subscription.id,
                                                         paymentMethodId: pm.id
@@ -160,7 +159,7 @@ export const ManagePaymentMethods = ({loader}) => {
                                                         <Button variant="outlined" color="success" disabled={subscription.paymentMethod === paymentMethod.id || processing} onClick={() => {
                                                             setProcessing(true);
                                                             setError(null);
-                                                            const updateSubscriptionPaymentMethod = CloudFunctions.httpsCallable('fireactjsSaas-updateSubscriptionPaymentMethod');
+                                                            const updateSubscriptionPaymentMethod = httpsCallable(cloudFunctions, 'fireactjsSaas-updateSubscriptionPaymentMethod');
                                                             return updateSubscriptionPaymentMethod({
                                                                 subscriptionId: subscription.id,
                                                                 paymentMethodId: paymentMethod.id
@@ -179,7 +178,7 @@ export const ManagePaymentMethods = ({loader}) => {
                                                         <Button variant="outlined" color="error" disabled={subscription.paymentMethod === paymentMethod.id || processing} onClick={() => {
                                                             setProcessing(true);
                                                             setError(null);
-                                                            const removePaymentMethod = CloudFunctions.httpsCallable('fireactjsSaas-removePaymentMethod');
+                                                            const removePaymentMethod = httpsCallable(cloudFunctions, 'fireactjsSaas-removePaymentMethod');
                                                             return removePaymentMethod({
                                                                 paymentMethodId: paymentMethod.id
                                                             }).then(() => {

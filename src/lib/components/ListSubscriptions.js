@@ -3,12 +3,12 @@ import { Alert, Box, Button, Card, CardActions, CardHeader, Container, Grid, Pap
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "firebase/compat/firestore";
-import "firebase/compat/functions";
+import { httpsCallable } from "firebase/functions";
 import { Stack } from "@mui/system";
 
 export const ListSubscriptions = ({loader}) => {
 
-    const { firebaseApp } = useContext(AuthContext);
+    const { firebaseApp, cloudFunctions } = useContext(AuthContext);
     const { config } = useContext(FireactContext);
     const navigate = useNavigate();
     const [subscriptions, setSubscriptions] = useState([]);
@@ -16,7 +16,6 @@ export const ListSubscriptions = ({loader}) => {
     const [error, setError] = useState(null);
     const [invites, setInvites] = useState([]);
     const [processing, setProcessing] = useState(false);
-    const CloudFunctions = firebaseApp.functions();
     const [acceptedInviteCount, setAcceptedInviteCount] = useState(0);
 
     useEffect(() => {
@@ -87,7 +86,7 @@ export const ListSubscriptions = ({loader}) => {
                                                     <>
                                                         <Button color="success" disabled={processing} size="small" onClick={() => {
                                                             setProcessing(true);
-                                                            const acceptInvite = CloudFunctions.httpsCallable('fireactjsSaas-acceptInvite');
+                                                            const acceptInvite = httpsCallable(cloudFunctions, 'fireactjsSaas-acceptInvite');
                                                             acceptInvite({inviteId: invite.id}).then(() => {
                                                                 setProcessing(false);
                                                                 setAcceptedInviteCount(prevState => (prevState+1));

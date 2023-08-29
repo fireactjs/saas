@@ -5,6 +5,7 @@ import { PricingPlans } from "./PricingPlans";
 import { SubscriptionContext } from "./SubscriptionContext";
 import "firebase/compat/functions";
 import { PaymentMethodForm } from "./PaymentMethodForm";
+import { httpsCallable } from "firebase/functions";
 import { NavLink } from "react-router-dom";
 import { getAuth } from "firebase/auth";
 
@@ -14,8 +15,7 @@ export const ChangePlan = () => {
     const { config } = useContext(FireactContext);
     const auth = getAuth();
 
-    const { firebaseApp } = useContext(AuthContext);
-    const CloudFunctions = firebaseApp.functions();
+    const { firebaseApp, cloudFunctions } = useContext(AuthContext);
 
     const [ processing, setProcessing ] = useState(false);
     const [ error, setError ] = useState(null);
@@ -28,7 +28,7 @@ export const ChangePlan = () => {
         setError(null);
         if(plan.price === 0 || subscription.paymentMethod){
             // subscribe to the new plan
-            const changeSubscriptionPlan = CloudFunctions.httpsCallable('fireactjsSaas-changeSubscriptionPlan');
+            const changeSubscriptionPlan = httpsCallable(cloudFunctions, 'fireactjsSaas-changeSubscriptionPlan');
             changeSubscriptionPlan({
                 paymentMethodId: subscription.paymentMethod,
                 priceId: plan.priceId,
@@ -59,7 +59,7 @@ export const ChangePlan = () => {
     const submitPlan = (paymentMethod) => {
         setProcessing(true);
         setError(null);
-        const changeSubscriptionPlan = CloudFunctions.httpsCallable('fireactjsSaas-changeSubscriptionPlan');
+        const changeSubscriptionPlan = httpsCallable(cloudFunctions, 'fireactjsSaas-changeSubscriptionPlan');
         changeSubscriptionPlan({
             paymentMethodId: paymentMethod.id,
             priceId: selectedPlan.priceId,

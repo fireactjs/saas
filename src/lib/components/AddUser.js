@@ -2,15 +2,15 @@ import { AuthContext, FireactContext, SetPageTitle } from "@fireactjs/core";
 import { Alert, Box, Button, Checkbox, Container, FormControl, FormControlLabel, FormLabel, Grid, Paper, TextField, Typography } from "@mui/material";
 import React, { useContext, useState } from "react";
 import { SubscriptionContext } from "./SubscriptionContext";
-import "firebase/compat/functions";
+//import "firebase/compat/functions";
+import { httpsCallable } from 'firebase/functions';
 
 export const AddUser = ({setAddUserActive, setUsers}) => {
 
     const { subscription } = useContext(SubscriptionContext);
     const subscriptionName = subscription.name?subscription.name:"";
 
-    const { firebaseApp } = useContext(AuthContext);
-    const CloudFunctions = firebaseApp.functions();
+    const { cloudFunctions } = useContext(AuthContext);
 
     const { config } = useContext(FireactContext);
     const permissions = config.saas.permissions || {};
@@ -88,7 +88,7 @@ export const AddUser = ({setAddUserActive, setUsers}) => {
                                 setProcessing(true);
                                 setError(null);
                                 setSuccess(false);
-                                const inviteUser = CloudFunctions.httpsCallable('fireactjsSaas-inviteUser');
+                                const inviteUser = httpsCallable(cloudFunctions, 'fireactjsSaas-inviteUser');
                                 inviteUser({
                                     email: email.toLocaleLowerCase(),
                                     displayName: displayName,
