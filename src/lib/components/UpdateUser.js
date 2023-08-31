@@ -3,7 +3,7 @@ import { SubscriptionContext } from "./SubscriptionContext";
 import "firebase/compat/functions";
 import { AuthContext, FireactContext, SetPageTitle } from "@fireactjs/core";
 import { Paper, Box, Container, Grid, Button, Alert, Typography, FormControl, FormLabel, FormControlLabel, Checkbox } from "@mui/material";
-import { doc, getFirestore, setDoc } from 'firebase/firestore';
+import { doc, setDoc } from 'firebase/firestore';
 
 export const UpdateUser = ({user, setSelectedUser, setUsers}) => {
 
@@ -15,7 +15,7 @@ export const UpdateUser = ({user, setSelectedUser, setUsers}) => {
 
     const [ processing, setProcessing ] = useState(false);
 
-    const { firebaseApp } = useContext(AuthContext);
+    const { firestoreInstance } = useContext(AuthContext);
 
     const [ userPermissions, setUserPermissions ] = useState(user.permissions);
 
@@ -98,8 +98,7 @@ export const UpdateUser = ({user, setSelectedUser, setUsers}) => {
                                 setProcessing(true);
                                 setError(null);
                                 setSuccess(false);
-                                const db = getFirestore(firebaseApp);
-                                const docRef = doc(db, "subscriptions", subscription.id);
+                                const docRef = doc(firestoreInstance, "subscriptions", subscription.id);
                                 // remove the user from all permissions
                                 const subPermissions = subscription.permissions;
                                 for(let p in subPermissions){
@@ -136,8 +135,7 @@ export const UpdateUser = ({user, setSelectedUser, setUsers}) => {
                                 setProcessing(true);
                                 setError(null);
                                 setSuccess(false);
-                                const db = getFirestore(firebaseApp);
-                                const docRef = doc(db, "subscriptions", subscription.id);
+                                const docRef = doc(firestoreInstance, "subscriptions", subscription.id);
                                 // remove the user from all permissions
                                 const subPermissions = subscription.permissions;
                                 for(let p in subPermissions){

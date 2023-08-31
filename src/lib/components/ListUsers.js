@@ -16,7 +16,7 @@ export const ListUsers = ({loader}) => {
     const subscriptionName = subscription.name?subscription.name:"";
     const [ users, setUsers ] = useState([]);
 
-    const { cloudFunctions } = useContext(AuthContext);
+    const { functionsInstance } = useContext(AuthContext);
 
     const [loaded, setLoaded] = useState(false);
 
@@ -34,7 +34,7 @@ export const ListUsers = ({loader}) => {
 
     const reovkeInvite = useCallback(({inviteId, subscriptionId}) => {
         setProcessing(true);
-        const revokeInvite = httpsCallable(cloudFunctions, 'fireactjsSaas-revokeInvite');
+        const revokeInvite = httpsCallable(functionsInstance, 'fireactjsSaas-revokeInvite');
         revokeInvite({
             subscriptionId: subscriptionId,
             inviteId: inviteId,
@@ -44,11 +44,11 @@ export const ListUsers = ({loader}) => {
             }));
             setProcessing(false);
         });
-    }, [cloudFunctions]);
+    }, [functionsInstance]);
 
     useEffect(() => {
         setError(null);
-        const getSubscriptionUsers = httpsCallable(cloudFunctions, 'fireactjsSaas-getSubscriptionUsers');
+        const getSubscriptionUsers = httpsCallable(functionsInstance, 'fireactjsSaas-getSubscriptionUsers');
         getSubscriptionUsers({subscriptionId: subscription.id}).then(result => {
             setTotal(result.data.total);
             result.data.users.sort((a,b) => a.displayName > b.displayName);
@@ -58,7 +58,7 @@ export const ListUsers = ({loader}) => {
             setError(error.message);
             setLoaded(true);
         });
-    }, [subscription.id, cloudFunctions, pathnames.UpdateUser]);
+    }, [subscription.id, functionsInstance, pathnames.UpdateUser]);
 
     useEffect(() => {
         const startIndex = page * pageSize;

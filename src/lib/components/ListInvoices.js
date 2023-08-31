@@ -7,12 +7,13 @@ import currencies from "./currencies.json";
 import { PaginationTable } from "./PaginationTable";
 import { getAuth } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import { collection, getDocs, orderBy, query } from "firebase/firestore";
 
 export const ListInvoices = ({loader}) => {
 
     const [loaded, setLoaded] = useState(false);
     const { subscription } = useContext(SubscriptionContext)
-    const { firebaseApp } = useContext(AuthContext);
+    const { firestoreInstance } = useContext(AuthContext);
     const [ invoices, setInvoices ] = useState([]);
     const [ error, setError ] = useState(null);
 
@@ -29,8 +30,9 @@ export const ListInvoices = ({loader}) => {
     useEffect(() => {
         setError(null);
         setLoaded(false);
-        const invoicesRef = firebaseApp.firestore().collection('subscriptions/'+subscription.id+"/invoices");
-        invoicesRef.orderBy('created', 'desc').get().then(invoicesSnapshot => {
+        const invoicesRef = collection(firestoreInstance, 'subscriptions/'+subscription.id+"/invoices");
+        const q = query(invoicesRef, orderBy('created', 'desc'));
+        getDocs(q).then(invoicesSnapshot => {
             const records = [];
             invoicesSnapshot.forEach(invoice => {
                 records.push({
@@ -57,7 +59,7 @@ export const ListInvoices = ({loader}) => {
             setError(err.message);
             setLoaded(true);
         });
-    }, [firebaseApp, subscription.id]);
+    }, [firestoreInstance, subscription.id]);
 
     useEffect(() => {
         const startIndex = page * pageSize;

@@ -4,17 +4,16 @@ import { NavLink } from "react-router-dom";
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import PeopleIcon from '@mui/icons-material/People';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
-import { FireactContext } from "@fireactjs/core";
+import { AuthContext, FireactContext } from "@fireactjs/core";
 import { checkPermission } from "./utilities";
 import { SubscriptionContext } from "./SubscriptionContext";
-import { getAuth } from "firebase/auth";
 import SettingsApplicationsIcon from '@mui/icons-material/SettingsApplications';
 
 export const SubscriptionMenu = ({customItems}) => {
     const { config } = useContext(FireactContext);
     const pathnames = config.pathnames;
     const { subscription } = useContext(SubscriptionContext);
-    const auth = getAuth();
+    const { authInstance } = useContext(AuthContext);
     const defaultPermissions = [];
     const adminPermissions = [];
 
@@ -29,7 +28,7 @@ export const SubscriptionMenu = ({customItems}) => {
 
     return (
         <List component="nav">
-            {checkPermission(subscription, auth.currentUser.uid, defaultPermissions) && 
+            {checkPermission(subscription, authInstance.currentUser.uid, defaultPermissions) && 
             <NavLink to={pathnames.Subscription.replace(":subscriptionId", subscription.id)} style={{textDecoration:'none'}} key="dashboard">
                 <ListItemButton>
                     <ListItemIcon><DashboardIcon /></ListItemIcon>
@@ -38,7 +37,7 @@ export const SubscriptionMenu = ({customItems}) => {
             </NavLink>
             }
             {customItems}
-            {checkPermission(subscription, auth.currentUser.uid, adminPermissions) && 
+            {checkPermission(subscription, authInstance.currentUser.uid, adminPermissions) && 
                 <>
                     <Divider key="settings-divider"/>
                     <NavLink to={pathnames.Settings.replace(":subscriptionId", subscription.id)} style={{textDecoration:'none'}} key="settings">

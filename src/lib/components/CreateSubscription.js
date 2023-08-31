@@ -6,12 +6,13 @@ import { httpsCallable } from "firebase/functions";
 import { PaymentMethodForm } from "./PaymentMethodForm";
 import { useNavigate } from "react-router-dom";
 import { getAuth } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
 
 export const CreateSubscription = () => {
 
     const { config } = useContext(FireactContext);
 
-    const { firebaseApp, cloudFunctions } = useContext(AuthContext);
+    const { firestoreInstance, functionsInstance } = useContext(AuthContext);
 
     const [ processing, setProcessing ] = useState(false);
     const [ error, setError ] = useState(null);
@@ -25,7 +26,7 @@ export const CreateSubscription = () => {
         setProcessing(true);
         setError(null);
         if(plan.price === 0){
-            const createSubscription = httpsCallable(cloudFunctions, 'fireactjsSaas-createSubscription');
+            const createSubscription = httpsCallable(functionsInstance, 'fireactjsSaas-createSubscription');
             createSubscription({
                 priceId: plan.priceId,
                 paymentMethodId: null
@@ -51,7 +52,7 @@ export const CreateSubscription = () => {
     const submitPlan = (paymentMethod) => {
         setProcessing(true);
         setError(null);
-        const createSubscription = httpsCallable(cloudFunctions, 'fireactjsSaas-createSubscription');
+        const createSubscription = httpsCallable(functionsInstance, 'fireactjsSaas-createSubscription');
         let subscriptionId = null;
         createSubscription({
             paymentMethodId: paymentMethod.id,
@@ -60,8 +61,8 @@ export const CreateSubscription = () => {
             if(res.data && res.data.subscriptionId){
                 subscriptionId = res.data.subscriptionId;
             }
-            const pmRef = firebaseApp.firestore().doc('users/'+auth.currentUser.uid+'/paymentMethods/'+paymentMethod.id);
-            return pmRef.set({
+            const pmRef = doc(firestoreInstance, 'users/'+auth.currentUser.uid+'/paymentMethods/'+paymentMethod.id);
+            return setDoc(pmRef, {
                 type: paymentMethod.type,
                 cardBrand: paymentMethod.card.brand,
                 cardExpMonth: paymentMethod.card.exp_month,

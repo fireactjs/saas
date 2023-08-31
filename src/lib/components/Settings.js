@@ -3,7 +3,7 @@ import { SubscriptionContext } from "./SubscriptionContext";
 import { Alert, Box, Button, Container, Grid, Paper, TextField, Typography } from "@mui/material";
 import { AuthContext, SetPageTitle } from "@fireactjs/core";
 import { FireactContext } from "@fireactjs/core";
-import { doc, getFirestore, setDoc } from 'firebase/firestore';
+import { doc, setDoc } from 'firebase/firestore';
 
 export const Settings = () => {
     const { subscription, setSubscription } = useContext(SubscriptionContext);
@@ -13,7 +13,7 @@ export const Settings = () => {
     const [ processing, setProcessing ] = useState(false);
     const { config } = useContext(FireactContext);
     const label = config.saas.subscription.singular.substr(0,1).toUpperCase() + config.saas.subscription.singular.substr(1);
-    const { firebaseApp } = useContext(AuthContext);
+    const { firestoreInstance } = useContext(AuthContext);
 
     const [ subscriptionName, setSubscriptionName ] = useState(defaultName);
 
@@ -21,8 +21,7 @@ export const Settings = () => {
         setProcessing(true);
         setError(null);
         setSuccess(null);
-        const db = getFirestore(firebaseApp);
-        const docRef = doc(db, "subscriptions", subscription.id);
+        const docRef = doc(firestoreInstance, "subscriptions", subscription.id);
         if(subscriptionName.trim() !== ""){
             setDoc(docRef, {name: subscriptionName}, {merge: true}).then(() => {
                 setSuccess('The settings have been successfully updated.');

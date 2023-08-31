@@ -2,13 +2,13 @@ import { AuthContext, FireactContext, SetPageTitle } from "@fireactjs/core";
 import { Alert, Box, Button, Card, CardActions, CardHeader, Container, Grid, Paper, Typography } from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "firebase/compat/firestore";
 import { httpsCallable } from "firebase/functions";
 import { Stack } from "@mui/system";
+import { collection, query, where, getDocs, getDoc, doc } from 'firebase/firestore';
 
 export const ListSubscriptions = ({loader}) => {
 
-    const { firebaseApp, cloudFunctions } = useContext(AuthContext);
+    const { authInstance, firestoreInstance, functionsInstance } = useContext(AuthContext);
     const { config } = useContext(FireactContext);
     const navigate = useNavigate();
     const [subscriptions, setSubscriptions] = useState([]);
@@ -31,11 +31,16 @@ export const ListSubscriptions = ({loader}) => {
         }
         let subscriptions = [];
         let invites = [];
-        const subscriptionsRef = firebaseApp.firestore().collection('subscriptions');
-        const subQuery = subscriptionsRef.where('permissions.'+defaultPermission, 'array-contains', firebaseApp.auth().currentUser.uid);
-        const invitesRef = firebaseApp.firestore().collection('invites');
-        const inviteQuery = invitesRef.where('email', '==', firebaseApp.auth().currentUser.email);
-        Promise.all([subQuery.get(), inviteQuery.get()]).then(([subSnapshot, inSnapshot]) => {
+
+        //const subscriptionsRef = firebaseApp.firestore().collection('subscriptions');
+        const subscriptionsRef = collection(firestoreInstance, '/subscriptions');
+        //const subQuery = subscriptionsRef.where('permissions.'+defaultPermission, 'array-contains', firebaseApp.auth().currentUser.uid);
+        const subQuery = query(subscriptionsRef, where('permissions.'+defaultPermission, 'array-contains', authInstance.currentUser.uid));
+        //const invitesRef = firebaseApp.firestore().collection('invites');
+        const invitesRef = collection(firestoreInstance, '/invites');
+        //const inviteQuery = invitesRef.where('email', '==', firebaseApp.auth().currentUser.email);
+        const inviteQuery = query(invitesRef, where('email', '==', authInstance.currentUser.email));
+        Promise.all([getDocs(subQuery), getDocs(inviteQuery)]).then(([subSnapshot, inSnapshot]) => {
             subSnapshot.forEach(record => {
                 subscriptions.push({
                     id: record.id,
@@ -56,7 +61,7 @@ export const ListSubscriptions = ({loader}) => {
             setLoaded(true);
             setError(error.message);
         })
-    },[firebaseApp, config.saas.permissions, acceptedInviteCount]);
+    },[authInstance, config.saas.permissions, acceptedInviteCount, firestoreInstance]);
 
     return (
         <>
@@ -79,14 +84,14 @@ export const ListSubscriptions = ({loader}) => {
                                 <Alert severity="error">{error}</Alert>
                             ):(
                                 <>
-                                    {invites.length > 0 && firebaseApp.auth().currentUser.emailVerified && 
+                                    {invites.length > 0 && authInstance.currentUser.emailVerified && 
                                         <Stack spacing={2} mb={2}>
                                             {invites.map((invite, i) => 
                                                 <Alert key={i} severity="info" action={
                                                     <>
                                                         <Button color="success" disabled={processing} size="small" onClick={() => {
                                                             setProcessing(true);
-                                                            const acceptInvite = httpsCallable(cloudFunctions, 'fireactjsSaas-acceptInvite');
+                                                            const acceptInvite = httpsCallable(functionsInstance, 'fireactjsSaas-acceptInvite');
                                                             acceptInvite({inviteId: invite.id}).then(() => {
                                                                 setProcessing(false);
                                                                 setAcceptedInviteCount(prevState => (prevState+1));
@@ -97,7 +102,8 @@ export const ListSubscriptions = ({loader}) => {
                                                         }}>Accept</Button>
                                                         <Button color="warning" disabled={processing} size="small" onClick={() => {
                                                             setProcessing(true);
-                                                            const inviteRef = firebaseApp.firestore().doc('invites/'+invite.id);
+                                                            const docRef = doc(firestoreInstance, 'invites/'+invite.id);
+                                                            const inviteRef = getDoc(docRef);
                                                             inviteRef.delete().then(() => {
                                                                 setInvites(prevState =>  prevState.filter(row => {
                                                                     return (row.id !== invite.id)
@@ -115,7 +121,7 @@ export const ListSubscriptions = ({loader}) => {
                                             )}
                                         </Stack>
                                     }
-                                    {invites.length > 0 && !firebaseApp.auth().currentUser.emailVerified && 
+                                    {invites.length > 0 && !authInstance.currentUser.emailVerified && 
                                         <Stack spacing={2} mb={2}>
                                             <Alert severity="warning" action={<Button size="small" onClick={() => navigate(config.pathnames.UserProfile)} >My Profile</Button>}>
                                                 You have invites but your email is not verified. Please go to your profile and verify your email to accept the invites.

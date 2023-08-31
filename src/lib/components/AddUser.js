@@ -10,7 +10,7 @@ export const AddUser = ({setAddUserActive, setUsers}) => {
     const { subscription } = useContext(SubscriptionContext);
     const subscriptionName = subscription.name?subscription.name:"";
 
-    const { cloudFunctions } = useContext(AuthContext);
+    const { functionsInstance } = useContext(AuthContext);
 
     const { config } = useContext(FireactContext);
     const permissions = config.saas.permissions || {};
@@ -88,7 +88,7 @@ export const AddUser = ({setAddUserActive, setUsers}) => {
                                 setProcessing(true);
                                 setError(null);
                                 setSuccess(false);
-                                const inviteUser = httpsCallable(cloudFunctions, 'fireactjsSaas-inviteUser');
+                                const inviteUser = httpsCallable(functionsInstance, 'fireactjsSaas-inviteUser');
                                 inviteUser({
                                     email: email.toLocaleLowerCase(),
                                     displayName: displayName,

@@ -12,7 +12,7 @@ export const CancelSubscription = () => {
     const navigate = useNavigate();
     const { config } = useContext(FireactContext);
     const [ error, setError ] = useState(null);
-    const { cloudFunctions } = useContext(AuthContext);
+    const { functionsInstance } = useContext(AuthContext);
 
     return (
         <Container maxWidth="md">
@@ -46,7 +46,7 @@ export const CancelSubscription = () => {
                                     setError("The input confirmation does not match \""+subscription.id+"\"");
                                     setProcessing(false);
                                 }else{
-                                    const cancelSubscription = httpsCallable(cloudFunctions, 'fireactjsSaas-cancelSubscription');
+                                    const cancelSubscription = httpsCallable(functionsInstance, 'fireactjsSaas-cancelSubscription');
                                     return cancelSubscription({
                                         subscriptionId: subscription.id
                                     }).then(() => {
