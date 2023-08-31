@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { SubscriptionContext } from "./SubscriptionContext";
-import "firebase/compat/functions";
+import { httpsCallable } from "firebase/functions";
 import { AuthContext, FireactContext, SetPageTitle } from "@fireactjs/core";
 import { Paper, Box, Container, Grid, Button, Avatar, Alert, Typography } from "@mui/material";
 import { PaginationTable } from "./PaginationTable";
@@ -16,8 +16,7 @@ export const ListUsers = ({loader}) => {
     const subscriptionName = subscription.name?subscription.name:"";
     const [ users, setUsers ] = useState([]);
 
-    const { firebaseApp } = useContext(AuthContext);
-    const CloudFunctions = firebaseApp.functions();
+    const { functionsInstance } = useContext(AuthContext);
 
     const [loaded, setLoaded] = useState(false);
 
@@ -35,7 +34,7 @@ export const ListUsers = ({loader}) => {
 
     const reovkeInvite = useCallback(({inviteId, subscriptionId}) => {
         setProcessing(true);
-        const revokeInvite = CloudFunctions.httpsCallable('fireactjsSaas-revokeInvite');
+        const revokeInvite = httpsCallable(functionsInstance, 'fireactjsSaas-revokeInvite');
         revokeInvite({
             subscriptionId: subscriptionId,
             inviteId: inviteId,
@@ -45,11 +44,11 @@ export const ListUsers = ({loader}) => {
             }));
             setProcessing(false);
         });
-    }, [CloudFunctions]);
+    }, [functionsInstance]);
 
     useEffect(() => {
         setError(null);
-        const getSubscriptionUsers = CloudFunctions.httpsCallable('fireactjsSaas-getSubscriptionUsers');
+        const getSubscriptionUsers = httpsCallable(functionsInstance, 'fireactjsSaas-getSubscriptionUsers');
         getSubscriptionUsers({subscriptionId: subscription.id}).then(result => {
             setTotal(result.data.total);
             result.data.users.sort((a,b) => a.displayName > b.displayName);
@@ -59,7 +58,7 @@ export const ListUsers = ({loader}) => {
             setError(error.message);
             setLoaded(true);
         });
-    }, [subscription.id, CloudFunctions, pathnames.UpdateUser]);
+    }, [subscription.id, functionsInstance, pathnames.UpdateUser]);
 
     useEffect(() => {
         const startIndex = page * pageSize;

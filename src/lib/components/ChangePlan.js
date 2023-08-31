@@ -3,19 +3,17 @@ import { Alert, Box, Container, Paper, Stack, Typography } from "@mui/material";
 import React, { useContext, useState } from "react";
 import { PricingPlans } from "./PricingPlans";
 import { SubscriptionContext } from "./SubscriptionContext";
-import "firebase/compat/functions";
 import { PaymentMethodForm } from "./PaymentMethodForm";
+import { httpsCallable } from "firebase/functions";
 import { NavLink } from "react-router-dom";
-import { getAuth } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
 
 export const ChangePlan = () => {
 
     const { subscription, setSubscription } = useContext(SubscriptionContext);
     const { config } = useContext(FireactContext);
-    const auth = getAuth();
 
-    const { firebaseApp } = useContext(AuthContext);
-    const CloudFunctions = firebaseApp.functions();
+    const { firestoreInstance, functionsInstance, authInstance } = useContext(AuthContext);
 
     const [ processing, setProcessing ] = useState(false);
     const [ error, setError ] = useState(null);
@@ -28,7 +26,7 @@ export const ChangePlan = () => {
         setError(null);
         if(plan.price === 0 || subscription.paymentMethod){
             // subscribe to the new plan
-            const changeSubscriptionPlan = CloudFunctions.httpsCallable('fireactjsSaas-changeSubscriptionPlan');
+            const changeSubscriptionPlan = httpsCallable(functionsInstance, 'fireactjsSaas-changeSubscriptionPlan');
             changeSubscriptionPlan({
                 paymentMethodId: subscription.paymentMethod,
                 priceId: plan.priceId,
@@ -59,14 +57,14 @@ export const ChangePlan = () => {
     const submitPlan = (paymentMethod) => {
         setProcessing(true);
         setError(null);
-        const changeSubscriptionPlan = CloudFunctions.httpsCallable('fireactjsSaas-changeSubscriptionPlan');
+        const changeSubscriptionPlan = httpsCallable(functionsInstance, 'fireactjsSaas-changeSubscriptionPlan');
         changeSubscriptionPlan({
             paymentMethodId: paymentMethod.id,
             priceId: selectedPlan.priceId,
             subscriptionId: subscription.id
         }).then(() => {
-            const pmRef = firebaseApp.firestore().doc('users/'+auth.currentUser.uid+'/paymentMethods/'+paymentMethod.id);
-            return pmRef.set({
+            const pmRef = doc(firestoreInstance, 'users/'+authInstance.currentUser.uid+'/paymentMethods/'+paymentMethod.id);
+            return setDoc(pmRef,{
                 type: paymentMethod.type,
                 cardBrand: paymentMethod.card.brand,
                 cardExpMonth: paymentMethod.card.exp_month,

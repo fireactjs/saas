@@ -1,10 +1,4 @@
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.checkPermission = void 0;
-const checkPermission = (subscription, uid, permissions) => {
+export const checkPermission = (subscription, uid, permissions) => {
   let allow = false;
   for (let i = 0; i < permissions.length; i++) {
     if (subscription.permissions && subscription.permissions[permissions[i]]) {
@@ -15,4 +9,3 @@ const checkPermission = (subscription, uid, permissions) => {
   }
   return allow;
 };
-exports.checkPermission = checkPermission;

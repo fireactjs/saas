@@ -3,7 +3,7 @@ import { Paper, Container, Box, Typography, TextField, Button, Grid, Alert } fro
 import React, { useContext, useState } from "react";
 import { SubscriptionContext } from "./SubscriptionContext";
 import { useNavigate } from "react-router-dom";
-import "firebase/compat/functions";
+import { httpsCallable } from "firebase/functions";
 
 export const CancelSubscription = () => {
     const { subscription } = useContext(SubscriptionContext);
@@ -12,8 +12,7 @@ export const CancelSubscription = () => {
     const navigate = useNavigate();
     const { config } = useContext(FireactContext);
     const [ error, setError ] = useState(null);
-    const { firebaseApp } = useContext(AuthContext);
-    const CloudFunctions = firebaseApp.functions();
+    const { functionsInstance } = useContext(AuthContext);
 
     return (
         <Container maxWidth="md">
@@ -47,7 +46,7 @@ export const CancelSubscription = () => {
                                     setError("The input confirmation does not match \""+subscription.id+"\"");
                                     setProcessing(false);
                                 }else{
-                                    const cancelSubscription = CloudFunctions.httpsCallable('fireactjsSaas-cancelSubscription');
+                                    const cancelSubscription = httpsCallable(functionsInstance, 'fireactjsSaas-cancelSubscription');
                                     return cancelSubscription({
                                         subscriptionId: subscription.id
                                     }).then(() => {

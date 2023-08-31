@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useParams, Outlet } from 'react-router-dom';
-import { doc, getFirestore, getDoc } from 'firebase/firestore';
+import { doc, getDoc } from 'firebase/firestore';
 import { AuthContext, FireactContext } from "@fireactjs/core";
 import { Alert, Box, Container } from "@mui/material";
 
@@ -9,14 +9,13 @@ export const SubscriptionContext = React.createContext();
 export const SubscriptionProvider = ({loader}) => {
     const { subscriptionId } = useParams();
     const [ subscription, setSubscription ] = useState(null);
-    const { firebaseApp } = useContext(AuthContext);
+    const { firestoreInstance } = useContext(AuthContext);
     const [ error, setError ] = useState(null);
     const { config } = useContext(FireactContext);
 
     useEffect(() => {
         setError(null);
-        const db = getFirestore(firebaseApp);
-        const docRef = doc(db, "subscriptions", subscriptionId);
+        const docRef = doc(firestoreInstance, "subscriptions", subscriptionId);
 
         getDoc(docRef).then(docSnap => {
             if(docSnap.exists()){
@@ -30,7 +29,7 @@ export const SubscriptionProvider = ({loader}) => {
         }).catch(error => {
             setError(error.message);
         })
-    }, [subscriptionId, firebaseApp, config.saas.subscription.singular, setError]);
+    }, [subscriptionId, firestoreInstance, config.saas.subscription.singular, setError]);
 
     return (
         <>
