@@ -1,0 +1,11 @@
+{
+    "CancelSubscription": "/sub/:subscriptionId/billing/cancel",
+    "CreateSubscription": "/create",
+    "ListSubscriptions": "/",
+    "Subscription" : "/sub/:subscriptionId",
+    "Settings": "/sub/:subscriptionId/settings",
+    "ListUsers": "/sub/:subscriptionId/users",
+    "ChangePlan": "/sub/:subscriptionId/billing/plan",
+    "ListInvoices": "/sub/:subscriptionId/billing",
+    "ManagePaymentMethods": "/sub/:subscriptionId/billing/payment-method"
+}
