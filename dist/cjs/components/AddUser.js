@@ -1,25 +1,35 @@
-import "core-js/modules/web.dom-collections.iterator.js";
-import { AuthContext, FireactContext, SetPageTitle } from "@fireactjs/core";
-import { Alert, Box, Button, Checkbox, Container, FormControl, FormControlLabel, FormLabel, Grid, Paper, TextField, Typography } from "@mui/material";
-import React, { useContext, useState } from "react";
-import { SubscriptionContext } from "./SubscriptionContext";
+"use strict";
+
+require("core-js/modules/es.weak-map.js");
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.AddUser = void 0;
+require("core-js/modules/web.dom-collections.iterator.js");
+var _core = require("@fireactjs/core");
+var _material = require("@mui/material");
+var _react = _interopRequireWildcard(require("react"));
+var _SubscriptionContext = require("./SubscriptionContext");
+var _functions = require("firebase/functions");
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 //import "firebase/compat/functions";
-import { httpsCallable } from 'firebase/functions';
-export const AddUser = _ref => {
+
+const AddUser = _ref => {
   let {
     setAddUserActive,
     setUsers
   } = _ref;
   const {
     subscription
-  } = useContext(SubscriptionContext);
+  } = (0, _react.useContext)(_SubscriptionContext.SubscriptionContext);
   const subscriptionName = subscription.name ? subscription.name : "";
   const {
     functionsInstance
-  } = useContext(AuthContext);
+  } = (0, _react.useContext)(_core.AuthContext);
   const {
     config
-  } = useContext(FireactContext);
+  } = (0, _react.useContext)(_core.FireactContext);
   const permissions = config.saas.permissions || {};
   const defaultPermissions = [];
   for (let p in permissions) {
@@ -27,33 +37,33 @@ export const AddUser = _ref => {
       defaultPermissions.push(p);
     }
   }
-  const [processing, setProcessing] = useState(false);
-  const [email, setEmail] = useState('');
-  const [displayName, setDisplayName] = useState('');
-  const [userPermissions, setUserPermissions] = useState(defaultPermissions);
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(false);
-  return /*#__PURE__*/React.createElement(Container, {
+  const [processing, setProcessing] = (0, _react.useState)(false);
+  const [email, setEmail] = (0, _react.useState)('');
+  const [displayName, setDisplayName] = (0, _react.useState)('');
+  const [userPermissions, setUserPermissions] = (0, _react.useState)(defaultPermissions);
+  const [error, setError] = (0, _react.useState)(null);
+  const [success, setSuccess] = (0, _react.useState)(false);
+  return /*#__PURE__*/_react.default.createElement(_material.Container, {
     maxWidth: "md"
-  }, /*#__PURE__*/React.createElement(SetPageTitle, {
+  }, /*#__PURE__*/_react.default.createElement(_core.SetPageTitle, {
     title: "Invite User" + (subscriptionName !== "" ? " - " + subscriptionName : "")
-  }), /*#__PURE__*/React.createElement(Paper, null, /*#__PURE__*/React.createElement(Box, {
+  }), /*#__PURE__*/_react.default.createElement(_material.Paper, null, /*#__PURE__*/_react.default.createElement(_material.Box, {
     p: 2
-  }, /*#__PURE__*/React.createElement(Typography, {
+  }, /*#__PURE__*/_react.default.createElement(_material.Typography, {
     component: "h1",
     variant: "h4",
     align: "center"
-  }, "Invite User")), error !== null && /*#__PURE__*/React.createElement(Box, {
+  }, "Invite User")), error !== null && /*#__PURE__*/_react.default.createElement(_material.Box, {
     p: 2
-  }, /*#__PURE__*/React.createElement(Alert, {
+  }, /*#__PURE__*/_react.default.createElement(_material.Alert, {
     severity: "error"
-  }, error)), success && /*#__PURE__*/React.createElement(Box, {
+  }, error)), success && /*#__PURE__*/_react.default.createElement(_material.Box, {
     p: 2
-  }, /*#__PURE__*/React.createElement(Alert, {
+  }, /*#__PURE__*/_react.default.createElement(_material.Alert, {
     severity: "success"
-  }, "The invite has been successfully sent")), /*#__PURE__*/React.createElement(Box, {
+  }, "The invite has been successfully sent")), /*#__PURE__*/_react.default.createElement(_material.Box, {
     p: 2
-  }, /*#__PURE__*/React.createElement(TextField, {
+  }, /*#__PURE__*/_react.default.createElement(_material.TextField, {
     required: true,
     fullWidth: true,
     name: "name",
@@ -63,7 +73,7 @@ export const AddUser = _ref => {
     onChange: e => {
       setDisplayName(e.target.value);
     }
-  }), /*#__PURE__*/React.createElement(TextField, {
+  }), /*#__PURE__*/_react.default.createElement(_material.TextField, {
     required: true,
     fullWidth: true,
     name: "email",
@@ -73,20 +83,20 @@ export const AddUser = _ref => {
     onChange: e => {
       setEmail(e.target.value);
     }
-  }), /*#__PURE__*/React.createElement(Box, {
+  }), /*#__PURE__*/_react.default.createElement(_material.Box, {
     p: 1
-  }, /*#__PURE__*/React.createElement(FormControl, {
+  }, /*#__PURE__*/_react.default.createElement(_material.FormControl, {
     fullWidth: true
-  }, /*#__PURE__*/React.createElement(FormLabel, null, "Permissions"), /*#__PURE__*/React.createElement(Grid, {
+  }, /*#__PURE__*/_react.default.createElement(_material.FormLabel, null, "Permissions"), /*#__PURE__*/_react.default.createElement(_material.Grid, {
     container: true
   }, Object.keys(permissions).map((key, index) => {
-    return /*#__PURE__*/React.createElement(Grid, {
+    return /*#__PURE__*/_react.default.createElement(_material.Grid, {
       item: true,
       xs: 12,
       md: 3,
       key: index
-    }, /*#__PURE__*/React.createElement(FormControlLabel, {
-      control: /*#__PURE__*/React.createElement(Checkbox, {
+    }, /*#__PURE__*/_react.default.createElement(_material.FormControlLabel, {
+      control: /*#__PURE__*/_react.default.createElement(_material.Checkbox, {
         onChange: e => {
           if (e.target.checked) {
             setUserPermissions(prevState => [...prevState, key]);
@@ -99,22 +109,22 @@ export const AddUser = _ref => {
       }),
       label: key
     }));
-  }))))), /*#__PURE__*/React.createElement(Box, {
+  }))))), /*#__PURE__*/_react.default.createElement(_material.Box, {
     p: 2
-  }, /*#__PURE__*/React.createElement(Grid, {
+  }, /*#__PURE__*/_react.default.createElement(_material.Grid, {
     container: true
-  }, /*#__PURE__*/React.createElement(Grid, {
+  }, /*#__PURE__*/_react.default.createElement(_material.Grid, {
     item: true,
     xs: true
-  }, /*#__PURE__*/React.createElement(Button, {
+  }, /*#__PURE__*/_react.default.createElement(_material.Button, {
     type: "button",
     color: "secondary",
     variant: "outlined",
     disabled: processing,
     onClick: () => setAddUserActive(false)
-  }, "Back")), /*#__PURE__*/React.createElement(Grid, {
+  }, "Back")), /*#__PURE__*/_react.default.createElement(_material.Grid, {
     item: true
-  }, /*#__PURE__*/React.createElement(Button, {
+  }, /*#__PURE__*/_react.default.createElement(_material.Button, {
     type: "button",
     color: "primary",
     variant: "contained",
@@ -123,7 +133,7 @@ export const AddUser = _ref => {
       setProcessing(true);
       setError(null);
       setSuccess(false);
-      const inviteUser = httpsCallable(functionsInstance, 'fireactjsSaas-inviteUser');
+      const inviteUser = (0, _functions.httpsCallable)(functionsInstance, 'fireactjsSaas-inviteUser');
       inviteUser({
         email: email.toLocaleLowerCase(),
         displayName: displayName,
@@ -150,3 +160,4 @@ export const AddUser = _ref => {
     }
   }, "Invite"))))));
 };
+exports.AddUser = AddUser;

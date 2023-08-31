@@ -1,20 +1,29 @@
-import "core-js/modules/web.dom-collections.iterator.js";
-import "core-js/modules/es.promise.js";
-import { loadStripe } from '@stripe/stripe-js';
-import { CardElement, useStripe, useElements, Elements } from '@stripe/react-stripe-js';
-import React, { useContext, useMemo, useState } from "react";
-import { FireactContext } from '@fireactjs/core';
-import { Grid, Stack, Alert, Box, Button } from '@mui/material';
+"use strict";
+
+require("core-js/modules/es.weak-map.js");
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.PaymentMethodForm = void 0;
+require("core-js/modules/web.dom-collections.iterator.js");
+require("core-js/modules/es.promise.js");
+var _stripeJs = require("@stripe/stripe-js");
+var _reactStripeJs = require("@stripe/react-stripe-js");
+var _react = _interopRequireWildcard(require("react"));
+var _core = require("@fireactjs/core");
+var _material = require("@mui/material");
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 const PaymentMethodFormHandler = _ref => {
   let {
     setPaymentMethod,
     buttonText,
     disabled
   } = _ref;
-  const [processing, setProcessing] = useState(false);
-  const [error, setError] = useState(null);
-  const stripe = useStripe();
-  const elements = useElements();
+  const [processing, setProcessing] = (0, _react.useState)(false);
+  const [error, setError] = (0, _react.useState)(null);
+  const stripe = (0, _reactStripeJs.useStripe)();
+  const elements = (0, _reactStripeJs.useElements)();
   const CARD_ELEMENT_OPTIONS = {
     style: {
       base: {
@@ -41,7 +50,7 @@ const PaymentMethodFormHandler = _ref => {
       setProcessing(false);
       return;
     }
-    const cardElement = elements.getElement(CardElement);
+    const cardElement = elements.getElement(_reactStripeJs.CardElement);
     const {
       error,
       paymentMethod
@@ -57,29 +66,29 @@ const PaymentMethodFormHandler = _ref => {
       setProcessing(false);
     }
   };
-  return /*#__PURE__*/React.createElement(Stack, {
+  return /*#__PURE__*/_react.default.createElement(_material.Stack, {
     spacing: 3
-  }, /*#__PURE__*/React.createElement(Grid, {
+  }, /*#__PURE__*/_react.default.createElement(_material.Grid, {
     container: true,
     direction: "row",
     justifyContent: "center",
     alignItems: "center"
-  }, /*#__PURE__*/React.createElement(Grid, {
+  }, /*#__PURE__*/_react.default.createElement(_material.Grid, {
     item: true,
     md: 8
-  }, error && /*#__PURE__*/React.createElement(Box, {
+  }, error && /*#__PURE__*/_react.default.createElement(_material.Box, {
     mb: 2
-  }, /*#__PURE__*/React.createElement(Alert, {
+  }, /*#__PURE__*/_react.default.createElement(_material.Alert, {
     severity: "error"
-  }, error)), /*#__PURE__*/React.createElement("div", {
+  }, error)), /*#__PURE__*/_react.default.createElement("div", {
     style: {
       position: "relative",
       minHeight: '56px',
       padding: '15px'
     }
-  }, /*#__PURE__*/React.createElement(CardElement, {
+  }, /*#__PURE__*/_react.default.createElement(_reactStripeJs.CardElement, {
     options: CARD_ELEMENT_OPTIONS
-  }), /*#__PURE__*/React.createElement("fieldset", {
+  }), /*#__PURE__*/_react.default.createElement("fieldset", {
     style: {
       borderColor: 'rgba(0, 0, 0, 0.23)',
       borderStyle: 'solid',
@@ -95,18 +104,18 @@ const PaymentMethodFormHandler = _ref => {
       overflow: 'hidden',
       pointerEvents: 'none'
     }
-  })))), /*#__PURE__*/React.createElement(Grid, {
+  })))), /*#__PURE__*/_react.default.createElement(_material.Grid, {
     container: true,
     direction: "row",
     justifyContent: "center",
     alignItems: "center"
-  }, /*#__PURE__*/React.createElement(Button, {
+  }, /*#__PURE__*/_react.default.createElement(_material.Button, {
     variant: "contained",
     disabled: processing || disabled,
     onClick: e => getPaymentMethod(e)
   }, buttonText)));
 };
-export const PaymentMethodForm = _ref2 => {
+const PaymentMethodForm = _ref2 => {
   let {
     setPaymentMethod,
     buttonText,
@@ -114,15 +123,16 @@ export const PaymentMethodForm = _ref2 => {
   } = _ref2;
   const {
     config
-  } = useContext(FireactContext);
-  const stripePromise = useMemo(() => {
-    return loadStripe(config.saas.stripe.public_api_key);
+  } = (0, _react.useContext)(_core.FireactContext);
+  const stripePromise = (0, _react.useMemo)(() => {
+    return (0, _stripeJs.loadStripe)(config.saas.stripe.public_api_key);
   }, [config.saas.stripe.public_api_key]);
-  return /*#__PURE__*/React.createElement(Elements, {
+  return /*#__PURE__*/_react.default.createElement(_reactStripeJs.Elements, {
     stripe: stripePromise
-  }, /*#__PURE__*/React.createElement(PaymentMethodFormHandler, {
+  }, /*#__PURE__*/_react.default.createElement(PaymentMethodFormHandler, {
     setPaymentMethod: setPaymentMethod,
     buttonText: buttonText,
     disabled: disabled
   }));
 };
+exports.PaymentMethodForm = PaymentMethodForm;

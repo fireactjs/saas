@@ -1,6 +1,6 @@
 {
   "name": "@fireactjs/saas",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "private": false,
   "author": "Chaoming Li",
   "keywords": [
@@ -25,7 +25,7 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.12.1",
-    "@fireactjs/core": "^1.1.0",
+    "@fireactjs/core": "^1.1.1",
     "@stripe/react-stripe-js": "^1.15.0",
     "@stripe/stripe-js": "^1.44.1"
   },

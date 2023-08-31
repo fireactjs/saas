@@ -1,15 +1,24 @@
-import "core-js/modules/web.dom-collections.iterator.js";
-import "core-js/modules/es.promise.js";
-import "core-js/modules/es.regexp.exec.js";
-import "core-js/modules/es.string.replace.js";
-import { AuthContext, FireactContext, SetPageTitle } from "@fireactjs/core";
-import { Alert, Box, Button, Card, CardActions, CardHeader, Container, Grid, Paper, Typography } from "@mui/material";
-import React, { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { httpsCallable } from "firebase/functions";
-import { Stack } from "@mui/system";
-import { collection, query, where, getDocs, getDoc, doc } from 'firebase/firestore';
-export const ListSubscriptions = _ref => {
+"use strict";
+
+require("core-js/modules/es.weak-map.js");
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.ListSubscriptions = void 0;
+require("core-js/modules/web.dom-collections.iterator.js");
+require("core-js/modules/es.promise.js");
+require("core-js/modules/es.regexp.exec.js");
+require("core-js/modules/es.string.replace.js");
+var _core = require("@fireactjs/core");
+var _material = require("@mui/material");
+var _react = _interopRequireWildcard(require("react"));
+var _reactRouterDom = require("react-router-dom");
+var _functions = require("firebase/functions");
+var _system = require("@mui/system");
+var _firestore = require("firebase/firestore");
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+const ListSubscriptions = _ref => {
   let {
     loader
   } = _ref;
@@ -17,18 +26,18 @@ export const ListSubscriptions = _ref => {
     authInstance,
     firestoreInstance,
     functionsInstance
-  } = useContext(AuthContext);
+  } = (0, _react.useContext)(_core.AuthContext);
   const {
     config
-  } = useContext(FireactContext);
-  const navigate = useNavigate();
-  const [subscriptions, setSubscriptions] = useState([]);
-  const [loaded, setLoaded] = useState(false);
-  const [error, setError] = useState(null);
-  const [invites, setInvites] = useState([]);
-  const [processing, setProcessing] = useState(false);
-  const [acceptedInviteCount, setAcceptedInviteCount] = useState(0);
-  useEffect(() => {
+  } = (0, _react.useContext)(_core.FireactContext);
+  const navigate = (0, _reactRouterDom.useNavigate)();
+  const [subscriptions, setSubscriptions] = (0, _react.useState)([]);
+  const [loaded, setLoaded] = (0, _react.useState)(false);
+  const [error, setError] = (0, _react.useState)(null);
+  const [invites, setInvites] = (0, _react.useState)([]);
+  const [processing, setProcessing] = (0, _react.useState)(false);
+  const [acceptedInviteCount, setAcceptedInviteCount] = (0, _react.useState)(0);
+  (0, _react.useEffect)(() => {
     setLoaded(false);
     setError(null);
     // get default permission level name
@@ -43,14 +52,14 @@ export const ListSubscriptions = _ref => {
     let invites = [];
 
     //const subscriptionsRef = firebaseApp.firestore().collection('subscriptions');
-    const subscriptionsRef = collection(firestoreInstance, '/subscriptions');
+    const subscriptionsRef = (0, _firestore.collection)(firestoreInstance, '/subscriptions');
     //const subQuery = subscriptionsRef.where('permissions.'+defaultPermission, 'array-contains', firebaseApp.auth().currentUser.uid);
-    const subQuery = query(subscriptionsRef, where('permissions.' + defaultPermission, 'array-contains', authInstance.currentUser.uid));
+    const subQuery = (0, _firestore.query)(subscriptionsRef, (0, _firestore.where)('permissions.' + defaultPermission, 'array-contains', authInstance.currentUser.uid));
     //const invitesRef = firebaseApp.firestore().collection('invites');
-    const invitesRef = collection(firestoreInstance, '/invites');
+    const invitesRef = (0, _firestore.collection)(firestoreInstance, '/invites');
     //const inviteQuery = invitesRef.where('email', '==', firebaseApp.auth().currentUser.email);
-    const inviteQuery = query(invitesRef, where('email', '==', authInstance.currentUser.email));
-    Promise.all([getDocs(subQuery), getDocs(inviteQuery)]).then(_ref2 => {
+    const inviteQuery = (0, _firestore.query)(invitesRef, (0, _firestore.where)('email', '==', authInstance.currentUser.email));
+    Promise.all([(0, _firestore.getDocs)(subQuery), (0, _firestore.getDocs)(inviteQuery)]).then(_ref2 => {
       let [subSnapshot, inSnapshot] = _ref2;
       subSnapshot.forEach(record => {
         subscriptions.push({
@@ -73,45 +82,45 @@ export const ListSubscriptions = _ref => {
       setError(error.message);
     });
   }, [authInstance, config.saas.permissions, acceptedInviteCount, firestoreInstance]);
-  return /*#__PURE__*/React.createElement(React.Fragment, null, loaded ? /*#__PURE__*/React.createElement(Container, {
+  return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, loaded ? /*#__PURE__*/_react.default.createElement(_material.Container, {
     maxWidth: "lx"
-  }, /*#__PURE__*/React.createElement(SetPageTitle, {
+  }, /*#__PURE__*/_react.default.createElement(_core.SetPageTitle, {
     title: "My Subscriptions"
-  }), /*#__PURE__*/React.createElement(Paper, null, /*#__PURE__*/React.createElement(Box, {
+  }), /*#__PURE__*/_react.default.createElement(_material.Paper, null, /*#__PURE__*/_react.default.createElement(_material.Box, {
     p: 2
-  }, /*#__PURE__*/React.createElement(Grid, {
+  }, /*#__PURE__*/_react.default.createElement(_material.Grid, {
     container: true,
     direction: "row",
     justifyContent: "space-between",
     alignItems: "center"
-  }, /*#__PURE__*/React.createElement(Grid, {
+  }, /*#__PURE__*/_react.default.createElement(_material.Grid, {
     item: true
-  }, /*#__PURE__*/React.createElement(Typography, {
+  }, /*#__PURE__*/_react.default.createElement(_material.Typography, {
     component: "h1",
     variant: "h4"
-  }, "My ", config.saas.subscription.plural)), /*#__PURE__*/React.createElement(Grid, {
+  }, "My ", config.saas.subscription.plural)), /*#__PURE__*/_react.default.createElement(_material.Grid, {
     item: true,
     textAlign: "right"
-  }, /*#__PURE__*/React.createElement(Button, {
+  }, /*#__PURE__*/_react.default.createElement(_material.Button, {
     variant: "contained",
     onClick: () => navigate(config.pathnames.CreateSubscription)
-  }, "Add ", config.saas.subscription.singular)))), /*#__PURE__*/React.createElement(Box, {
+  }, "Add ", config.saas.subscription.singular)))), /*#__PURE__*/_react.default.createElement(_material.Box, {
     p: 2
-  }, error !== null ? /*#__PURE__*/React.createElement(Alert, {
+  }, error !== null ? /*#__PURE__*/_react.default.createElement(_material.Alert, {
     severity: "error"
-  }, error) : /*#__PURE__*/React.createElement(React.Fragment, null, invites.length > 0 && authInstance.currentUser.emailVerified && /*#__PURE__*/React.createElement(Stack, {
+  }, error) : /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, invites.length > 0 && authInstance.currentUser.emailVerified && /*#__PURE__*/_react.default.createElement(_system.Stack, {
     spacing: 2,
     mb: 2
-  }, invites.map((invite, i) => /*#__PURE__*/React.createElement(Alert, {
+  }, invites.map((invite, i) => /*#__PURE__*/_react.default.createElement(_material.Alert, {
     key: i,
     severity: "info",
-    action: /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(Button, {
+    action: /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement(_material.Button, {
       color: "success",
       disabled: processing,
       size: "small",
       onClick: () => {
         setProcessing(true);
-        const acceptInvite = httpsCallable(functionsInstance, 'fireactjsSaas-acceptInvite');
+        const acceptInvite = (0, _functions.httpsCallable)(functionsInstance, 'fireactjsSaas-acceptInvite');
         acceptInvite({
           inviteId: invite.id
         }).then(() => {
@@ -122,14 +131,14 @@ export const ListSubscriptions = _ref => {
           setProcessing(false);
         });
       }
-    }, "Accept"), /*#__PURE__*/React.createElement(Button, {
+    }, "Accept"), /*#__PURE__*/_react.default.createElement(_material.Button, {
       color: "warning",
       disabled: processing,
       size: "small",
       onClick: () => {
         setProcessing(true);
-        const docRef = doc(firestoreInstance, 'invites/' + invite.id);
-        const inviteRef = getDoc(docRef);
+        const docRef = (0, _firestore.doc)(firestoreInstance, 'invites/' + invite.id);
+        const inviteRef = (0, _firestore.getDoc)(docRef);
         inviteRef.delete().then(() => {
           setInvites(prevState => prevState.filter(row => {
             return row.id !== invite.id;
@@ -141,33 +150,34 @@ export const ListSubscriptions = _ref => {
         });
       }
     }, "Reject"))
-  }, "You are invited to join ", /*#__PURE__*/React.createElement("strong", null, invite.subscriptionName), " by ", /*#__PURE__*/React.createElement("strong", null, invite.sender)))), invites.length > 0 && !authInstance.currentUser.emailVerified && /*#__PURE__*/React.createElement(Stack, {
+  }, "You are invited to join ", /*#__PURE__*/_react.default.createElement("strong", null, invite.subscriptionName), " by ", /*#__PURE__*/_react.default.createElement("strong", null, invite.sender)))), invites.length > 0 && !authInstance.currentUser.emailVerified && /*#__PURE__*/_react.default.createElement(_system.Stack, {
     spacing: 2,
     mb: 2
-  }, /*#__PURE__*/React.createElement(Alert, {
+  }, /*#__PURE__*/_react.default.createElement(_material.Alert, {
     severity: "warning",
-    action: /*#__PURE__*/React.createElement(Button, {
+    action: /*#__PURE__*/_react.default.createElement(_material.Button, {
       size: "small",
       onClick: () => navigate(config.pathnames.UserProfile)
     }, "My Profile")
-  }, "You have invites but your email is not verified. Please go to your profile and verify your email to accept the invites.")), /*#__PURE__*/React.createElement(Grid, {
+  }, "You have invites but your email is not verified. Please go to your profile and verify your email to accept the invites.")), /*#__PURE__*/_react.default.createElement(_material.Grid, {
     container: true,
     spacing: 3
-  }, subscriptions.length > 0 ? subscriptions.map((subscription, i) => /*#__PURE__*/React.createElement(Grid, {
+  }, subscriptions.length > 0 ? subscriptions.map((subscription, i) => /*#__PURE__*/_react.default.createElement(_material.Grid, {
     item: true,
     xs: 12,
     md: 4,
     key: i
-  }, /*#__PURE__*/React.createElement(Card, null, /*#__PURE__*/React.createElement(CardHeader, {
+  }, /*#__PURE__*/_react.default.createElement(_material.Card, null, /*#__PURE__*/_react.default.createElement(_material.CardHeader, {
     title: subscription.name ? subscription.name : "Untitled",
     subheader: subscription.id
-  }), /*#__PURE__*/React.createElement(CardActions, null, /*#__PURE__*/React.createElement(Button, {
+  }), /*#__PURE__*/_react.default.createElement(_material.CardActions, null, /*#__PURE__*/_react.default.createElement(_material.Button, {
     variant: "outlined",
     color: "success",
     onClick: () => {
       navigate(config.pathnames.Subscription.replace(":subscriptionId", subscription.id));
     }
-  }, "Access"))))) : /*#__PURE__*/React.createElement(Grid, {
+  }, "Access"))))) : /*#__PURE__*/_react.default.createElement(_material.Grid, {
     item: true
-  }, "You don't have access to any ", config.saas.subscription.singular, ". Please create one or ask your admin to invite you to one.")))))) : /*#__PURE__*/React.createElement(React.Fragment, null, loader));
+  }, "You don't have access to any ", config.saas.subscription.singular, ". Please create one or ask your admin to invite you to one.")))))) : /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, loader));
 };
+exports.ListSubscriptions = ListSubscriptions;
