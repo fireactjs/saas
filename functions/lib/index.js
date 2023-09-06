@@ -272,7 +272,7 @@ module.exports = function(config){
             let permissions = [];
             return getDoc("subscriptions/"+data.subscriptionId).then(subRef => {
                 // check if the user is an admin level user
-                if(subRef.data().permissions[getAdminPermission()].indexOf(context.auth.uid) !== -1){
+                if(subRef.data().permissions[getAdminPermission()].indexOf(context.auth.uid) !== -1 || subRef.data().owner === context.auth.uid){
                     const userList = subRef.data().permissions[getDefaultPermission()];
                     permissions = subRef.data().permissions;
                     // get total
@@ -328,7 +328,7 @@ module.exports = function(config){
             return getDoc("subscriptions/"+data.subscriptionId).then(subRef => {
                 // check if the user is an admin level user
                 subDoc = subRef;
-                if(subRef.data().permissions[getAdminPermission()].indexOf(context.auth.uid) !== -1){
+                if(subRef.data().permissions[getAdminPermission()].indexOf(context.auth.uid) !== -1 || subRef.data().owner === context.auth.uid){
                     return getUserByEmail(data.email);
                 }else{
                     throw new Error("Permission denied.");
@@ -387,7 +387,7 @@ module.exports = function(config){
         revokeInvite: functions.https.onCall((data, context) => {
             return Promise.all([getDoc("subscriptions/"+data.subscriptionId), getDoc("invites/"+data.inviteId)]).then(([subRef, inviteRef]) => {
                 // check if the user is an admin level user
-                if(subRef.data().permissions[getAdminPermission()].indexOf(context.auth.uid) !== -1 && inviteRef.data().subscriptionId === subRef.id){
+                if((subRef.data().permissions[getAdminPermission()].indexOf(context.auth.uid) !== -1 || subRef.data().owner === context.auth.uid) && inviteRef.data().subscriptionId === subRef.id){
                     return admin.firestore().doc("invites/"+data.inviteId).delete();
                 }else{
                     throw new Error("Permission denied.");
