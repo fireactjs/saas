@@ -27,6 +27,7 @@ export const SubscriptionProvider = _ref => {
       if (docSnap.exists()) {
         const sub = docSnap.data();
         sub.id = subscriptionId;
+        console.log(sub);
         setSubscription(sub);
       } else {
         // no subscription
