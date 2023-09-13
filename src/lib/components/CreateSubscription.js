@@ -25,10 +25,11 @@ export const CreateSubscription = () => {
     const selectPlan = (plan) => {
         setProcessing(true);
         setError(null);
-        if(plan.price === 0){
+        if(plan.free){
+            // subscribe to free plans on selection
             const createSubscription = httpsCallable(functionsInstance, 'fireactjsSaas-createSubscription');
             createSubscription({
-                priceId: plan.priceId,
+                planId: plan.id,
                 paymentMethodId: null
             }).then((res) => {
                 if(res.data && res.data.subscriptionId){
@@ -56,7 +57,7 @@ export const CreateSubscription = () => {
         let subscriptionId = null;
         createSubscription({
             paymentMethodId: paymentMethod.id,
-            priceId: selectedPlan.priceId
+            planId: selectedPlan.id
         }).then((res) => {
             if(res.data && res.data.subscriptionId){
                 subscriptionId = res.data.subscriptionId;

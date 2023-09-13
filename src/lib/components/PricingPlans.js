@@ -4,7 +4,7 @@ import { Box } from "@mui/system";
 import React, { useContext } from "react";
 import StarIcon from '@mui/icons-material/Star';
 
-export const PricingPlans = ({selectedPriceId, disabled, selectPlan, paymentMethod}) => {
+export const PricingPlans = ({selectedPlanId, disabled, selectPlan, paymentMethod}) => {
 
     const { config } = useContext(FireactContext);
     const plans = config.saas.plans;
@@ -67,10 +67,10 @@ export const PricingPlans = ({selectedPriceId, disabled, selectPlan, paymentMeth
                             </ul>
                         </CardContent>
                         <CardActions>
-                            <Button fullWidth disabled={disabled || selectedPriceId===plan.priceId?true:false} variant={plan.popular?"contained":"outlined"} onClick={(e) => {
+                            <Button fullWidth disabled={disabled || selectedPlanId===plan.id?true:false} variant={plan.popular?"contained":"outlined"} onClick={(e) => {
                                 selectPlan(plan);
                             }}>
-                                {plan.price === 0 || paymentMethod ?"Subscribe":"Continue"}
+                                {plan.free || paymentMethod ?"Subscribe":"Continue"}
                             </Button>
                         </CardActions>
                     </Card>
