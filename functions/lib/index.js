@@ -585,7 +585,13 @@ module.exports = function(config){
                         }
                     }else{
                         // existing item to be deleted
-                        deleteItems.push(stripe.subscriptionItems.del(item.id, {proration_behavior: "always_invoice", clear_usage: true}));
+                        let setting = {
+                            proration_behavior: "always_invoice"
+                        }
+                        if(item.price.recurring && item.price.recurring.usage_type === 'metered'){
+                            setting["clear_usage"] = true;
+                        }
+                        deleteItems.push(stripe.subscriptionItems.del(item.id, setting));
                     }
                 }
                 if(deleteItems.length > 0){
