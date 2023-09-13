@@ -12,6 +12,7 @@ export const PricingPlans = ({selectedPlanId, disabled, selectPlan, paymentMetho
     return (
         <Grid container spacing={5} alignItems="flex-end">
             {plans.map((plan, i) => (
+                plan.legacy === false &&
                 <Grid
                     item
                     key={i}

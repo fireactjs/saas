@@ -210,6 +210,9 @@ module.exports = function(config){
             const stripe = require('stripe')(config.stripe.secret_api_key);
             const paymentMethodId = data.paymentMethodId || null;
             let selectedPlan = (config.plans.find(obj => obj.id === data.planId) || {});
+            if(selectedPlan.legacy){
+                throw new functions.https.HttpsError('internal', "The plan is not available.");
+            }
             return getStripeCustomerId(
                 context.auth.uid,
                 context.auth.token.name,
@@ -522,6 +525,9 @@ module.exports = function(config){
             const stripe = require('stripe')(config.stripe.secret_api_key);
             const paymentMethodId = data.paymentMethodId || null;
             let selectedPlan = (config.plans.find(obj => obj.id === data.planId) || {});
+            if(selectedPlan.legacy){
+                throw new functions.https.HttpsError('internal', "The plan is not available.");
+            }
             let stripeSubscriptionId = '';
             let addedItems = {};
             const deleteItemIds = [];
@@ -579,7 +585,7 @@ module.exports = function(config){
                         }
                     }else{
                         // existing item to be deleted
-                        deleteItems.push(stripe.subscriptionItems.del(item.id, {proration_behavior: "always_invoice"}));
+                        deleteItems.push(stripe.subscriptionItems.del(item.id, {proration_behavior: "always_invoice", clear_usage: true}));
                     }
                 }
                 if(deleteItems.length > 0){
