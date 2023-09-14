@@ -445,7 +445,7 @@ match /users/{userId}/paymentMethods/{paymentMethodId} {
 match /subscriptions/{subscriptionId} {
     allow read: if request.auth.uid != null && request.auth.uid in resource.data.permissions.access;
     allow update: if request.auth.uid != null && request.auth.uid in resource.data.permissions.admin && (!request.resource.data.diff(resource.data).affectedKeys()
-        .hasAny(['currency', 'ownerId', 'paymentCycle', 'paymentMethod', 'plan', 'price', 'stripePriceId', 'stripeSubscriptionId', 'subscriptionCreated', 'subscriptionCurrentPeriodEnd', 'subscriptionCurrentPeriodStart', 'subscriptionEnded', 'subscriptionStatus']));
+        .hasAny(['currency', 'ownerId', 'paymentCycle', 'paymentMethod', 'plan', 'price', 'stripeItems', 'stripeSubscriptionId', 'subscriptionCreated', 'subscriptionCurrentPeriodEnd', 'subscriptionCurrentPeriodStart', 'subscriptionEnded', 'subscriptionStatus']));
 }
 match /subscriptions/{subscriptionId}/invoices/{invoiceId} {
     allow read: if request.auth.uid != null && request.auth.uid in get(/databases/$(database)/documents/subscriptions/$(subscriptionId)).data.permissions.admin;
