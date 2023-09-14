@@ -13,6 +13,9 @@ const checkPermission = (subscription, uid, permissions) => {
       }
     }
   }
+  if (subscription.ownerId === uid) {
+    allow = true;
+  }
   return allow;
 };
 exports.checkPermission = checkPermission;

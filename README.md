@@ -44,16 +44,23 @@ npm i @fireactjs/saas-cloud-functions
 
 Fireactjs SaaS integrates with [Stripe](https://www.stripe.com) to handle subscription payments. You must have a Stripe account to enable the integration.
 
-In Stripe, create a product for your SaaS. You can have multiple subscription plans, including both free and paid plans. Create a price plan under your subscription product for each plan. Stripe will create a `price_id` for each price plan.
+In Stripe, create products for your SaaS. Each product can have multiple prices. However, these prices must have the same billing period.
 
-Create a JSON file called `plans.json` in the `/src` folder and the `/functions` folder to describe the subscription plans of your SaaS product as the example shows below. The plans will be shown in the pricing table as the property values in the Reactjs application and will be used for the subscription process in the cloud functions. It’s important that the `priceId` property value of each plan matches the plan’s `price_id` in Stripe.
+Create a JSON to describe your plans as the example below. Each plan must have an unique `id` to identify the plan. A plan can contain multiple price IDs from different products in Stripe. In this example, the "enterprise" plan contains two prices which are from two products: license and support.
+
+If the `free` property is set to `true` for a plan, the plan will not ask for putting in a credit card. Make sure that all the prices in the plan are "0" in price in Stripe.
+
+If a plan is no longer available for new users, set its `legacy` property to `true` and the plan will not be shown in the pricing table.
 
 ```json
 [
     {
+        "id": "free",
         "title": "Free",
         "popular": false,
-        "priceId": "price_1...",
+        "priceIds": [
+            "price_1..."
+        ],
         "currency": "$",
         "price": 0,
         "frequency": "week",
@@ -62,12 +69,17 @@ Create a JSON file called `plans.json` in the `/src` folder and the `/functions`
             "2 GB of storage",
             "Help center access",
             "Email support"
-        ]
+        ],
+        "free": true,
+        "legacy": false
     },
     {
-        "title": "Weekly",
+        "id": "pro",
+        "title": "Pro",
         "popular": true,
-        "priceId": "price_2...",
+        "priceIds": [
+            "price_2..."
+        ],
         "currency": "$",
         "price": 10,
         "frequency": "week",
@@ -76,21 +88,48 @@ Create a JSON file called `plans.json` in the `/src` folder and the `/functions`
             "10 GB of storage",
             "Help center access",
             "Priority email support"
-        ]
+        ],
+        "free": false,
+        "legacy": false
     },
     {
-        "title": "Daily",
+        "id": "enterprise",
+        "title": "Enterprise",
         "popular": false,
-        "priceId": "price_3...",
+        "priceIds": [
+            "price_3...",
+            "price_4..."
+        ],
         "currency": "$",
-        "price": 5,
-        "frequency": "day",
+        "price": 30,
+        "frequency": "week",
         "description": [
             "50 users included",
             "30 GB of storage",
             "Help center access",
             "Phone & email support"
-        ]
+        ],
+        "free": false,
+        "legacy": false
+    },
+    {
+        "id": "legcy",
+        "title": "Gold",
+        "popular": true,
+        "priceIds": [
+            "price_2..."
+        ],
+        "currency": "$",
+        "price": 10,
+        "frequency": "week",
+        "description": [
+            "20 users included",
+            "10 GB of storage",
+            "Help center access",
+            "Priority email support"
+        ],
+        "free": false,
+        "legacy": true
     }
 ]
 ```
@@ -136,9 +175,12 @@ The Reactjs application needs the `price_id` from Stripe to integrate with the S
     },
     "plans": [
         {
+            "id": "free",
             "title": "Free",
             "popular": false,
-            "priceId": "price_1...",
+            "priceIds": [
+                "price_1..."
+            ],
             "currency": "$",
             "price": 0,
             "frequency": "week",
@@ -147,12 +189,17 @@ The Reactjs application needs the `price_id` from Stripe to integrate with the S
                 "2 GB of storage",
                 "Help center access",
                 "Email support"
-            ]
+            ],
+            "free": true,
+            "legacy": false
         },
         {
-            "title": "Weekly",
+            "id": "pro",
+            "title": "Pro",
             "popular": true,
-            "priceId": "price_2...",
+            "priceIds": [
+                "price_2..."
+            ],
             "currency": "$",
             "price": 10,
             "frequency": "week",
@@ -161,21 +208,48 @@ The Reactjs application needs the `price_id` from Stripe to integrate with the S
                 "10 GB of storage",
                 "Help center access",
                 "Priority email support"
-            ]
+            ],
+            "free": false,
+            "legacy": false
         },
         {
-            "title": "Daily",
+            "id": "enterprise",
+            "title": "Enterprise",
             "popular": false,
-            "priceId": "price_3...",
+            "priceIds": [
+                "price_3...",
+                "price_4..."
+            ],
             "currency": "$",
-            "price": 5,
-            "frequency": "day",
+            "price": 30,
+            "frequency": "week",
             "description": [
                 "50 users included",
                 "30 GB of storage",
                 "Help center access",
                 "Phone & email support"
-            ]
+            ],
+            "free": false,
+            "legacy": false
+        },
+        {
+            "id": "legcy",
+            "title": "Gold",
+            "popular": true,
+            "priceIds": [
+                "price_2..."
+            ],
+            "currency": "$",
+            "price": 10,
+            "frequency": "week",
+            "description": [
+                "20 users included",
+                "10 GB of storage",
+                "Help center access",
+                "Priority email support"
+            ],
+            "free": false,
+            "legacy": true
         }
     ],
     "permissions": {
@@ -218,9 +292,12 @@ For sending new user invites, the `mailgun` JSON is needed. The details are cove
     },
     "plans": [
         {
+            "id": "free",
             "title": "Free",
             "popular": false,
-            "priceId": "price_1...",
+            "priceIds": [
+                "price_1..."
+            ],
             "currency": "$",
             "price": 0,
             "frequency": "week",
@@ -229,12 +306,17 @@ For sending new user invites, the `mailgun` JSON is needed. The details are cove
                 "2 GB of storage",
                 "Help center access",
                 "Email support"
-            ]
+            ],
+            "free": true,
+            "legacy": false
         },
         {
-            "title": "Weekly",
+            "id": "pro",
+            "title": "Pro",
             "popular": true,
-            "priceId": "price_2...",
+            "priceIds": [
+                "price_2..."
+            ],
             "currency": "$",
             "price": 10,
             "frequency": "week",
@@ -243,21 +325,48 @@ For sending new user invites, the `mailgun` JSON is needed. The details are cove
                 "10 GB of storage",
                 "Help center access",
                 "Priority email support"
-            ]
+            ],
+            "free": false,
+            "legacy": false
         },
         {
-            "title": "Daily",
+            "id": "enterprise",
+            "title": "Enterprise",
             "popular": false,
-            "priceId": "price_3...",
+            "priceIds": [
+                "price_3...",
+                "price_4..."
+            ],
             "currency": "$",
-            "price": 5,
-            "frequency": "day",
+            "price": 30,
+            "frequency": "week",
             "description": [
                 "50 users included",
                 "30 GB of storage",
                 "Help center access",
                 "Phone & email support"
-            ]
+            ],
+            "free": false,
+            "legacy": false
+        },
+        {
+            "id": "legcy",
+            "title": "Gold",
+            "popular": true,
+            "priceIds": [
+                "price_2..."
+            ],
+            "currency": "$",
+            "price": 10,
+            "frequency": "week",
+            "description": [
+                "20 users included",
+                "10 GB of storage",
+                "Help center access",
+                "Priority email support"
+            ],
+            "free": false,
+            "legacy": true
         }
     ],
     "permissions": {

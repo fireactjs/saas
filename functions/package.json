@@ -9,20 +9,20 @@
     "logs": "firebase functions:log"
   },
   "engines": {
-    "node": "16"
+    "node": "18"
   },
   "main": "lib/index.js",
   "dependencies": {
-    "firebase-admin": "^10.3.0",
-    "firebase-functions": "^3.24.1",
+    "firebase-admin": "^11.8.0",
+    "firebase-functions": "^4.3.1",
     "mailgun-js": "^0.22.0",
     "stripe": "^11.1.0"
   },
   "devDependencies": {
-    "firebase-functions-test": "^0.2.0"
+    "firebase-functions-test": "^3.1.0"
   },
   "private": false,
-  "version": "1.0.0",
+  "version": "1.2.0",
   "directories": {
     "lib": "lib"
   },

@@ -46,18 +46,18 @@ const ChangePlan = () => {
   const selectPlan = plan => {
     setProcessing(true);
     setError(null);
-    if (plan.price === 0 || subscription.paymentMethod) {
+    if (plan.free || subscription.paymentMethod) {
       // subscribe to the new plan
       const changeSubscriptionPlan = (0, _functions.httpsCallable)(functionsInstance, 'fireactjsSaas-changeSubscriptionPlan');
       changeSubscriptionPlan({
         paymentMethodId: subscription.paymentMethod,
-        priceId: plan.priceId,
+        planId: plan.id,
         subscriptionId: subscription.id
       }).then(() => {
         setSubscription(prevState => _objectSpread(_objectSpread({}, prevState), {}, {
           plan: plan.title,
           // title of the plan
-          stripePriceId: plan.priceId,
+          planId: plan.id,
           // price ID in stripe
           paymentCycle: plan.frequency,
           price: plan.price,
@@ -82,7 +82,7 @@ const ChangePlan = () => {
     const changeSubscriptionPlan = (0, _functions.httpsCallable)(functionsInstance, 'fireactjsSaas-changeSubscriptionPlan');
     changeSubscriptionPlan({
       paymentMethodId: paymentMethod.id,
-      priceId: selectedPlan.priceId,
+      planId: selectedPlan.id,
       subscriptionId: subscription.id
     }).then(() => {
       const pmRef = (0, _firestore.doc)(firestoreInstance, 'users/' + authInstance.currentUser.uid + '/paymentMethods/' + paymentMethod.id);
@@ -99,7 +99,7 @@ const ChangePlan = () => {
       setSubscription(prevState => _objectSpread(_objectSpread({}, prevState), {}, {
         plan: selectedPlan.title,
         // title of the plan
-        stripePriceId: selectedPlan.priceId,
+        planId: selectedPlan.id,
         // price ID in stripe
         paymentCycle: selectedPlan.frequency,
         price: selectedPlan.price,
@@ -116,7 +116,7 @@ const ChangePlan = () => {
   return /*#__PURE__*/_react.default.createElement(_material.Container, {
     maxWidth: "lg"
   }, /*#__PURE__*/_react.default.createElement(_core.SetPageTitle, {
-    title: "Change Plan" + (subscription.name !== "" ? " - " + subscription.name : "")
+    title: "Change Plan" + (subscription.name !== "" && typeof subscription.name !== 'undefined' ? " - " + subscription.name : "")
   }), success ? /*#__PURE__*/_react.default.createElement(_material.Alert, {
     severity: "success"
   }, "Your subscription plan has been changed. Please go back to ", /*#__PURE__*/_react.default.createElement(_reactRouterDom.NavLink, {
@@ -148,7 +148,7 @@ const ChangePlan = () => {
   }, "Choose a Plan"), error !== null && /*#__PURE__*/_react.default.createElement(_material.Alert, {
     severity: "error"
   }, error), /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement(_PricingPlans.PricingPlans, {
-    selectedPriceId: subscription.stripePriceId,
+    selectedPlanId: subscription.planId,
     selectPlan: selectPlan,
     disabled: processing,
     paymentMethod: subscription.paymentMethod

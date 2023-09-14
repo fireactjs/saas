@@ -6,7 +6,7 @@ import React, { useContext } from "react";
 import StarIcon from '@mui/icons-material/Star';
 export const PricingPlans = _ref => {
   let {
-    selectedPriceId,
+    selectedPlanId,
     disabled,
     selectPlan,
     paymentMethod
@@ -19,7 +19,7 @@ export const PricingPlans = _ref => {
     container: true,
     spacing: 5,
     alignItems: "flex-end"
-  }, plans.map((plan, i) => /*#__PURE__*/React.createElement(Grid, {
+  }, plans.map((plan, i) => plan.legacy === false && /*#__PURE__*/React.createElement(Grid, {
     item: true,
     key: i,
     xs: 12,
@@ -69,10 +69,10 @@ export const PricingPlans = _ref => {
     key: line
   }, line)))), /*#__PURE__*/React.createElement(CardActions, null, /*#__PURE__*/React.createElement(Button, {
     fullWidth: true,
-    disabled: disabled || selectedPriceId === plan.priceId ? true : false,
+    disabled: disabled || selectedPlanId === plan.id ? true : false,
     variant: plan.popular ? "contained" : "outlined",
     onClick: e => {
       selectPlan(plan);
     }
-  }, plan.price === 0 || paymentMethod ? "Subscribe" : "Continue"))))));
+  }, plan.free || paymentMethod ? "Subscribe" : "Continue"))))));
 };
