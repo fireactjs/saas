@@ -175,9 +175,12 @@ The Reactjs application needs the `price_id` from Stripe to integrate with the S
     },
     "plans": [
         {
+            "id": "free",
             "title": "Free",
             "popular": false,
-            "priceId": "price_1...",
+            "priceIds": [
+                "price_1..."
+            ],
             "currency": "$",
             "price": 0,
             "frequency": "week",
@@ -186,12 +189,17 @@ The Reactjs application needs the `price_id` from Stripe to integrate with the S
                 "2 GB of storage",
                 "Help center access",
                 "Email support"
-            ]
+            ],
+            "free": true,
+            "legacy": false
         },
         {
-            "title": "Weekly",
+            "id": "pro",
+            "title": "Pro",
             "popular": true,
-            "priceId": "price_2...",
+            "priceIds": [
+                "price_2..."
+            ],
             "currency": "$",
             "price": 10,
             "frequency": "week",
@@ -200,21 +208,48 @@ The Reactjs application needs the `price_id` from Stripe to integrate with the S
                 "10 GB of storage",
                 "Help center access",
                 "Priority email support"
-            ]
+            ],
+            "free": false,
+            "legacy": false
         },
         {
-            "title": "Daily",
+            "id": "enterprise",
+            "title": "Enterprise",
             "popular": false,
-            "priceId": "price_3...",
+            "priceIds": [
+                "price_3...",
+                "price_4..."
+            ],
             "currency": "$",
-            "price": 5,
-            "frequency": "day",
+            "price": 30,
+            "frequency": "week",
             "description": [
                 "50 users included",
                 "30 GB of storage",
                 "Help center access",
                 "Phone & email support"
-            ]
+            ],
+            "free": false,
+            "legacy": false
+        },
+        {
+            "id": "legcy",
+            "title": "Gold",
+            "popular": true,
+            "priceIds": [
+                "price_2..."
+            ],
+            "currency": "$",
+            "price": 10,
+            "frequency": "week",
+            "description": [
+                "20 users included",
+                "10 GB of storage",
+                "Help center access",
+                "Priority email support"
+            ],
+            "free": false,
+            "legacy": true
         }
     ],
     "permissions": {
@@ -257,9 +292,12 @@ For sending new user invites, the `mailgun` JSON is needed. The details are cove
     },
     "plans": [
         {
+            "id": "free",
             "title": "Free",
             "popular": false,
-            "priceId": "price_1...",
+            "priceIds": [
+                "price_1..."
+            ],
             "currency": "$",
             "price": 0,
             "frequency": "week",
@@ -268,12 +306,17 @@ For sending new user invites, the `mailgun` JSON is needed. The details are cove
                 "2 GB of storage",
                 "Help center access",
                 "Email support"
-            ]
+            ],
+            "free": true,
+            "legacy": false
         },
         {
-            "title": "Weekly",
+            "id": "pro",
+            "title": "Pro",
             "popular": true,
-            "priceId": "price_2...",
+            "priceIds": [
+                "price_2..."
+            ],
             "currency": "$",
             "price": 10,
             "frequency": "week",
@@ -282,21 +325,48 @@ For sending new user invites, the `mailgun` JSON is needed. The details are cove
                 "10 GB of storage",
                 "Help center access",
                 "Priority email support"
-            ]
+            ],
+            "free": false,
+            "legacy": false
         },
         {
-            "title": "Daily",
+            "id": "enterprise",
+            "title": "Enterprise",
             "popular": false,
-            "priceId": "price_3...",
+            "priceIds": [
+                "price_3...",
+                "price_4..."
+            ],
             "currency": "$",
-            "price": 5,
-            "frequency": "day",
+            "price": 30,
+            "frequency": "week",
             "description": [
                 "50 users included",
                 "30 GB of storage",
                 "Help center access",
                 "Phone & email support"
-            ]
+            ],
+            "free": false,
+            "legacy": false
+        },
+        {
+            "id": "legcy",
+            "title": "Gold",
+            "popular": true,
+            "priceIds": [
+                "price_2..."
+            ],
+            "currency": "$",
+            "price": 10,
+            "frequency": "week",
+            "description": [
+                "20 users included",
+                "10 GB of storage",
+                "Help center access",
+                "Priority email support"
+            ],
+            "free": false,
+            "legacy": true
         }
     ],
     "permissions": {

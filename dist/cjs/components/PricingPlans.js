@@ -17,7 +17,7 @@ function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "functio
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 const PricingPlans = _ref => {
   let {
-    selectedPriceId,
+    selectedPlanId,
     disabled,
     selectPlan,
     paymentMethod
@@ -30,7 +30,7 @@ const PricingPlans = _ref => {
     container: true,
     spacing: 5,
     alignItems: "flex-end"
-  }, plans.map((plan, i) => /*#__PURE__*/_react.default.createElement(_material.Grid, {
+  }, plans.map((plan, i) => plan.legacy === false && /*#__PURE__*/_react.default.createElement(_material.Grid, {
     item: true,
     key: i,
     xs: 12,
@@ -80,11 +80,11 @@ const PricingPlans = _ref => {
     key: line
   }, line)))), /*#__PURE__*/_react.default.createElement(_material.CardActions, null, /*#__PURE__*/_react.default.createElement(_material.Button, {
     fullWidth: true,
-    disabled: disabled || selectedPriceId === plan.priceId ? true : false,
+    disabled: disabled || selectedPlanId === plan.id ? true : false,
     variant: plan.popular ? "contained" : "outlined",
     onClick: e => {
       selectPlan(plan);
     }
-  }, plan.price === 0 || paymentMethod ? "Subscribe" : "Continue"))))));
+  }, plan.free || paymentMethod ? "Subscribe" : "Continue"))))));
 };
 exports.PricingPlans = PricingPlans;

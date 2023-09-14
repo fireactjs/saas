@@ -22,7 +22,7 @@
     "firebase-functions-test": "^3.1.0"
   },
   "private": false,
-  "version": "1.0.0",
+  "version": "1.2.0",
   "directories": {
     "lib": "lib"
   },
