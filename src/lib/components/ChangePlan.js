@@ -7,6 +7,7 @@ import { PaymentMethodForm } from "./PaymentMethodForm";
 import { httpsCallable } from "firebase/functions";
 import { NavLink } from "react-router-dom";
 import { doc, setDoc } from "firebase/firestore";
+import { BillingDetails } from "./BillingDetails";
 
 export const ChangePlan = () => {
 
@@ -21,6 +22,9 @@ export const ChangePlan = () => {
     const [ selectedPlan, setSelectedPlan ] = useState(null);
     const [ success, setSuccess ] = useState(false);
 
+    const [ billingDetails, setBillingDetails ] = useState(null);
+    const [ paymentStep, setPaymentStep ] = useState(1);
+
     const selectPlan = (plan) => {
         setProcessing(true);
         setError(null);
@@ -29,6 +33,7 @@ export const ChangePlan = () => {
             const changeSubscriptionPlan = httpsCallable(functionsInstance, 'fireactjsSaas-changeSubscriptionPlan');
             changeSubscriptionPlan({
                 paymentMethodId: subscription.paymentMethod,
+                billingDetails: null,
                 planId: plan.id,
                 subscriptionId: subscription.id
             }).then(() => {
@@ -60,6 +65,7 @@ export const ChangePlan = () => {
         const changeSubscriptionPlan = httpsCallable(functionsInstance, 'fireactjsSaas-changeSubscriptionPlan');
         changeSubscriptionPlan({
             paymentMethodId: paymentMethod.id,
+            billingDetails: billingDetails,
             planId: selectedPlan.id,
             subscriptionId: subscription.id
         }).then(() => {
@@ -99,19 +105,45 @@ export const ChangePlan = () => {
                     <Box p={5}>
                         {showPaymentMethod?(
                             <Stack spacing={3}>
-                                <Typography
-                                component="h1"
-                                variant="h3"
-                                align="center"
-                                color="text.primary"
-                                gutterBottom
-                                >
-                                Setup Payment Method
-                                </Typography>
-                                {error !== null && 
-                                    <Alert severity="error">{error}</Alert>
+                                { paymentStep === 1 && 
+                                    <>
+                                        <Typography
+                                        component="h1"
+                                        variant="h3"
+                                        align="center"
+                                        color="text.primary"
+                                        gutterBottom
+                                        >
+                                        Your Billing Details
+                                        </Typography>
+                                        {error !== null && 
+                                            <Alert severity="error">{error}</Alert>
+                                        }
+                                        <BillingDetails buttonText={"Continue"} setBillingDetailsObject={(obj) => {
+                                                setBillingDetails(obj);
+                                                setPaymentStep(2);
+                                            }
+                                        } />
+                                    </>
                                 }
-                                <PaymentMethodForm buttonText={"Submit"} setPaymentMethod={submitPlan} disabled={processing} />               
+                                { paymentStep === 2 && 
+                                    <>
+                                        <Typography
+                                        component="h1"
+                                        variant="h3"
+                                        align="center"
+                                        color="text.primary"
+                                        gutterBottom
+                                        >
+                                        Setup Payment Method
+                                        </Typography>
+                                        {error !== null && 
+                                            <Alert severity="error">{error}</Alert>
+                                        }
+                                        <PaymentMethodForm buttonText={"Subscribe"} setPaymentMethod={submitPlan} disabled={processing} />
+                                    </>
+                                    
+                                }              
                             </Stack>
                         ):(
                             <Stack spacing={3}>

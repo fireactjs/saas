@@ -19,17 +19,7 @@ export const CreateSubscription = () => {
     const [ error, setError ] = useState(null);
     const [ showPaymentMethod, setShowPaymentMethod ] = useState(false);
     const [ paymentStep, setPaymentStep ] = useState(1);
-    const [ billingDetails, setBillingDetails ] = useState({
-        name: "",
-        address: {
-            line1: "",
-            line2: "",
-            city: "",
-            postal_code: "",
-            state: "",
-            country: ""
-        }
-    });
+    const [ billingDetails, setBillingDetails ] = useState(null);
     const [ selectedPlan, setSelectedPlan ] = useState(null);
     const singular = config.saas.subscription.singular;
     const auth = getAuth();
