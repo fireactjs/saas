@@ -27,34 +27,51 @@ module.exports = function(config){
      * @param {string} paymentMethodId (optional)
      * @returns {string} Stripe customer ID
      */
-    const getStripeCustomerId = (userId, name, email, paymentMethodId) => {
+    const getStripeCustomerId = (userId, name, email, paymentMethodId, billingDetails) => {
         const stripe = require('stripe')(config.stripe.secret_api_key);
         let user = null;
         let stripeCustomerId = '';
         return getDoc('users/'+userId).then(userDoc => {
             user = userDoc;
-            if(userDoc.data().stripeCustomerId){
-                return {
-                    existing: true,
-                    id: userDoc.data().stripeCustomerId
+            let data = {
+                name: name,
+                email: email                 
+            }
+            if(billingDetails){
+                data.address = {
+                    line1: billingDetails.address.line1,
+                    line2: billingDetails.address.line2,
+                    city: billingDetails.address.city,
+                    postal_code: billingDetails.address.postal_code,
+                    state: billingDetails.address.state,
+                    country: billingDetails.address.country
                 }
+                data.description="Contact: "+data.name;
+                data.metadata = {
+                    contact_name: data.name,
+                    firebase_uid: userId
+                }
+                data.name = billingDetails.name; // business name replaces user name
+            }
+            if(userDoc.data().stripeCustomerId){
+                // update stripe customer
+                return stripe.customers.update(userDoc.data().stripeCustomerId, data);
             }else{
                 // create stripe customer
-                return stripe.customers.create({
-                    name: name,
-                    email: email,
-                    description: userId
-                });
+                if(paymentMethodId){
+                    data.payment_method = paymentMethodId
+                }
+                return stripe.customers.create(data);
             }
         }).then(customer => {
             stripeCustomerId = customer.id;
-            if(customer.existing){
-                return user;
-            }else{
-                return user.ref.set({
-                    stripeCustomerId: customer.id
-                },{merge: true});
+            let updateUserData = {
+                stripeCustomerId: customer.id
             }
+            if(billingDetails){
+                updateUserData.billingDetails = billingDetails
+            }
+            return user.ref.set(updateUserData, {merge: true});
         }).then(res => {
             if(paymentMethodId){
                 return stripe.paymentMethods.attach(paymentMethodId, {
@@ -65,8 +82,8 @@ module.exports = function(config){
                     customer: stripeCustomerId
                 }
             }
-        }).then(paymentMethod => {
-            return paymentMethod.customer;
+        }).then(res => {
+            return stripeCustomerId;
         });
     }
 
@@ -209,6 +226,7 @@ module.exports = function(config){
         createSubscription: functions.https.onCall((data, context) => {
             const stripe = require('stripe')(config.stripe.secret_api_key);
             const paymentMethodId = data.paymentMethodId || null;
+            const billingDetails = data.billingDetails || null;
             let selectedPlan = (config.plans.find(obj => obj.id === data.planId) || {});
             if(selectedPlan.legacy){
                 throw new functions.https.HttpsError('internal', "The plan is not available.");
@@ -217,7 +235,8 @@ module.exports = function(config){
                 context.auth.uid,
                 context.auth.token.name,
                 context.auth.token.email,
-                paymentMethodId
+                paymentMethodId,
+                billingDetails
             ).then(stripeCustomerId => {
                 // create subscription
                 const items = [];
@@ -451,6 +470,7 @@ module.exports = function(config){
         updateSubscriptionPaymentMethod: functions.https.onCall((data, context) => {
             const stripe = require('stripe')(config.stripe.secret_api_key);
             const paymentMethodId = data.paymentMethodId || null;
+            const billingDetails = data.billingDetails || null;
             let stripeSubscriptionId = "";
             return getDoc("subscriptions/"+data.subscriptionId).then(subRef => {
                 // check if the user is an admin level user
@@ -460,7 +480,8 @@ module.exports = function(config){
                         context.auth.uid,
                         context.auth.token.name,
                         context.auth.token.email,
-                        paymentMethodId
+                        paymentMethodId,
+                        billingDetails
                     );
                 }else{
                     throw new Error("Permission denied.");
@@ -524,6 +545,7 @@ module.exports = function(config){
         changeSubscriptionPlan: functions.https.onCall((data, context) => {
             const stripe = require('stripe')(config.stripe.secret_api_key);
             const paymentMethodId = data.paymentMethodId || null;
+            const billingDetails = data.billingDetails || null;
             let selectedPlan = (config.plans.find(obj => obj.id === data.planId) || {});
             if(selectedPlan.legacy){
                 throw new functions.https.HttpsError('internal', "The plan is not available.");
@@ -542,7 +564,8 @@ module.exports = function(config){
                         context.auth.uid,
                         context.auth.token.name,
                         context.auth.token.email,
-                        paymentMethodId
+                        paymentMethodId,
+                        billingDetails
                     );
                 }else{
                     throw new Error("Permission denied.");

@@ -38,11 +38,11 @@ const PaymentMethodFormHandler = ({setPaymentMethod, buttonText, disabled}) => {
             return;
         }
         const cardElement = elements.getElement(CardElement);
-        const {error, paymentMethod} = await stripe.createPaymentMethod({
+        var data = {
             type: 'card',
             card: cardElement
-        });
-
+        }
+        const {error, paymentMethod} = await stripe.createPaymentMethod(data);
         if(error){
             setError(error.message);
             setProcessing(false);
@@ -91,13 +91,13 @@ const PaymentMethodFormHandler = ({setPaymentMethod, buttonText, disabled}) => {
     )
 }
 
-export const PaymentMethodForm = ({setPaymentMethod, buttonText, disabled}) => {
+export const PaymentMethodForm = ({setPaymentMethod, buttonText, disabled, billingDetails}) => {
     const {config} = useContext(FireactContext);
     const stripePromise = useMemo(() => {return loadStripe(config.saas.stripe.public_api_key)}, [config.saas.stripe.public_api_key]);
 
     return (
         <Elements stripe={stripePromise}>
-            <PaymentMethodFormHandler setPaymentMethod={setPaymentMethod} buttonText={buttonText} disabled={disabled}/>
+            <PaymentMethodFormHandler setPaymentMethod={setPaymentMethod} buttonText={buttonText} disabled={disabled} billingDetails={billingDetails}/>
         </Elements>
     )
 

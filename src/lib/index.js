@@ -1,3 +1,4 @@
+import { BillingDetails } from "./components/BillingDetails";
 import { CreateSubscription } from "./components/CreateSubscription";
 import { ListInvoices } from "./components/ListInvoices";
 import { ListSubscriptions } from "./components/ListSubscriptions";
@@ -18,6 +19,7 @@ import { CancelSubscription } from "./components/CancelSubscription";
 
 export {
     AddUser,
+    BillingDetails,
     checkPermission,
     ChangePlan,
     CancelSubscription,

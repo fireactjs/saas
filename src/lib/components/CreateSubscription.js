@@ -7,6 +7,7 @@ import { PaymentMethodForm } from "./PaymentMethodForm";
 import { useNavigate } from "react-router-dom";
 import { getAuth } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
+import { BillingDetails } from "./BillingDetails";
 
 export const CreateSubscription = () => {
 
@@ -17,6 +18,18 @@ export const CreateSubscription = () => {
     const [ processing, setProcessing ] = useState(false);
     const [ error, setError ] = useState(null);
     const [ showPaymentMethod, setShowPaymentMethod ] = useState(false);
+    const [ paymentStep, setPaymentStep ] = useState(1);
+    const [ billingDetails, setBillingDetails ] = useState({
+        name: "",
+        address: {
+            line1: "",
+            line2: "",
+            city: "",
+            postal_code: "",
+            state: "",
+            country: ""
+        }
+    });
     const [ selectedPlan, setSelectedPlan ] = useState(null);
     const singular = config.saas.subscription.singular;
     const auth = getAuth();
@@ -30,7 +43,8 @@ export const CreateSubscription = () => {
             const createSubscription = httpsCallable(functionsInstance, 'fireactjsSaas-createSubscription');
             createSubscription({
                 planId: plan.id,
-                paymentMethodId: null
+                paymentMethodId: null,
+                BillingDetails: null
             }).then((res) => {
                 if(res.data && res.data.subscriptionId){
                     navigate(config.pathnames.Settings.replace(":subscriptionId", res.data.subscriptionId));
@@ -57,7 +71,8 @@ export const CreateSubscription = () => {
         let subscriptionId = null;
         createSubscription({
             paymentMethodId: paymentMethod.id,
-            planId: selectedPlan.id
+            planId: selectedPlan.id,
+            billingDetails: billingDetails
         }).then((res) => {
             if(res.data && res.data.subscriptionId){
                 subscriptionId = res.data.subscriptionId;
@@ -90,19 +105,46 @@ export const CreateSubscription = () => {
                 <Box p={5}>
                     {showPaymentMethod?(
                         <Stack spacing={3}>
-                            <Typography
-                            component="h1"
-                            variant="h3"
-                            align="center"
-                            color="text.primary"
-                            gutterBottom
-                            >
-                            Setup Payment Method
-                            </Typography>
-                            {error !== null && 
-                                <Alert severity="error">{error}</Alert>
+                            { paymentStep === 1 && 
+                                <>
+                                    <Typography
+                                    component="h1"
+                                    variant="h3"
+                                    align="center"
+                                    color="text.primary"
+                                    gutterBottom
+                                    >
+                                    Your Billing Details
+                                    </Typography>
+                                    {error !== null && 
+                                        <Alert severity="error">{error}</Alert>
+                                    }
+                                    <BillingDetails buttonText={"Continue"} setBillingDetailsObject={(obj) => {
+                                            setBillingDetails(obj);
+                                            setPaymentStep(2);
+                                        }
+                                    } />
+                                </>
                             }
-                            <PaymentMethodForm buttonText={"Submit"} setPaymentMethod={submitPlan} disabled={processing} />               
+                            { paymentStep === 2 && 
+                                <>
+                                    <Typography
+                                    component="h1"
+                                    variant="h3"
+                                    align="center"
+                                    color="text.primary"
+                                    gutterBottom
+                                    >
+                                    Setup Payment Method
+                                    </Typography>
+                                    {error !== null && 
+                                        <Alert severity="error">{error}</Alert>
+                                    }
+                                    <PaymentMethodForm buttonText={"Subscribe"} setPaymentMethod={submitPlan} disabled={processing} />
+                                </>
+                                
+                            }
+                            
                         </Stack>
                     ):(
                         <Stack spacing={3}>
