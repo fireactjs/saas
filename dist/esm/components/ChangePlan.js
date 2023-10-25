@@ -16,6 +16,7 @@ import { PaymentMethodForm } from "./PaymentMethodForm";
 import { httpsCallable } from "firebase/functions";
 import { NavLink } from "react-router-dom";
 import { doc, setDoc } from "firebase/firestore";
+import { BillingDetails } from "./BillingDetails";
 export const ChangePlan = () => {
   const {
     subscription,
@@ -34,6 +35,8 @@ export const ChangePlan = () => {
   const [showPaymentMethod, setShowPaymentMethod] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState(null);
   const [success, setSuccess] = useState(false);
+  const [billingDetails, setBillingDetails] = useState(null);
+  const [paymentStep, setPaymentStep] = useState(1);
   const selectPlan = plan => {
     setProcessing(true);
     setError(null);
@@ -42,6 +45,7 @@ export const ChangePlan = () => {
       const changeSubscriptionPlan = httpsCallable(functionsInstance, 'fireactjsSaas-changeSubscriptionPlan');
       changeSubscriptionPlan({
         paymentMethodId: subscription.paymentMethod,
+        billingDetails: null,
         planId: plan.id,
         subscriptionId: subscription.id
       }).then(() => {
@@ -73,6 +77,7 @@ export const ChangePlan = () => {
     const changeSubscriptionPlan = httpsCallable(functionsInstance, 'fireactjsSaas-changeSubscriptionPlan');
     changeSubscriptionPlan({
       paymentMethodId: paymentMethod.id,
+      billingDetails: billingDetails,
       planId: selectedPlan.id,
       subscriptionId: subscription.id
     }).then(() => {
@@ -116,7 +121,21 @@ export const ChangePlan = () => {
     p: 5
   }, showPaymentMethod ? /*#__PURE__*/React.createElement(Stack, {
     spacing: 3
-  }, /*#__PURE__*/React.createElement(Typography, {
+  }, paymentStep === 1 && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(Typography, {
+    component: "h1",
+    variant: "h3",
+    align: "center",
+    color: "text.primary",
+    gutterBottom: true
+  }, "Your Billing Details"), error !== null && /*#__PURE__*/React.createElement(Alert, {
+    severity: "error"
+  }, error), /*#__PURE__*/React.createElement(BillingDetails, {
+    buttonText: "Continue",
+    setBillingDetailsObject: obj => {
+      setBillingDetails(obj);
+      setPaymentStep(2);
+    }
+  })), paymentStep === 2 && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(Typography, {
     component: "h1",
     variant: "h3",
     align: "center",
@@ -125,10 +144,10 @@ export const ChangePlan = () => {
   }, "Setup Payment Method"), error !== null && /*#__PURE__*/React.createElement(Alert, {
     severity: "error"
   }, error), /*#__PURE__*/React.createElement(PaymentMethodForm, {
-    buttonText: "Submit",
+    buttonText: "Subscribe",
     setPaymentMethod: submitPlan,
     disabled: processing
-  })) : /*#__PURE__*/React.createElement(Stack, {
+  }))) : /*#__PURE__*/React.createElement(Stack, {
     spacing: 3
   }, /*#__PURE__*/React.createElement(Typography, {
     component: "h1",

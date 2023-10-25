@@ -124,7 +124,12 @@ export const ListInvoices = _ref => {
     variant: "outlined",
     size: "small",
     onClick: () => navigate(config.pathnames.ManagePaymentMethods.replace(":subscriptionId", subscription.id))
-  }, "Update Payment Method"))))), /*#__PURE__*/React.createElement(Box, {
+  }, "Update Payment Method"), /*#__PURE__*/React.createElement(Button, {
+    color: "info",
+    variant: "outlined",
+    size: "small",
+    onClick: () => navigate(config.pathnames.UpdateBillingDetails.replace(":subscriptionId", subscription.id))
+  }, "Update Billing Details"))))), /*#__PURE__*/React.createElement(Box, {
     p: 2
   }, /*#__PURE__*/React.createElement(PaginationTable, {
     columns: [{

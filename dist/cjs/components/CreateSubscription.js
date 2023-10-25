@@ -17,6 +17,7 @@ var _PaymentMethodForm = require("./PaymentMethodForm");
 var _reactRouterDom = require("react-router-dom");
 var _auth = require("firebase/auth");
 var _firestore = require("firebase/firestore");
+var _BillingDetails = require("./BillingDetails");
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 const CreateSubscription = () => {
@@ -30,6 +31,8 @@ const CreateSubscription = () => {
   const [processing, setProcessing] = (0, _react.useState)(false);
   const [error, setError] = (0, _react.useState)(null);
   const [showPaymentMethod, setShowPaymentMethod] = (0, _react.useState)(false);
+  const [paymentStep, setPaymentStep] = (0, _react.useState)(1);
+  const [billingDetails, setBillingDetails] = (0, _react.useState)(null);
   const [selectedPlan, setSelectedPlan] = (0, _react.useState)(null);
   const singular = config.saas.subscription.singular;
   const auth = (0, _auth.getAuth)();
@@ -42,7 +45,8 @@ const CreateSubscription = () => {
       const createSubscription = (0, _functions.httpsCallable)(functionsInstance, 'fireactjsSaas-createSubscription');
       createSubscription({
         planId: plan.id,
-        paymentMethodId: null
+        paymentMethodId: null,
+        BillingDetails: null
       }).then(res => {
         if (res.data && res.data.subscriptionId) {
           navigate(config.pathnames.Settings.replace(":subscriptionId", res.data.subscriptionId));
@@ -68,7 +72,8 @@ const CreateSubscription = () => {
     let subscriptionId = null;
     createSubscription({
       paymentMethodId: paymentMethod.id,
-      planId: selectedPlan.id
+      planId: selectedPlan.id,
+      billingDetails: billingDetails
     }).then(res => {
       if (res.data && res.data.subscriptionId) {
         subscriptionId = res.data.subscriptionId;
@@ -103,7 +108,21 @@ const CreateSubscription = () => {
     p: 5
   }, showPaymentMethod ? /*#__PURE__*/_react.default.createElement(_material.Stack, {
     spacing: 3
-  }, /*#__PURE__*/_react.default.createElement(_material.Typography, {
+  }, paymentStep === 1 && /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement(_material.Typography, {
+    component: "h1",
+    variant: "h3",
+    align: "center",
+    color: "text.primary",
+    gutterBottom: true
+  }, "Your Billing Details"), error !== null && /*#__PURE__*/_react.default.createElement(_material.Alert, {
+    severity: "error"
+  }, error), /*#__PURE__*/_react.default.createElement(_BillingDetails.BillingDetails, {
+    buttonText: "Continue",
+    setBillingDetailsObject: obj => {
+      setBillingDetails(obj);
+      setPaymentStep(2);
+    }
+  })), paymentStep === 2 && /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement(_material.Typography, {
     component: "h1",
     variant: "h3",
     align: "center",
@@ -112,10 +131,10 @@ const CreateSubscription = () => {
   }, "Setup Payment Method"), error !== null && /*#__PURE__*/_react.default.createElement(_material.Alert, {
     severity: "error"
   }, error), /*#__PURE__*/_react.default.createElement(_PaymentMethodForm.PaymentMethodForm, {
-    buttonText: "Submit",
+    buttonText: "Subscribe",
     setPaymentMethod: submitPlan,
     disabled: processing
-  })) : /*#__PURE__*/_react.default.createElement(_material.Stack, {
+  }))) : /*#__PURE__*/_react.default.createElement(_material.Stack, {
     spacing: 3
   }, /*#__PURE__*/_react.default.createElement(_material.Typography, {
     component: "h1",

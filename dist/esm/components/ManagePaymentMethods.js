@@ -4,8 +4,10 @@ function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key i
 function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return typeof key === "symbol" ? key : String(key); }
 function _toPrimitive(input, hint) { if (typeof input !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (typeof res !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 import "core-js/modules/web.dom-collections.iterator.js";
+import "core-js/modules/es.regexp.exec.js";
+import "core-js/modules/es.string.replace.js";
 import "core-js/modules/es.symbol.description.js";
-import { AuthContext, SetPageTitle } from "@fireactjs/core";
+import { AuthContext, FireactContext, SetPageTitle } from "@fireactjs/core";
 import React, { useContext, useEffect, useState } from "react";
 import { SubscriptionContext } from "./SubscriptionContext";
 import { getAuth } from "firebase/auth";
@@ -13,6 +15,7 @@ import { Alert, Box, Container, Grid, Paper, Typography, Button, Stack, Card, Ca
 import { PaymentMethodForm } from "./PaymentMethodForm";
 import { httpsCallable } from "firebase/functions";
 import { doc, setDoc, collection, getDocs } from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
 export const ManagePaymentMethods = _ref => {
   let {
     loader
@@ -33,6 +36,10 @@ export const ManagePaymentMethods = _ref => {
   const [paymentFormDisabled, setPaymentFormDisabled] = useState(false);
   const [paymentMethodFormShowed, setPaymentMethodFormShowed] = useState(false);
   const [processing, setProcessing] = useState(false);
+  const {
+    config
+  } = useContext(FireactContext);
+  const navigate = useNavigate();
   useEffect(() => {
     setLoeaded(false);
     setError(null);
@@ -80,13 +87,23 @@ export const ManagePaymentMethods = _ref => {
   }, "Payment Methods")), /*#__PURE__*/React.createElement(Grid, {
     item: true,
     textAlign: "right"
+  }, /*#__PURE__*/React.createElement(Stack, {
+    direction: "row-reverse",
+    spacing: 1,
+    mt: 2
   }, !paymentMethodFormShowed && /*#__PURE__*/React.createElement(Button, {
-    variant: "contained",
+    variant: "outlined",
+    size: "small",
     onClick: () => setPaymentMethodFormShowed(true)
   }, "Add Payment Method"), paymentMethodFormShowed && paymentMethods.length > 0 && /*#__PURE__*/React.createElement(Button, {
-    variant: "contained",
+    variant: "outlined",
+    size: "small",
     onClick: () => setPaymentMethodFormShowed(false)
-  }, "Back to Payment Methods")))), /*#__PURE__*/React.createElement(Box, {
+  }, "Payment Methods"), /*#__PURE__*/React.createElement(Button, {
+    variant: "outlined",
+    size: "small",
+    onClick: () => navigate(config.pathnames.ListInvoices.replace(":subscriptionId", subscription.id))
+  }, "Invoice List"))))), /*#__PURE__*/React.createElement(Box, {
     p: 2
   }, error !== null ? /*#__PURE__*/React.createElement(Alert, {
     severity: "error"

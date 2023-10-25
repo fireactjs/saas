@@ -10,6 +10,7 @@ import { PaymentMethodForm } from "./PaymentMethodForm";
 import { useNavigate } from "react-router-dom";
 import { getAuth } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
+import { BillingDetails } from "./BillingDetails";
 export const CreateSubscription = () => {
   const {
     config
@@ -21,6 +22,8 @@ export const CreateSubscription = () => {
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState(null);
   const [showPaymentMethod, setShowPaymentMethod] = useState(false);
+  const [paymentStep, setPaymentStep] = useState(1);
+  const [billingDetails, setBillingDetails] = useState(null);
   const [selectedPlan, setSelectedPlan] = useState(null);
   const singular = config.saas.subscription.singular;
   const auth = getAuth();
@@ -33,7 +36,8 @@ export const CreateSubscription = () => {
       const createSubscription = httpsCallable(functionsInstance, 'fireactjsSaas-createSubscription');
       createSubscription({
         planId: plan.id,
-        paymentMethodId: null
+        paymentMethodId: null,
+        BillingDetails: null
       }).then(res => {
         if (res.data && res.data.subscriptionId) {
           navigate(config.pathnames.Settings.replace(":subscriptionId", res.data.subscriptionId));
@@ -59,7 +63,8 @@ export const CreateSubscription = () => {
     let subscriptionId = null;
     createSubscription({
       paymentMethodId: paymentMethod.id,
-      planId: selectedPlan.id
+      planId: selectedPlan.id,
+      billingDetails: billingDetails
     }).then(res => {
       if (res.data && res.data.subscriptionId) {
         subscriptionId = res.data.subscriptionId;
@@ -94,7 +99,21 @@ export const CreateSubscription = () => {
     p: 5
   }, showPaymentMethod ? /*#__PURE__*/React.createElement(Stack, {
     spacing: 3
-  }, /*#__PURE__*/React.createElement(Typography, {
+  }, paymentStep === 1 && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(Typography, {
+    component: "h1",
+    variant: "h3",
+    align: "center",
+    color: "text.primary",
+    gutterBottom: true
+  }, "Your Billing Details"), error !== null && /*#__PURE__*/React.createElement(Alert, {
+    severity: "error"
+  }, error), /*#__PURE__*/React.createElement(BillingDetails, {
+    buttonText: "Continue",
+    setBillingDetailsObject: obj => {
+      setBillingDetails(obj);
+      setPaymentStep(2);
+    }
+  })), paymentStep === 2 && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(Typography, {
     component: "h1",
     variant: "h3",
     align: "center",
@@ -103,10 +122,10 @@ export const CreateSubscription = () => {
   }, "Setup Payment Method"), error !== null && /*#__PURE__*/React.createElement(Alert, {
     severity: "error"
   }, error), /*#__PURE__*/React.createElement(PaymentMethodForm, {
-    buttonText: "Submit",
+    buttonText: "Subscribe",
     setPaymentMethod: submitPlan,
     disabled: processing
-  })) : /*#__PURE__*/React.createElement(Stack, {
+  }))) : /*#__PURE__*/React.createElement(Stack, {
     spacing: 3
   }, /*#__PURE__*/React.createElement(Typography, {
     component: "h1",

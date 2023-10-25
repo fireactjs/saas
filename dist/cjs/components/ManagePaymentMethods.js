@@ -7,6 +7,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.ManagePaymentMethods = void 0;
 require("core-js/modules/web.dom-collections.iterator.js");
+require("core-js/modules/es.regexp.exec.js");
+require("core-js/modules/es.string.replace.js");
 var _core = require("@fireactjs/core");
 var _react = _interopRequireWildcard(require("react"));
 var _SubscriptionContext = require("./SubscriptionContext");
@@ -15,6 +17,7 @@ var _material = require("@mui/material");
 var _PaymentMethodForm = require("./PaymentMethodForm");
 var _functions = require("firebase/functions");
 var _firestore = require("firebase/firestore");
+var _reactRouterDom = require("react-router-dom");
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
@@ -42,6 +45,10 @@ const ManagePaymentMethods = _ref => {
   const [paymentFormDisabled, setPaymentFormDisabled] = (0, _react.useState)(false);
   const [paymentMethodFormShowed, setPaymentMethodFormShowed] = (0, _react.useState)(false);
   const [processing, setProcessing] = (0, _react.useState)(false);
+  const {
+    config
+  } = (0, _react.useContext)(_core.FireactContext);
+  const navigate = (0, _reactRouterDom.useNavigate)();
   (0, _react.useEffect)(() => {
     setLoeaded(false);
     setError(null);
@@ -89,13 +96,23 @@ const ManagePaymentMethods = _ref => {
   }, "Payment Methods")), /*#__PURE__*/_react.default.createElement(_material.Grid, {
     item: true,
     textAlign: "right"
+  }, /*#__PURE__*/_react.default.createElement(_material.Stack, {
+    direction: "row-reverse",
+    spacing: 1,
+    mt: 2
   }, !paymentMethodFormShowed && /*#__PURE__*/_react.default.createElement(_material.Button, {
-    variant: "contained",
+    variant: "outlined",
+    size: "small",
     onClick: () => setPaymentMethodFormShowed(true)
   }, "Add Payment Method"), paymentMethodFormShowed && paymentMethods.length > 0 && /*#__PURE__*/_react.default.createElement(_material.Button, {
-    variant: "contained",
+    variant: "outlined",
+    size: "small",
     onClick: () => setPaymentMethodFormShowed(false)
-  }, "Back to Payment Methods")))), /*#__PURE__*/_react.default.createElement(_material.Box, {
+  }, "Payment Methods"), /*#__PURE__*/_react.default.createElement(_material.Button, {
+    variant: "outlined",
+    size: "small",
+    onClick: () => navigate(config.pathnames.ListInvoices.replace(":subscriptionId", subscription.id))
+  }, "Invoice List"))))), /*#__PURE__*/_react.default.createElement(_material.Box, {
     p: 2
   }, error !== null ? /*#__PURE__*/_react.default.createElement(_material.Alert, {
     severity: "error"

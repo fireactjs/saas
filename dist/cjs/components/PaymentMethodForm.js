@@ -51,13 +51,14 @@ const PaymentMethodFormHandler = _ref => {
       return;
     }
     const cardElement = elements.getElement(_reactStripeJs.CardElement);
+    var data = {
+      type: 'card',
+      card: cardElement
+    };
     const {
       error,
       paymentMethod
-    } = await stripe.createPaymentMethod({
-      type: 'card',
-      card: cardElement
-    });
+    } = await stripe.createPaymentMethod(data);
     if (error) {
       setError(error.message);
       setProcessing(false);
@@ -119,7 +120,8 @@ const PaymentMethodForm = _ref2 => {
   let {
     setPaymentMethod,
     buttonText,
-    disabled
+    disabled,
+    billingDetails
   } = _ref2;
   const {
     config
@@ -132,7 +134,8 @@ const PaymentMethodForm = _ref2 => {
   }, /*#__PURE__*/_react.default.createElement(PaymentMethodFormHandler, {
     setPaymentMethod: setPaymentMethod,
     buttonText: buttonText,
-    disabled: disabled
+    disabled: disabled,
+    billingDetails: billingDetails
   }));
 };
 exports.PaymentMethodForm = PaymentMethodForm;
