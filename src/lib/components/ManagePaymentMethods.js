@@ -1,4 +1,4 @@
-import { AuthContext, SetPageTitle } from "@fireactjs/core";
+import { AuthContext, FireactContext, SetPageTitle } from "@fireactjs/core";
 import React, { useContext, useEffect, useState } from "react";
 import { SubscriptionContext } from "./SubscriptionContext";
 import { getAuth } from "firebase/auth";
@@ -6,6 +6,7 @@ import { Alert, Box, Container, Grid, Paper, Typography, Button, Stack, Card, Ca
 import { PaymentMethodForm } from "./PaymentMethodForm";
 import { httpsCallable } from "firebase/functions";
 import { doc, setDoc, collection, getDocs } from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
 
 
 export const ManagePaymentMethods = ({loader}) => {
@@ -19,6 +20,8 @@ export const ManagePaymentMethods = ({loader}) => {
     const [ paymentFormDisabled, setPaymentFormDisabled ] = useState(false);
     const [ paymentMethodFormShowed, setPaymentMethodFormShowed ] = useState(false);
     const [ processing, setProcessing ] = useState(false);
+    const { config } = useContext(FireactContext);
+    const navigate = useNavigate();
 
 
     useEffect(() => {
@@ -62,12 +65,15 @@ export const ManagePaymentMethods = ({loader}) => {
                                 <Typography component="h1" variant="h4">Payment Methods</Typography>
                             </Grid>
                             <Grid item textAlign="right">
-                                {!paymentMethodFormShowed && 
-                                    <Button variant="contained" onClick={() => setPaymentMethodFormShowed(true)}>Add Payment Method</Button>
-                                }
-                                {paymentMethodFormShowed && paymentMethods.length > 0 &&
-                                    <Button variant="contained" onClick={() => setPaymentMethodFormShowed(false)}>Back to Payment Methods</Button>
-                                }
+                                <Stack direction="row-reverse" spacing={1} mt={2}>
+                                    {!paymentMethodFormShowed && 
+                                        <Button variant="outlined" size="small" onClick={() => setPaymentMethodFormShowed(true)}>Add Payment Method</Button>
+                                    }
+                                    {paymentMethodFormShowed && paymentMethods.length > 0 &&
+                                        <Button variant="outlined" size="small" onClick={() => setPaymentMethodFormShowed(false)}>Payment Methods</Button>
+                                    }
+                                    <Button variant="outlined" size="small" onClick={() => navigate(config.pathnames.ListInvoices.replace(":subscriptionId", subscription.id))}>Invoice List</Button>
+                                </Stack>
                             </Grid>
                         </Grid>
                     </Box>

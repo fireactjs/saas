@@ -640,6 +640,22 @@ module.exports = function(config){
             });
         }),
 
+        changeBillingDetails: functions.https.onCall((data, context) => {
+            return getStripeCustomerId(
+                context.auth.uid,
+                context.auth.token.name,
+                context.auth.token.email,
+                null,
+                data.billingDetails
+            ).then(res => {
+                return {
+                    result: 'success'
+                }
+            }).catch(err => {
+                throw new functions.https.HttpsError('internal', err.message);
+            })
+        }),
+
         stripeWebHook: functions.https.onRequest((req, res) => {
             const stripe = require('stripe')(config.stripe.secret_api_key);
             const endpointSecret = config.stripe.end_point_secret;

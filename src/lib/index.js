@@ -13,9 +13,11 @@ import { PricingPlans } from "./components/PricingPlans";
 import { Settings } from "./components/Settings";
 import { ListUsers } from "./components/ListUsers";
 import { AddUser } from "./components/AddUser";
+import { UpdateBillingDetails } from "./components/UpdateBillingDetails";
 import { UpdateUser } from "./components/UpdateUser";
 import { ChangePlan } from "./components/ChangePlan";
 import { CancelSubscription } from "./components/CancelSubscription";
+
 
 export {
     AddUser,
@@ -36,5 +38,6 @@ export {
     SubscriptionMenu,
     SubscriptionProvider,
     ListUsers,
+    UpdateBillingDetails,
     UpdateUser,
 }

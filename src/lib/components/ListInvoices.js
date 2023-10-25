@@ -95,6 +95,7 @@ export const ListInvoices = ({loader}) => {
                                             <Button color="error" variant="outlined" size="small" onClick={() => navigate(config.pathnames.CancelSubscription.replace(":subscriptionId", subscription.id))}>Cancel Subscription</Button>
                                             <Button color="info" variant="outlined" size="small" onClick={() => navigate(config.pathnames.ChangePlan.replace(":subscriptionId", subscription.id))}>Chane Plan</Button>
                                             <Button color="info" variant="outlined" size="small" onClick={() => navigate(config.pathnames.ManagePaymentMethods.replace(":subscriptionId", subscription.id))}>Update Payment Method</Button>
+                                            <Button color="info" variant="outlined" size="small" onClick={() => navigate(config.pathnames.UpdateBillingDetails.replace(":subscriptionId", subscription.id))}>Update Billing Details</Button>
                                         </Stack>}
                                     </Grid>
                                 </Grid>
