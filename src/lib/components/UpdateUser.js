@@ -80,7 +80,7 @@ export const UpdateUser = ({user, setSelectedUser, setUsers}) => {
                                                 }}
                                                 defaultChecked={user.permissions.indexOf(key)>=0?true:false}
                                                 disabled={permissions[key].default?true:false} />
-                                            } label={key} />
+                                            } label={typeof(permissions[key].label!=='undefined')?permissions[key].label:key} />
                                         </Grid>
                                     )
                                 })}
