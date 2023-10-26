@@ -71,7 +71,7 @@ export const AddUser = ({setAddUserActive, setUsers}) => {
                                                 }}
                                                 defaultChecked={permissions[key].default?true:false}
                                                 disabled={permissions[key].default?true:false} />} 
-                                                label={typeof(permissions[key].label!=='undefined')?permissions[key].label:key} />
+                                                label={permissions[key].label?permissions[key].label:key} />
                                         </Grid>
                                     )
                                 })}

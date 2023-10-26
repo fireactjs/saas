@@ -78,7 +78,7 @@ const ListUsers = _ref => {
     const userPermissionLabels = userPermissions => {
       const labels = [];
       userPermissions.forEach(permission => {
-        labels.push(typeof config.saas.permissions[permission].label !== 'undefined' ? config.saas.permissions[permission].label : permission);
+        labels.push(config.saas.permissions[permission].label ? config.saas.permissions[permission].label : permission);
       });
       return labels.join(', ');
     };
