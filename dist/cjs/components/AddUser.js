@@ -107,7 +107,7 @@ const AddUser = _ref => {
         defaultChecked: permissions[key].default ? true : false,
         disabled: permissions[key].default ? true : false
       }),
-      label: key
+      label: typeof (permissions[key].label !== 'undefined') ? permissions[key].label : key
     }));
   }))))), /*#__PURE__*/_react.default.createElement(_material.Box, {
     p: 2

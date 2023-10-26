@@ -66,6 +66,13 @@ export const ListUsers = _ref => {
     });
   }, [subscription.id, functionsInstance, pathnames.UpdateUser]);
   useEffect(() => {
+    const userPermissionLabels = userPermissions => {
+      const labels = [];
+      userPermissions.forEach(permission => {
+        labels.push(typeof config.saas.permissions[permission].label !== 'undefined' ? config.saas.permissions[permission].label : permission);
+      });
+      return labels.join(', ');
+    };
     const startIndex = page * pageSize;
     let records = [];
     for (let i = startIndex; i < users.length; i++) {
@@ -88,9 +95,9 @@ export const ListUsers = _ref => {
             marginLeft: '15px'
           }
         }, user.displayName));
-        user.permissionCol = user.permissions.join(", ");
+        user.permissionCol = userPermissionLabels(user.permissions);
         if (subscription.ownerId === user.id) {
-          user.permissionCol = 'owner';
+          user.permissionCol = 'Owner';
         }
         user.emailCol = user.email;
         if (subscription.ownerId !== user.id) {
@@ -122,7 +129,7 @@ export const ListUsers = _ref => {
             marginLeft: '15px'
           }
         }, user.displayName));
-        user.permissionCol = user.permissions.join(", ");
+        user.permissionCol = userPermissionLabels(user.permissions);
         user.emailCol = user.email;
         user.actionCol = /*#__PURE__*/React.createElement(Button, {
           size: "small",
@@ -144,7 +151,7 @@ export const ListUsers = _ref => {
     if (addUserActive === false && selectedUser === null) {
       window.scrollTo(0, 0);
     }
-  }, [page, pageSize, users, addUserActive, selectedUser, reovkeInvite, subscription.ownerId, subscription.id, processing]);
+  }, [page, pageSize, users, addUserActive, selectedUser, reovkeInvite, subscription.ownerId, subscription.id, processing, config.saas.permissions]);
   return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(SetPageTitle, {
     title: "User List" + (subscriptionName !== "" ? " - " + subscriptionName : "")
   }), loaded ? /*#__PURE__*/React.createElement(React.Fragment, null, selectedUser !== null ? /*#__PURE__*/React.createElement(UpdateUser, {

@@ -75,6 +75,13 @@ const ListUsers = _ref => {
     });
   }, [subscription.id, functionsInstance, pathnames.UpdateUser]);
   (0, _react.useEffect)(() => {
+    const userPermissionLabels = userPermissions => {
+      const labels = [];
+      userPermissions.forEach(permission => {
+        labels.push(typeof config.saas.permissions[permission].label !== 'undefined' ? config.saas.permissions[permission].label : permission);
+      });
+      return labels.join(', ');
+    };
     const startIndex = page * pageSize;
     let records = [];
     for (let i = startIndex; i < users.length; i++) {
@@ -97,9 +104,9 @@ const ListUsers = _ref => {
             marginLeft: '15px'
           }
         }, user.displayName));
-        user.permissionCol = user.permissions.join(", ");
+        user.permissionCol = userPermissionLabels(user.permissions);
         if (subscription.ownerId === user.id) {
-          user.permissionCol = 'owner';
+          user.permissionCol = 'Owner';
         }
         user.emailCol = user.email;
         if (subscription.ownerId !== user.id) {
@@ -131,7 +138,7 @@ const ListUsers = _ref => {
             marginLeft: '15px'
           }
         }, user.displayName));
-        user.permissionCol = user.permissions.join(", ");
+        user.permissionCol = userPermissionLabels(user.permissions);
         user.emailCol = user.email;
         user.actionCol = /*#__PURE__*/_react.default.createElement(_material.Button, {
           size: "small",
@@ -153,7 +160,7 @@ const ListUsers = _ref => {
     if (addUserActive === false && selectedUser === null) {
       window.scrollTo(0, 0);
     }
-  }, [page, pageSize, users, addUserActive, selectedUser, reovkeInvite, subscription.ownerId, subscription.id, processing]);
+  }, [page, pageSize, users, addUserActive, selectedUser, reovkeInvite, subscription.ownerId, subscription.id, processing, config.saas.permissions]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement(_core.SetPageTitle, {
     title: "User List" + (subscriptionName !== "" ? " - " + subscriptionName : "")
   }), loaded ? /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, selectedUser !== null ? /*#__PURE__*/_react.default.createElement(_UpdateUser.UpdateUser, {
