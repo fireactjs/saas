@@ -1,6 +1,6 @@
 {
   "name": "@fireactjs/saas",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "private": false,
   "author": "Chaoming Li",
   "keywords": [
@@ -25,20 +25,20 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.12.1",
-    "@fireactjs/core": "^1.1.1",
-    "@stripe/react-stripe-js": "^1.15.0",
-    "@stripe/stripe-js": "^1.44.1",
+    "@fireactjs/core": "^1.1.2",
+    "@stripe/react-stripe-js": "^1.16.5",
+    "@stripe/stripe-js": "^1.54.2",
     "react-country-state-fields": "^1.0.4"
   },
   "peerDependencies": {
-    "@emotion/react": "^11.11.1",
+    "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
-    "@mui/icons-material": "^5.14.7",
-    "@mui/material": "^5.14.7",
-    "firebase": "^10.3.0",
+    "@mui/icons-material": "^5.15.3",
+    "@mui/material": "^5.15.3",
+    "firebase": "^10.7.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.15.0",
+    "react-router-dom": "^6.21.1",
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"
   },
@@ -67,10 +67,10 @@
     ]
   },
   "devDependencies": {
-    "@babel/cli": "^7.19.3",
-    "@babel/core": "^7.20.5",
-    "@babel/preset-env": "^7.20.2",
-    "@testing-library/jest-dom": "^5.16.5",
+    "@babel/cli": "^7.23.4",
+    "@babel/core": "^7.23.7",
+    "@babel/preset-env": "^7.23.7",
+    "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0"
   },

@@ -397,20 +397,24 @@ module.exports = function(config){
             }).then((invite) => {
                 inviteId = invite.id;
                 if(config.mailgun){
-                    const mailgun = require("mailgun-js");
-                    const mg = mailgun({apiKey: config.mailgun.api_key, domain: config.mailgun.domain});
+                    const formData = require('form-data');
+                    const Mailgun = require('mailgun.js');
+                    const mailgun = new Mailgun(formData);
+                    const mg = mailgun.client({username: 'api', key: config.mailgun.api_key});
                     const mailData = {
                         from: config.mailgun.from,
                         to: data.email,
                         subject: data.displayName+", you are invited to "+config.site_name,
                         template: config.mailgun.templates.invite_email,
-                        'v:sender': context.auth.token.name,
-                        'v:site_name': config.site_name,
-                        'v:name': data.displayName,
-                        'v:sign_in_url': config.sign_in_url,
-                        'v:sign_up_url': config.sign_up_url
+                        'h:X-Mailgun-Variables': JSON.stringify({
+                            'sender': context.auth.token.name,
+                            'site_name': config.site_name,
+                            'name': data.displayName,
+                            'sign_in_url': config.sign_in_url,
+                            'sign_up_url': config.sign_up_url
+                        })
                     }
-                    return mg.messages().send(mailData);
+                    return mg.messages.create(config.mailgun.domain, mailData);
                 }else{
                     // skip invite email
                     return {}
