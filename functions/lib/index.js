@@ -1,7 +1,4 @@
-const functions = require('firebase-functions');
-const admin = require('firebase-admin');
-
-module.exports = function(config){
+module.exports = function({config, admin, functions}){
 
     /**
      * Get Firestore document by the given document path.
