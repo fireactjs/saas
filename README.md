@@ -136,7 +136,7 @@ If a plan is no longer available for new users, set its `legacy` property to `tr
 
 ## Setup Stripe Integration
 
-For the cloud functions to receive data from Stripe, you will need to create a webhook endpoint with the cloud function webhook URL `https://firebse-location-project-id.cloudfunctions.net/fireactjsSaas-stripeWebHook`. Please make sure you replace the domain with your actual Firebase project cloud function domain. Once the webhook is created, you will get an endpoint secret which is needed in the configuration file.
+For the cloud functions to receive data from Stripe, you will need to create a webhook endpoint with the cloud function webhook URL `https://firebase-location-project-id.cloudfunctions.net/fireactjsSaas-stripeWebHook`. Please make sure you replace the domain with your actual Firebase project cloud function domain. Once the webhook is created, you will get an endpoint secret which is needed in the configuration file.
 
 The following Stripe events need to be sent to the endpoint:
 
@@ -164,7 +164,7 @@ invoice.voided
 
 Create a file called `config.json` in the `/src` folder as the example shows below store the configuration settings.
 
-To integrate with Stripe, the Stripe public API key is required for the `stripe.pubblic_api_key` property.
+To integrate with Stripe, the Stripe public API key is required for the `stripe.public_api_key` property.
 
 The Reactjs application needs the `price_id` from Stripe to integrate with the Stripe payment plans. The plans will be shown in the pricing table as the property values in the JSON `plans`. It’s important that the `priceId` property value of each plan matches the plan’s `price_id` in Stripe.
 
